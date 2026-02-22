@@ -261,31 +261,52 @@
             } catch (e) { console.error("送信失敗"); }
         }
 
-        // --- ユーザー管理 ---
-        function loginUser() {
-            const name = document.getElementById("user-name-input").value.trim();
-            if (!name) return alert("ネームを入力してね！");
-            currentUser = name;
-            localStorage.setItem("quiz_current_user", name);
-            showUserInfo();
-            if(currentRegion && currentEra) syncRanking();
-        }
-        function logoutUser() { localStorage.removeItem("quiz_current_user"); location.reload(); }
-        function checkLocalLogin() {
-            const saved = localStorage.getItem("quiz_current_user");
-            if (saved) { currentUser = saved; showUserInfo(); }
-        }
-        function showUserInfo() {
-            document.getElementById("login-form").style.display = "none";
-            document.getElementById("user-info-area").style.display = "block";
-            document.getElementById("display-name").innerText = currentUser;
-            updateScoreUI();
-        }
-        function updateScoreUI() {
-            const tag = `${currentRegion}_${currentEra}`;
-            const score = localStorage.getItem(`score_${currentUser}_${tag}`) || 0;
-            document.getElementById("user-total-score").innerText = score;
-        }
+       // --- ユーザー管理 (ここを差し替え！) ---
+function loginUser() {
+    const name = document.getElementById("user-name-input").value.trim();
+    if (!name) return alert("ネームを入力してね！");
+    currentUser = name;
+    localStorage.setItem("quiz_current_user", name);
+    showUserInfo();
+    if(currentRegion && currentEra) syncRanking();
+}
+
+function logoutUser() {
+    if(confirm("ユーザーを変更しますか？")) {
+        localStorage.removeItem("quiz_current_user");
+        currentUser = null;
+        // 入力フォームを復活させて、表示をリセット
+        document.getElementById("login-form").style.display = "block";
+        document.getElementById("user-info-area").style.display = "none";
+        document.getElementById("user-name-input").value = "";
+        document.getElementById("ranking-list").innerHTML = "ログインしてね";
+        updateScoreUI();
+    }
+}
+
+function checkLocalLogin() {
+    const saved = localStorage.getItem("quiz_current_user");
+    if (saved) { currentUser = saved; showUserInfo(); }
+}
+
+function showUserInfo() {
+    document.getElementById("login-form").style.display = "none";
+    document.getElementById("user-info-area").style.display = "block";
+    document.getElementById("display-name").innerText = currentUser;
+    updateScoreUI();
+}
+
+function updateScoreUI() {
+    // ログインしてない時や時代未選択の時は0を表示
+    if(!currentUser || !currentEra) {
+        document.getElementById("user-total-score").innerText = "0";
+        return;
+    }
+    const tag = `${currentRegion}_${currentEra}`;
+    const score = localStorage.getItem(`score_${currentUser}_${tag}`) || 0;
+    document.getElementById("user-total-score").innerText = score;
+}
+
         function addPoint() {
             if (!currentUser || !currentEra) return;
             const tag = `${currentRegion}_${currentEra}`;

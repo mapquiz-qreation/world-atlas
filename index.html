@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>世界史地図クイズ - 高精度管理モード</title>
+    <title>世界史地図クイズ - 学習強化版</title>
     <style>
         body { font-family: sans-serif; background-color: #f4f1ea; color: #3e2723; margin: 0; padding: 10px; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
         h1 { font-size: 18px; margin: 0 0 5px 0; text-align: center; }
@@ -20,24 +20,39 @@
         #result { font-size: 16px; font-weight: bold; min-height: 20px; margin: 5px 0; }
         #next-btn { width: 100%; padding: 8px; background: #5d4037; color: white; border: none; border-radius: 4px; cursor: pointer; display: none; font-weight: bold; }
         
-        /* マップエリア */
         #map-container { position: relative; border: 4px solid #3e2723; border-radius: 4px; background: #e0f2f1; line-height: 0; overflow: hidden; max-height: 85vh; cursor: crosshair; }
         #map-image { height: 75vh; width: auto; display: block; -webkit-user-drag: none; }
         
         .target-node { position: absolute; width: 18px; height: 18px; border-radius: 50%; transform: translate(-50%, -50%); border: 2px solid #5d4037; background: white; cursor: pointer; z-index: 5; transition: 0.2s; }
-        .target-node.correct { background: #388e3c !important; border-color: #1b5e20 !important; box-shadow: 0 0 8px #388e3c; z-index: 10; }
-        .target-node.wrong { background: #d32f2f !important; opacity: 0.6; }
         
-        /* 管理用ピン */
-        #admin-pin { position: absolute; width: 12px; height: 12px; background: red; border: 2px solid white; border-radius: 50%; transform: translate(-50%, -50%); pointer-events: none; z-index: 20; display: none; box-shadow: 0 0 5px rgba(0,0,0,0.5); }
+        /* 正解時の色 */
+        .target-node.correct { background: #388e3c !important; border-color: #1b5e20 !important; box-shadow: 0 0 10px #388e3c; z-index: 10; }
+        
+        /* 不正解時の色 */
+        .target-node.wrong { background: #d32f2f !important; opacity: 0.6; }
 
+        /* 【追加】不正解の時に「ここが正解だよ！」と光らせるアニメーション */
+        .target-node.highlight {
+            background: #388e3c !important;
+            border-color: #1b5e20 !important;
+            z-index: 15;
+            animation: pulse-ring 1s infinite;
+        }
+
+        @keyframes pulse-ring {
+            0% { box-shadow: 0 0 0 0 rgba(56, 142, 60, 0.7); transform: translate(-50%, -50%) scale(1); }
+            70% { box-shadow: 0 0 0 15px rgba(56, 142, 60, 0); transform: translate(-50%, -50%) scale(1.2); }
+            100% { box-shadow: 0 0 0 0 rgba(56, 142, 60, 0); transform: translate(-50%, -50%) scale(1); }
+        }
+
+        #admin-pin { position: absolute; width: 12px; height: 12px; background: red; border: 2px solid white; border-radius: 50%; transform: translate(-50%, -50%); pointer-events: none; z-index: 20; display: none; box-shadow: 0 0 5px rgba(0,0,0,0.5); }
         #admin-panel { font-size: 11px; background: rgba(239, 235, 233, 0.9); padding: 10px; border-radius: 6px; border: 1px solid #a1887f; }
         textarea { width: 95%; height: 60px; font-family: monospace; font-size: 10px; }
     </style>
 </head>
 <body>
 
-    <h1>🗺️ 世界史 地図クイズ (高精度管理)</h1>
+    <h1>🗺️ 世界史 地図クイズ</h1>
 
     <div id="main-layout">
         <div id="sidebar">
@@ -65,30 +80,26 @@
             <div id="admin-panel">
                 <details>
                     <summary>🛠️ 地点登録モード</summary>
-                    <div style="margin-top:5px; color:blue;">地図を直接クリックして！</div>
                     座標: <strong id="selected-coord" style="color:red;">未選択</strong>
                     <input type="text" id="new-q-text" placeholder="地点名を入力" style="width:90%; margin:5px 0;">
-                    <button onclick="addNewQuestion()" style="width:100%;">この座標を一時保存</button>
-                    <hr>
-                    <button onclick="exportAllRegions()" style="width:100%; margin-bottom:5px;">全JSONを抽出 (永久保存用)</button>
-                    <textarea id="export-area" readonly placeholder="ここにJSONが出ます"></textarea>
+                    <button onclick="addNewQuestion()" style="width:100%;">一時保存</button>
+                    <button onclick="exportAllRegions()" style="width:100%; margin:5px 0;">全JSONを抽出</button>
+                    <textarea id="export-area" readonly></textarea>
                 </details>
             </div>
         </div>
-        <div id="map-container" id="map-click-area">
+        <div id="map-container">
             <img id="map-image" src="map.png" draggable="false">
-            <div id="admin-pin"></div> <!-- 赤いピン -->
+            <div id="admin-pin"></div>
             <div id="node-container"></div>
         </div>
     </div>
 
     <script>
-        // ★ここに君のGASのURLを貼ってね！
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbxNQwAodoz8BF8B0wqQXrNzWZvXImRuIVcVkKi7LCtdSe8ScjIfqbbU1rWKQ9ZxrYKm/exec";
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbx9n1Xo3l8sKjvVh5Zy7q2X9eQ0a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q/exec"; // ここにGoogle Apps ScriptのURLを入れてね
 
         let masterData = {}, currentUser = null, currentRegion = '', questions = [], currentIdx = 0, isAnswered = false, lastClickedPos = null;
 
-        // ランキング受信
         window.receiveRanking = function(scores) {
             if (!Array.isArray(scores)) return;
             scores.sort((a, b) => b.score - a.score);
@@ -109,43 +120,15 @@
             } catch (e) { console.error("JSON読込失敗"); }
         }
 
-        // --- ランキング同期（JSONP方式の最新版） ---
-function syncRanking() {
-    if (!GAS_URL || !GAS_URL.includes("https")) {
-        console.error("GAS_URLが設定されていません");
-        return;
-    }
-    
-    // 既存の古いスクリプトタグを確実に消去
-    const oldScript = document.getElementById('jsonp-script');
-    if (oldScript) oldScript.remove();
-    
-    // 新しいスクリプトタグを作成
-    const script = document.createElement('script');
-    script.id = 'jsonp-script';
-    
-    // 通信の末尾に「現在時刻」を足して、ブラウザが「古いデータ」を使い回さないようにするよ！
-    const timestamp = new Date().getTime();
-    script.src = `${GAS_URL}?action=get&callback=receiveRanking&t=${timestamp}`;
-    
-    // エラーが起きた時のための保険
-    script.onerror = () => {
-        console.error("ランキングの読み込みに失敗しました。URLを確認してね。");
-        document.getElementById("ranking-list").innerText = "読み込みエラー";
-    };
-
-    document.body.appendChild(script);
-}
-
-// ページを開いた時にも自動で同期するように設定！
-window.onload = function() {
-    fetchQuestions(); // 問題データの読み込み
-    // ログイン済みならランキングも呼ぶ
-    if (localStorage.getItem("quiz_current_user")) {
-        setTimeout(syncRanking, 1000); 
-    }
-};
-
+        function syncRanking() {
+            if (!GAS_URL.includes("https")) return;
+            const oldScript = document.getElementById('jsonp-script');
+            if (oldScript) oldScript.remove();
+            const script = document.createElement('script');
+            script.id = 'jsonp-script';
+            script.src = `${GAS_URL}?action=get&callback=receiveRanking&t=${new Date().getTime()}`;
+            document.body.appendChild(script);
+        }
 
         async function uploadScore(score) {
             if (!GAS_URL.includes("https")) return;
@@ -155,40 +138,84 @@ window.onload = function() {
             } catch (e) { console.error("送信失敗"); }
         }
 
-        // --- 管理モード：地図クリックで座標取得 ---
-        document.getElementById("map-container").addEventListener("click", function(e) {
-            const rect = this.getBoundingClientRect();
-            // クリックした位置の割合(%)を計算
-            const x = ((e.clientX - rect.left) / rect.width * 100).toFixed(1);
-            const y = ((e.clientY - rect.top) / rect.height * 100).toFixed(1);
-            
-            lastClickedPos = { top: y + "%", left: x + "%" };
-            
-            // 画面に座標を表示
-            document.getElementById("selected-coord").innerText = `T:${y}% L:${x}%`;
-            
-            // 赤いピンを移動させて表示
-            const pin = document.getElementById("admin-pin");
-            pin.style.display = "block";
-            pin.style.top = y + "%";
-            pin.style.left = x + "%";
-        });
-
-        function addNewQuestion() {
-            const t = document.getElementById("new-q-text").value.trim();
-            if(!t || !lastClickedPos) return alert("地点名を入力して、地図をクリックしてね！");
-            
-            const s = JSON.parse(localStorage.getItem("quiz_added_" + currentRegion) || "[]");
-            s.push({ text: t, ...lastClickedPos });
-            localStorage.setItem("quiz_added_" + currentRegion, JSON.stringify(s));
-            
-            document.getElementById("new-q-text").value = "";
-            document.getElementById("admin-pin").style.display = "none";
-            document.getElementById("selected-coord").innerText = "保存しました！";
-            loadRegion(currentRegion);
+        function setupButtons() {
+            const selector = document.getElementById("mode-selector");
+            selector.innerHTML = "";
+            const keys = Object.keys(masterData);
+            keys.forEach(key => {
+                const btn = document.createElement("button");
+                btn.className = "mode-btn";
+                btn.innerText = masterData[key].name;
+                btn.onclick = () => { loadRegion(key); document.getElementById("admin-pin").style.display = "none"; };
+                btn.id = `btn-${key}`;
+                selector.appendChild(btn);
+            });
+            if (keys.length > 0) loadRegion(keys);
         }
 
-        // --- 以下共通ロジック ---
+        function loadRegion(key) {
+            currentRegion = key;
+            const data = masterData[key];
+            const added = JSON.parse(localStorage.getItem("quiz_added_" + key) || "[]");
+            questions = [...(data.fixed || []), ...added];
+            currentIdx = 0;
+            document.getElementById("map-image").src = data.img;
+            document.querySelectorAll('.mode-btn').forEach(b => b.classList.toggle('active', b.id === `btn-${key}`));
+            showQuestion();
+        }
+
+        function showQuestion() {
+            if (!questions.length) return;
+            isAnswered = false;
+            const q = questions[currentIdx];
+            document.getElementById("q-text").innerText = q.text;
+            document.getElementById("result").innerText = "";
+            document.getElementById("next-btn").style.display = "none";
+            const container = document.getElementById("node-container");
+            container.innerHTML = "";
+            let others = questions.filter(o => o.text !== q.text);
+            let choices = [{...q, correct: true}, ...others.sort(() => Math.random() - 0.5).slice(0, 3)].sort(() => Math.random() - 0.5);
+            
+            choices.forEach(c => {
+                const n = document.createElement("div");
+                n.className = "target-node";
+                n.style.top = c.top; n.style.left = c.left;
+                
+                // 正解のピンにだけ「正解データ」をこっそり持たせる
+                if(c.correct) n.dataset.isCorrect = "true";
+
+                n.onclick = (e) => {
+                    e.stopPropagation();
+                    if(isAnswered) return;
+                    isAnswered = true;
+                    if(c.correct) { 
+                        n.classList.add("correct"); 
+                        document.getElementById("result").innerText = "⭕ 正解！"; 
+                        addPoint(); 
+                    }
+                    else { 
+                        n.classList.add("wrong"); 
+                        document.getElementById("result").innerText = "❌ 不正解"; 
+                        highlightCorrect(); // ★ここを呼び出す
+                    }
+                    document.getElementById("next-btn").style.display = "block";
+                };
+                container.appendChild(n);
+            });
+        }
+
+        // 【修正】正解の場所を点滅させる機能
+        function highlightCorrect() {
+            document.querySelectorAll(".target-node").forEach(n => {
+                if(n.dataset.isCorrect === "true") {
+                    n.classList.add("highlight"); // アニメーション付きのクラスを追加
+                }
+            });
+        }
+
+        function nextQuestion() { currentIdx = (currentIdx + 1) % questions.length; showQuestion(); }
+
+        // --- ユーザー・管理機能（維持） ---
         function loginUser() {
             const name = document.getElementById("user-name-input").value.trim();
             if (!name) return alert("名前を入れてね！");
@@ -219,62 +246,25 @@ window.onload = function() {
             updateScoreUI();
             uploadScore(score);
         }
-        function setupButtons() {
-            const selector = document.getElementById("mode-selector");
-            selector.innerHTML = "";
-            const keys = Object.keys(masterData);
-            keys.forEach(key => {
-                const btn = document.createElement("button");
-                btn.className = "mode-btn";
-                btn.innerText = masterData[key].name;
-                btn.onclick = () => { loadRegion(key); document.getElementById("admin-pin").style.display = "none"; };
-                btn.id = `btn-${key}`;
-                selector.appendChild(btn);
-            });
-            if (keys.length > 0) loadRegion(keys[0]);
+        document.getElementById("map-container").addEventListener("click", function(e) {
+            const rect = this.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width * 100).toFixed(1);
+            const y = ((e.clientY - rect.top) / rect.height * 100).toFixed(1);
+            lastClickedPos = { top: y + "%", left: x + "%" };
+            document.getElementById("selected-coord").innerText = `T:${y}% L:${x}%`;
+            const pin = document.getElementById("admin-pin");
+            pin.style.display = "block"; pin.style.top = y + "%"; pin.style.left = x + "%";
+        });
+        function addNewQuestion() {
+            const t = document.getElementById("new-q-text").value.trim();
+            if(!t || !lastClickedPos) return alert("名前と場所を指定してね！");
+            const s = JSON.parse(localStorage.getItem("quiz_added_" + currentRegion) || "[]");
+            s.push({ text: t, ...lastClickedPos });
+            localStorage.setItem("quiz_added_" + currentRegion, JSON.stringify(s));
+            document.getElementById("new-q-text").value = "";
+            document.getElementById("admin-pin").style.display = "none";
+            loadRegion(currentRegion);
         }
-        function loadRegion(key) {
-            currentRegion = key;
-            const data = masterData[key];
-            const added = JSON.parse(localStorage.getItem("quiz_added_" + key) || "[]");
-            questions = [...(data.fixed || []), ...added];
-            currentIdx = 0;
-            document.getElementById("map-image").src = data.img;
-            document.querySelectorAll('.mode-btn').forEach(b => b.classList.toggle('active', b.id === `btn-${key}`));
-            showQuestion();
-        }
-        function showQuestion() {
-            if (!questions.length) return;
-            isAnswered = false;
-            const q = questions[currentIdx];
-            document.getElementById("q-text").innerText = q.text;
-            document.getElementById("result").innerText = "";
-            document.getElementById("next-btn").style.display = "none";
-            const container = document.getElementById("node-container");
-            container.innerHTML = "";
-            let others = questions.filter(o => o.text !== q.text);
-            let choices = [{...q, correct: true}, ...others.sort(() => Math.random() - 0.5).slice(0, 3)].sort(() => Math.random() - 0.5);
-            choices.forEach(c => {
-                const n = document.createElement("div");
-                n.className = "target-node";
-                n.style.top = c.top; n.style.left = c.left;
-                n.onclick = (e) => {
-                    e.stopPropagation();
-                    if(isAnswered) return;
-                    isAnswered = true;
-                    if(c.correct) { n.classList.add("correct"); document.getElementById("result").innerText = "⭕ 正解！"; addPoint(); }
-                    else { n.classList.add("wrong"); document.getElementById("result").innerText = "❌ 不正解"; highlightCorrect(q); }
-                    document.getElementById("next-btn").style.display = "block";
-                };
-                container.appendChild(n);
-            });
-        }
-        function highlightCorrect(q) {
-            document.querySelectorAll(".target-node").forEach(n => {
-                if(n.style.top === q.top && n.style.left === q.left) n.classList.add("correct");
-            });
-        }
-        function nextQuestion() { currentIdx = (currentIdx + 1) % questions.length; showQuestion(); }
         function exportAllRegions() {
             const fullData = JSON.parse(JSON.stringify(masterData));
             Object.keys(fullData).forEach(key => {

@@ -58,20 +58,26 @@
     <div id="main-layout">
         <div id="sidebar">
             <!-- ユーザー登録 -->
-            <div id="user-panel">
-                <div id="login-form">
-                    <input type="text" id="user-name-input" placeholder="受験生ネーム" style="width:140px; padding:5px;">
-                    <button onclick="loginUser()" class="mode-btn" style="min-width:60px;">参戦</button>
-                </div>
-                <div id="user-info-area" style="display:none;">
-                    👤: <span id="display-name" style="font-weight:bold;"></span> 
-                    🏆: <span class="score-badge" id="user-total-score">0</span>
-                    <hr>
-                    <div id="ranking-title">🚩 時代別TOP10</div>
-                    <div id="ranking-list">時代を選択してね</div>
-                    <button onclick="logoutUser()" style="font-size:9px; margin-top:8px; border:none; background:none; color:#8d6e63; cursor:pointer;">ログアウト</button>
-                </div>
-            </div>
+           <!-- サイドバーの中の user-panel をこれに差し替えて！ -->
+<div id="user-panel">
+    <!-- ログイン前：ここが表示されるはず！ -->
+    <div id="login-form">
+        <strong>👤 受験生登録</strong><br>
+        <input type="text" id="user-name-input" placeholder="名前を入力" style="width:140px; margin-top:5px; padding:5px;">
+        <button onclick="loginUser()" class="mode-btn" style="min-width:60px;">参戦</button>
+    </div>
+
+    <!-- ログイン後：最初は隠しておくよ -->
+    <div id="user-info-area" style="display:none;">
+        ログイン中: <span id="display-name" style="font-weight:bold;"></span><br>
+        正解数: <span class="score-badge" id="user-total-score">0</span>
+        <hr>
+        <div id="ranking-title">🏆 時代別TOP10</div>
+        <div id="ranking-list">時代を選択してね</div>
+        <button onclick="logoutUser()" style="font-size:10px; margin-top:10px; color:#d32f2f; cursor:pointer; background:none; border:1px solid #d32f2f; border-radius:3px; padding:2px 5px;">ログアウト / ユーザー変更</button>
+    </div>
+</div>
+
 
             <!-- 地域選択 -->
             <div class="section-label">REGION / 地域</div>

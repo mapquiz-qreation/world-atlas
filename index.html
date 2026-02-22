@@ -109,15 +109,43 @@
             } catch (e) { console.error("JSON読込失敗"); }
         }
 
-        function syncRanking() {
-            if (!GAS_URL.includes("https")) return;
-            const oldScript = document.getElementById('jsonp-script');
-            if (oldScript) oldScript.remove();
-            const script = document.createElement('script');
-            script.id = 'jsonp-script';
-            script.src = `${GAS_URL}?action=get&callback=receiveRanking&t=${new Date().getTime()}`;
-            document.body.appendChild(script);
-        }
+        // --- ランキング同期（JSONP方式の最新版） ---
+function syncRanking() {
+    if (!GAS_URL || !GAS_URL.includes("https")) {
+        console.error("GAS_URLが設定されていません");
+        return;
+    }
+    
+    // 既存の古いスクリプトタグを確実に消去
+    const oldScript = document.getElementById('jsonp-script');
+    if (oldScript) oldScript.remove();
+    
+    // 新しいスクリプトタグを作成
+    const script = document.createElement('script');
+    script.id = 'jsonp-script';
+    
+    // 通信の末尾に「現在時刻」を足して、ブラウザが「古いデータ」を使い回さないようにするよ！
+    const timestamp = new Date().getTime();
+    script.src = `${GAS_URL}?action=get&callback=receiveRanking&t=${timestamp}`;
+    
+    // エラーが起きた時のための保険
+    script.onerror = () => {
+        console.error("ランキングの読み込みに失敗しました。URLを確認してね。");
+        document.getElementById("ranking-list").innerText = "読み込みエラー";
+    };
+
+    document.body.appendChild(script);
+}
+
+// ページを開いた時にも自動で同期するように設定！
+window.onload = function() {
+    fetchQuestions(); // 問題データの読み込み
+    // ログイン済みならランキングも呼ぶ
+    if (localStorage.getItem("quiz_current_user")) {
+        setTimeout(syncRanking, 1000); 
+    }
+};
+
 
         async function uploadScore(score) {
             if (!GAS_URL.includes("https")) return;

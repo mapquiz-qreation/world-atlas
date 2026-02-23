@@ -16,9 +16,6 @@
             background-color: #f5ecd8;
             color: #4a3526;
         }
-        body[data-era="ancient"] #sidebar {
-            /* サイドバー全体も少しトーンを合わせる */
-        }
         body[data-era="ancient"] #user-panel,
         body[data-era="ancient"] #admin-panel,
         body[data-era="ancient"] #question-box {
@@ -57,9 +54,6 @@
         body[data-era="medieval"] {
             background-color: #1b2234;
             color: #e0e7ff;
-        }
-        body[data-era="medieval"] #sidebar {
-            /* 背景はボディと馴染ませつつカードでコントラストを付ける */
         }
         body[data-era="medieval"] #user-panel,
         body[data-era="medieval"] #admin-panel,
@@ -142,58 +136,58 @@
         }
 
         /* 中東：砂漠とオアシス（砂色＋ターコイズ＋ゴールド） */
-        body[data-era="islamic_origin"],
-        body[data-era="turk_mongol"] {
+        body[data-era="islamic_expansion"],
+        body[data-era="turco_mongol"] {
             background-color: #f3e5c8;  /* 薄い砂色 */
             color: #4a3420;
         }
-        body[data-era="islamic_origin"] #user-panel,
-        body[data-era="islamic_origin"] #admin-panel,
-        body[data-era="islamic_origin"] #question-box,
-        body[data-era="turk_mongol"] #user-panel,
-        body[data-era="turk_mongol"] #admin-panel,
-        body[data-era="turk_mongol"] #question-box {
+        body[data-era="islamic_expansion"] #user-panel,
+        body[data-era="islamic_expansion"] #admin-panel,
+        body[data-era="islamic_expansion"] #question-box,
+        body[data-era="turco_mongol"] #user-panel,
+        body[data-era="turco_mongol"] #admin-panel,
+        body[data-era="turco_mongol"] #question-box {
             background: #fff5dc;       /* 砂より少し明るいカード */
             border-color: #c49b47;     /* ゴールド系 */
         }
-        body[data-era="islamic_origin"] #ranking-list,
-        body[data-era="turk_mongol"] #ranking-list {
+        body[data-era="islamic_expansion"] #ranking-list,
+        body[data-era="turco_mongol"] #ranking-list {
             background: #fdf4da;
             border-color: #e0c17b;
         }
-        body[data-era="islamic_origin"] #ranking-title,
-        body[data-era="turk_mongol"] #ranking-title {
+        body[data-era="islamic_expansion"] #ranking-title,
+        body[data-era="turco_mongol"] #ranking-title {
             color: #c68900;            /* 深めのゴールド */
         }
-        body[data-era="islamic_origin"] #q-text,
-        body[data-era="turk_mongol"] #q-text {
+        body[data-era="islamic_expansion"] #q-text,
+        body[data-era="turco_mongol"] #q-text {
             color: #007b83;            /* ターコイズ寄りの青緑 */
         }
-        body[data-era="islamic_origin"] .mode-btn,
-        body[data-era="islamic_origin"] .era-btn,
-        body[data-era="turk_mongol"] .mode-btn,
-        body[data-era="turk_mongol"] .era-btn {
+        body[data-era="islamic_expansion"] .mode-btn,
+        body[data-era="islamic_expansion"] .era-btn,
+        body[data-era="turco_mongol"] .mode-btn,
+        body[data-era="turco_mongol"] .era-btn {
             background: #f0dba8;       /* 砂色ボタン */
             border-color: #c49b47;
             color: #4a3420;
         }
-        body[data-era="islamic_origin"] .mode-btn.active,
-        body[data-era="islamic_origin"] .era-btn.active,
-        body[data-era="turk_mongol"] .mode-btn.active,
-        body[data-era="turk_mongol"] .era-btn.active {
+        body[data-era="islamic_expansion"] .mode-btn.active,
+        body[data-era="islamic_expansion"] .era-btn.active,
+        body[data-era="turco_mongol"] .mode-btn.active,
+        body[data-era="turco_mongol"] .era-btn.active {
             background: #007b83;       /* アクティブはオアシスの水色 */
             color: #fff8e1;
             border-color: #004f56;
         }
-        body[data-era="islamic_origin"] #next-btn,
-        body[data-era="islamic_origin"] .score-badge,
-        body[data-era="turk_mongol"] #next-btn,
-        body[data-era="turk_mongol"] .score-badge {
+        body[data-era="islamic_expansion"] #next-btn,
+        body[data-era="islamic_expansion"] .score-badge,
+        body[data-era="turco_mongol"] #next-btn,
+        body[data-era="turco_mongol"] .score-badge {
             background: #c49b47;       /* ゴールド調ボタン／バッジ */
             color: #fffaf0;
         }
-        body[data-era="islamic_origin"] #map-container,
-        body[data-era="turk_mongol"] #map-container {
+        body[data-era="islamic_expansion"] #map-container,
+        body[data-era="turco_mongol"] #map-container {
             background: radial-gradient(circle at 20% 30%, #b2ebf2 0, #b2ebf2 15%, #f3e5c8 40%, #e0c17b 100%);
             border-color: #c49b47;
         }
@@ -335,6 +329,8 @@
         .score-badge { display: inline-block; background: #5d4037; color: white; padding: 2px 10px; border-radius: 15px; font-weight: bold; }
         #ranking-title { font-weight: bold; font-size: 12px; margin-top: 10px; color: #d32f2f; }
         #ranking-list { font-size: 11px; background: white; padding: 8px; border-radius: 6px; margin-top: 5px; border: 1px solid #d7ccc8; min-height: 60px; line-height: 1.6; }
+        .rank-row { margin: 2px 0; }
+        .rank-title-badge { display: inline-block; margin-left: 4px; padding: 1px 6px; font-size: 10px; font-weight: bold; background: linear-gradient(135deg, #ffd54f, #ff8f00); color: #3e2723; border-radius: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
 
         /* セレクター（地域・時代） */
         .section-label { font-size: 11px; font-weight: bold; color: #8d6e63; margin-bottom: 2px; }
@@ -352,8 +348,13 @@
         #next-btn { width: 100%; padding: 10px; background: #5d4037; color: white; border: none; border-radius: 6px; cursor: pointer; display: none; font-weight: bold; font-size: 14px; }
 
         /* マップエリア */
-        #map-container { position: relative; border: 5px solid #3e2723; border-radius: 8px; background: #e0f2f1; line-height: 0; overflow: hidden; max-height: 80vh; box-shadow: 0 4px 15px rgba(0,0,0,0.3); cursor: crosshair; }
-        #map-image { height: 75vh; width: auto; display: block; -webkit-user-drag: none; }
+        #map-container { position: relative; border: 5px solid #3e2723; border-radius: 8px; background: #e0f2f1; line-height: 0; overflow: hidden; max-height: 80vh; box-shadow: 0 4px 15px rgba(0,0,0,0.3); cursor: grab; touch-action: none; }
+        #map-container.dragging { cursor: grabbing; }
+        #map-content { position: relative; display: inline-block; transform-origin: 0 0; }
+        #map-image { height: 75vh; width: auto; display: block; -webkit-user-drag: none; pointer-events: none; }
+        #map-content .target-node { pointer-events: auto; }
+        #map-reset-btn { position: absolute; bottom: 10px; right: 10px; z-index: 25; padding: 6px 12px; font-size: 12px; background: rgba(62,39,35,0.9); color: #fff; border: 1px solid #fff; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.3); }
+        #map-reset-btn:hover { background: #5d4037; }
         .target-node { position: absolute; width: 20px; height: 20px; border-radius: 50%; transform: translate(-50%, -50%); border: 2px solid #5d4037; background: white; cursor: pointer; z-index: 5; transition: 0.2s; }
         .target-node.correct { background: #388e3c !important; border-color: #1b5e20 !important; box-shadow: 0 0 10px #388e3c; z-index: 10; }
         .target-node.wrong { background: #d32f2f !important; opacity: 0.6; }
@@ -429,9 +430,12 @@
 
         <!-- マップ -->
         <div id="map-container">
-            <img id="map-image" src="map.png" draggable="false">
-            <div id="admin-pin"></div>
-            <div id="node-container"></div>
+            <div id="map-content">
+                <img id="map-image" src="map.png" draggable="false">
+                <div id="admin-pin"></div>
+                <div id="node-container"></div>
+            </div>
+            <button type="button" id="map-reset-btn" title="全体表示">全体表示</button>
         </div>
     </div>
 
@@ -439,7 +443,26 @@
         // ★君のGASのURLを貼り付けてね！
         const GAS_URL = "https://script.google.com/macros/s/AKfycbyyeni58wMFYb8K4xfop2KzjldXr-U5RQQilybUjM_60nUeUR6IdiZoCMoJnP9FSbXD/exec";
 
+        // 地域・時代タグごとの第1位称号
+        const TAG_TITLES = {
+            "china_ancient_china": "👑 始皇帝",
+            "china_medieval_china": "👑 天可汗 (てんかがん)",
+            "china_early_modern_china": "👑 総督 (そうとく)",
+            "mideast_islamic_expansion": "☪️ 正統カリフ",
+            "mideast_turco_mongol": "☪️ スルタン・ハン",
+            "europe_ancient": "🏛️ インペラトル",
+            "europe_medieval": "🏛️ 教皇 (パパ)",
+            "europe_modern": "🏛️ 啓蒙専制君主",
+            "india_ancient_medieval_india": "🕉️ 転輪聖王 (てんりんじょうおう)",
+            "india_mughal_colonial": "🕉️ パードシャー",
+            "southeast_asia_ancient": "🌴 諸王の王",
+            "southeast_asia_colonial": "🌴 海域の覇者"
+        };
+
         let masterData = {}, currentUser = null, currentRegion = '', currentEra = '', questions = [], currentIdx = 0, isAnswered = false, lastClickedPos = null;
+        // 地図ズーム・ドラッグ用
+        let mapScale = 1, mapTranslateX = 0, mapTranslateY = 0;
+        let mapDragging = false, mapDragStartX = 0, mapDragStartY = 0, mapDragStartTx = 0, mapDragStartTy = 0, mapJustDragged = false;
 
         // ランキング受信 (時代別タグ対応)
         window.receiveRanking = function(scores) {
@@ -455,7 +478,12 @@
             if(filtered.length === 0) {
                 list.innerHTML = "この時代の挑戦者は君が初めてかも！";
             } else {
-                list.innerHTML = filtered.slice(0, 10).map((s, i) => `<div>${i+1}位: ${s.name} (${s.score}点)</div>`).join("");
+                const titleForTag = TAG_TITLES[tag] || "";
+                list.innerHTML = filtered.slice(0, 10).map((s, i) => {
+                    const isFirst = i === 0;
+                    const badge = isFirst && titleForTag ? ` <span class="rank-title-badge">${titleForTag}</span>` : "";
+                    return `<div class="rank-row">${i+1}位: ${s.name}${badge} (${s.score}点)</div>`;
+                }).join("");
             }
 
             // 自分のスコア更新
@@ -512,6 +540,7 @@
             document.getElementById("admin-pin").style.display = "none";
             document.body.removeAttribute("data-era");
             document.body.dataset.region = key;
+            if (typeof resetMapView === "function") resetMapView();
         }
 
         // クイズ開始
@@ -644,15 +673,91 @@ function updateScoreUI() {
             uploadScore(score);
         }
 
-        // --- 管理モード ---
+        // --- 地図ズーム・ドラッグ ---
+        function applyMapTransform() {
+            const content = document.getElementById("map-content");
+            content.style.transform = `translate(${mapTranslateX}px, ${mapTranslateY}px) scale(${mapScale})`;
+        }
+        function containerToContentPercent(clientX, clientY) {
+            const container = document.getElementById("map-container");
+            const content = document.getElementById("map-content");
+            const rect = container.getBoundingClientRect();
+            const cx = clientX - rect.left, cy = clientY - rect.top;
+            const cw = content.offsetWidth, ch = content.offsetHeight;
+            if (!cw || !ch) return null;
+            const contentX = (cx - mapTranslateX) / mapScale;
+            const contentY = (cy - mapTranslateY) / mapScale;
+            const leftPct = (contentX / cw * 100), topPct = (contentY / ch * 100);
+            return { top: topPct.toFixed(1) + "%", left: leftPct.toFixed(1) + "%" };
+        }
+        function resetMapView() {
+            mapScale = 1; mapTranslateX = 0; mapTranslateY = 0;
+            applyMapTransform();
+        }
+        (function setupMapZoomPan() {
+            const container = document.getElementById("map-container");
+            const content = document.getElementById("map-content");
+            const MIN_SCALE = 0.5, MAX_SCALE = 3;
+            container.addEventListener("wheel", function(e) {
+                e.preventDefault();
+                const rect = container.getBoundingClientRect();
+                const cx = e.clientX - rect.left, cy = e.clientY - rect.top;
+                const factor = e.deltaY > 0 ? 0.9 : 1.1;
+                const newScale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, mapScale * factor));
+                const contentX = (cx - mapTranslateX) / mapScale, contentY = (cy - mapTranslateY) / mapScale;
+                mapTranslateX = cx - contentX * newScale;
+                mapTranslateY = cy - contentY * newScale;
+                mapScale = newScale;
+                applyMapTransform();
+            }, { passive: false });
+            container.addEventListener("mousedown", function(e) {
+                if (e.target.closest(".target-node") || e.target.closest("#map-reset-btn")) return;
+                mapDragging = true; mapJustDragged = false;
+                mapDragStartX = e.clientX; mapDragStartY = e.clientY;
+                mapDragStartTx = mapTranslateX; mapDragStartTy = mapTranslateY;
+                container.classList.add("dragging");
+            });
+            document.addEventListener("mousemove", function(e) {
+                if (!mapDragging) return;
+                mapTranslateX = mapDragStartTx + (e.clientX - mapDragStartX);
+                mapTranslateY = mapDragStartTy + (e.clientY - mapDragStartY);
+                mapJustDragged = true;
+                applyMapTransform();
+            });
+            document.addEventListener("mouseup", function() {
+                if (mapDragging) container.classList.remove("dragging");
+                mapDragging = false;
+            });
+            container.addEventListener("touchstart", function(e) {
+                if (e.target.closest(".target-node") || e.target.closest("#map-reset-btn")) return;
+                if (e.touches.length === 1) {
+                    mapDragging = true; mapJustDragged = false;
+                    mapDragStartX = e.touches[0].clientX; mapDragStartY = e.touches[0].clientY;
+                    mapDragStartTx = mapTranslateX; mapDragStartTy = mapTranslateY;
+                }
+            }, { passive: true });
+            container.addEventListener("touchmove", function(e) {
+                if (mapDragging && e.touches.length === 1) {
+                    e.preventDefault();
+                    mapTranslateX = mapDragStartTx + (e.touches[0].clientX - mapDragStartX);
+                    mapTranslateY = mapDragStartTy + (e.touches[0].clientY - mapDragStartY);
+                    mapJustDragged = true;
+                    applyMapTransform();
+                }
+            }, { passive: false });
+            container.addEventListener("touchend", function() { mapDragging = false; });
+            document.getElementById("map-reset-btn").addEventListener("click", function(e) { e.stopPropagation(); resetMapView(); });
+        })();
+        // --- 管理モード（座標はズーム時も正しく地図上の％に変換） ---
         document.getElementById("map-container").addEventListener("click", function(e) {
-            const rect = this.getBoundingClientRect();
-            const x = ((e.clientX - rect.left) / rect.width * 100).toFixed(1);
-            const y = ((e.clientY - rect.top) / rect.height * 100).toFixed(1);
-            lastClickedPos = { top: y + "%", left: x + "%" };
-            document.getElementById("selected-coord").innerText = `T:${y}% L:${x}%`;
+            if (e.target.closest(".target-node") || e.target.closest("#map-reset-btn")) return;
+            if (mapJustDragged) { mapJustDragged = false; return; }
+            const p = containerToContentPercent(e.clientX, e.clientY);
+            if (!p) return;
+            lastClickedPos = { top: p.top, left: p.left };
+            document.getElementById("selected-coord").innerText = `T:${p.top} L:${p.left}`;
             const pin = document.getElementById("admin-pin");
-            pin.style.display = "block"; pin.style.top = y + "%"; pin.style.left = x + "%";
+            pin.style.display = "block"; pin.style.top = p.top; pin.style.left = p.left;
         });
         function addNewQuestion() {
             const t = document.getElementById("new-q-text").value.trim();

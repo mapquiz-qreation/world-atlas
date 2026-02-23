@@ -8,347 +8,170 @@
         h1 { font-size: 20px; margin: 0 0 10px 0; text-align: center; letter-spacing: 2px; }
         #main-layout { display: flex; gap: 15px; flex: 1; align-items: flex-start; justify-content: center; }
 
-        /* 時代別テーマ
-           startQuiz() が body に data-era="<eraKey>" を付与すると発動します。 */
+        /* 時代・地域別テーマ（色のみ上書き。枠は共通の騎士風を継承） */
 
-        /* 古代：羊皮紙ベージュ＋茶色 */
-        body[data-era="ancient"] {
-            background-color: #f5ecd8;
-            color: #4a3526;
-        }
+        /* 古代：砂色と焦茶（石板風） */
+        body[data-era="ancient"] { background-color: #f5ecd8; color: #4a3526; }
         body[data-era="ancient"] #user-panel,
         body[data-era="ancient"] #admin-panel,
-        body[data-era="ancient"] #question-box {
-            background: #fbf3dd;
-            border-color: #8d6e63;
-        }
-        body[data-era="ancient"] #ranking-list {
-            background: #fffaf0;
-            border-color: #d7ccc8;
-        }
-        body[data-era="ancient"] #q-text {
-            color: #8d4f2a;
-        }
+        body[data-era="ancient"] #question-box { background: #fbf3dd; border-color: #6d4c41; }
+        body[data-era="ancient"] #ranking-list { background: #fffaf0; border-color: #8d6e63; color: #4a3526; }
+        body[data-era="ancient"] .section-label { background: linear-gradient(to right, #8d6e63, #5d4037); color: #fffaf0; }
+        body[data-era="ancient"] #q-text { color: #5d4037; }
         body[data-era="ancient"] .mode-btn,
-        body[data-era="ancient"] .era-btn {
-            background: #e0c9a6;
-            border-color: #8d6e63;
-            color: #4a3526;
-        }
+        body[data-era="ancient"] .era-btn { background: #e0c9a6; border-color: #6d4c41; color: #4a3526; }
         body[data-era="ancient"] .mode-btn.active,
-        body[data-era="ancient"] .era-btn.active {
-            background: #8d6e63;
-            color: #fffaf0;
-        }
+        body[data-era="ancient"] .era-btn.active { background: #6d4c41; color: #fffaf0; border-color: #5d4037; }
         body[data-era="ancient"] #next-btn,
-        body[data-era="ancient"] .score-badge {
-            background: #8d6e63;
-            color: #fffaf0;
-        }
-        body[data-era="ancient"] #map-container {
-            background: #f2e4c8;
-            border-color: #6d4c41;
-        }
+        body[data-era="ancient"] .score-badge { background: #6d4c41; color: #fffaf0; }
+        body[data-era="ancient"] #map-container { background: #f2e4c8; border-color: #6d4c41; }
 
-        /* 中世：騎士イメージの深い青＋赤 */
-        body[data-era="medieval"] {
-            background-color: #1b2234;
-            color: #e0e7ff;
-        }
+        /* 中世（ヨーロッパ）：ロイヤルブルー・クリムゾン・金（騎士の紋章風） */
+        body[data-era="medieval"] { background-color: #0a2d5c; color: #FFFFFF; }
         body[data-era="medieval"] #user-panel,
         body[data-era="medieval"] #admin-panel,
-        body[data-era="medieval"] #question-box {
-            background: #232b3f;
-            border-color: #3949ab;
-        }
-        body[data-era="medieval"] #ranking-list {
-            background: #141826;
-            border-color: #3949ab;
-            color: #e0e7ff;
-        }
-        body[data-era="medieval"] #ranking-title {
-            color: #ef5350;
-        }
-        body[data-era="medieval"] #q-text {
-            color: #e53935;
-        }
+        body[data-era="medieval"] #question-box { background: #0D47A1; color: #FFFFFF; border-color: #B0BEC5; }
+        body[data-era="medieval"] #ranking-list { background: #0D47A1; border-color: #B0BEC5; color: #FFFFFF; }
+        body[data-era="medieval"] #ranking-title { color: #FFFFFF; }
+        body[data-era="medieval"] .section-label { background: linear-gradient(to right, #D32F2F, #0D47A1); color: #FFFFFF; }
+        body[data-era="medieval"] #q-text { color: #FFFFFF; }
         body[data-era="medieval"] .mode-btn,
-        body[data-era="medieval"] .era-btn {
-            background: #303f9f;
-            border-color: #1e2760;
-            color: #e8eaf6;
-        }
+        body[data-era="medieval"] .era-btn { background: #1565C0; border-color: #B0BEC5; color: #FFFFFF; }
         body[data-era="medieval"] .mode-btn.active,
-        body[data-era="medieval"] .era-btn.active {
-            background: #c62828;
-            color: #fff3e0;
-        }
+        body[data-era="medieval"] .era-btn.active { background: #D32F2F; color: #FFD700; border-color: #B0BEC5; }
         body[data-era="medieval"] #next-btn,
-        body[data-era="medieval"] .score-badge {
-            background: #c62828;
-            color: #fff3e0;
-        }
-        body[data-era="medieval"] #map-container {
-            background: #111827;
-            border-color: #3949ab;
-        }
+        body[data-era="medieval"] .score-badge { background: #D32F2F; color: #FFD700; }
+        body[data-era="medieval"] #map-container { background: #0a2d5c; border-color: #B0BEC5; }
 
-        /* 近代：クールなグレー＋ダークネイビー */
-        body[data-era="modern"] {
-            background-color: #eceff1;
-            color: #263238;
-        }
+        /* 近代（ヨーロッパ）：クールなグレー＋ダークネイビー */
+        body[data-era="modern"] { background-color: #eceff1; color: #263238; }
         body[data-era="modern"] #user-panel,
         body[data-era="modern"] #admin-panel,
-        body[data-era="modern"] #question-box {
-            background: #ffffff;
-            border-color: #37474f;
-        }
-        body[data-era="modern"] #ranking-list {
-            background: #fafafa;
-            border-color: #cfd8dc;
-        }
-        body[data-era="modern"] #ranking-title {
-            color: #1e88e5;
-        }
-        body[data-era="modern"] #q-text {
-            color: #1e3a5f;
-        }
+        body[data-era="modern"] #question-box { background: #ffffff; border-color: #37474f; }
+        body[data-era="modern"] #ranking-list { background: #fafafa; border-color: #90a4ae; }
+        body[data-era="modern"] .section-label { background: linear-gradient(to right, #546e7a, #37474f); color: #eceff1; }
+        body[data-era="modern"] #q-text { color: #1e3a5f; }
         body[data-era="modern"] .mode-btn,
-        body[data-era="modern"] .era-btn {
-            background: #cfd8dc;
-            border-color: #455a64;
-            color: #263238;
-        }
+        body[data-era="modern"] .era-btn { background: #cfd8dc; border-color: #455a64; color: #263238; }
         body[data-era="modern"] .mode-btn.active,
-        body[data-era="modern"] .era-btn.active {
-            background: #263238;
-            color: #e0f7fa;
-        }
+        body[data-era="modern"] .era-btn.active { background: #263238; color: #e0f7fa; border-color: #37474f; }
         body[data-era="modern"] #next-btn,
-        body[data-era="modern"] .score-badge {
-            background: #263238;
-            color: #e0f7fa;
-        }
-        body[data-era="modern"] #map-container {
-            background: #eceff1;
-            border-color: #263238;
-        }
+        body[data-era="modern"] .score-badge { background: #263238; color: #e0f7fa; }
+        body[data-era="modern"] #map-container { background: #eceff1; border-color: #37474f; }
 
-        /* 中東：砂漠とオアシス（砂色＋ターコイズ＋ゴールド） */
+        /* 中東：ターコイズとゴールド（タイル装飾風） */
         body[data-era="islamic_expansion"],
-        body[data-era="turco_mongol"] {
-            background-color: #f3e5c8;  /* 薄い砂色 */
-            color: #4a3420;
-        }
+        body[data-era="turco_mongol"] { background-color: #e0f7fa; color: #004d40; }
         body[data-era="islamic_expansion"] #user-panel,
         body[data-era="islamic_expansion"] #admin-panel,
         body[data-era="islamic_expansion"] #question-box,
         body[data-era="turco_mongol"] #user-panel,
         body[data-era="turco_mongol"] #admin-panel,
-        body[data-era="turco_mongol"] #question-box {
-            background: #fff5dc;       /* 砂より少し明るいカード */
-            border-color: #c49b47;     /* ゴールド系 */
-        }
+        body[data-era="turco_mongol"] #question-box { background: #fff8e1; border-color: #c49b47; }
         body[data-era="islamic_expansion"] #ranking-list,
-        body[data-era="turco_mongol"] #ranking-list {
-            background: #fdf4da;
-            border-color: #e0c17b;
-        }
-        body[data-era="islamic_expansion"] #ranking-title,
-        body[data-era="turco_mongol"] #ranking-title {
-            color: #c68900;            /* 深めのゴールド */
-        }
+        body[data-era="turco_mongol"] #ranking-list { background: #fdf4da; border-color: #c49b47; color: #4a3420; }
+        body[data-era="islamic_expansion"] .section-label,
+        body[data-era="turco_mongol"] .section-label { background: linear-gradient(to right, #00796b, #c49b47); color: #fffde7; }
         body[data-era="islamic_expansion"] #q-text,
-        body[data-era="turco_mongol"] #q-text {
-            color: #007b83;            /* ターコイズ寄りの青緑 */
-        }
+        body[data-era="turco_mongol"] #q-text { color: #00695c; }
         body[data-era="islamic_expansion"] .mode-btn,
         body[data-era="islamic_expansion"] .era-btn,
         body[data-era="turco_mongol"] .mode-btn,
-        body[data-era="turco_mongol"] .era-btn {
-            background: #f0dba8;       /* 砂色ボタン */
-            border-color: #c49b47;
-            color: #4a3420;
-        }
+        body[data-era="turco_mongol"] .era-btn { background: #b2ebf2; border-color: #c49b47; color: #004d40; }
         body[data-era="islamic_expansion"] .mode-btn.active,
         body[data-era="islamic_expansion"] .era-btn.active,
         body[data-era="turco_mongol"] .mode-btn.active,
-        body[data-era="turco_mongol"] .era-btn.active {
-            background: #007b83;       /* アクティブはオアシスの水色 */
-            color: #fff8e1;
-            border-color: #004f56;
-        }
+        body[data-era="turco_mongol"] .era-btn.active { background: #00796b; color: #ffd54f; border-color: #c49b47; }
         body[data-era="islamic_expansion"] #next-btn,
         body[data-era="islamic_expansion"] .score-badge,
         body[data-era="turco_mongol"] #next-btn,
-        body[data-era="turco_mongol"] .score-badge {
-            background: #c49b47;       /* ゴールド調ボタン／バッジ */
-            color: #fffaf0;
-        }
+        body[data-era="turco_mongol"] .score-badge { background: #c49b47; color: #fffaf0; }
         body[data-era="islamic_expansion"] #map-container,
-        body[data-era="turco_mongol"] #map-container {
-            background: radial-gradient(circle at 20% 30%, #b2ebf2 0, #b2ebf2 15%, #f3e5c8 40%, #e0c17b 100%);
-            border-color: #c49b47;
-        }
+        body[data-era="turco_mongol"] #map-container { background: radial-gradient(circle at 30% 30%, #b2ebf2 0, #e0f7fa 50%, #fff8e1 100%); border-color: #c49b47; }
 
-        /* インド：サフランオレンジ＋マゼンタ（スパイス＆寺院の熱量） */
-        body[data-region="india"] {
-            background: radial-gradient(circle at top, #ffe082 0, #ffe082 25%, #fff3e0 55%, #ffe0b2 100%);
-            color: #4e342e;
-        }
+        /* インド：サフランオレンジとマゼンタ（極彩色風） */
+        body[data-region="india"] { background: radial-gradient(circle at top, #ffe082 0, #fff3e0 50%, #ffe0b2 100%); color: #4e342e; }
         body[data-region="india"] #user-panel,
         body[data-region="india"] #admin-panel,
-        body[data-region="india"] #question-box {
-            background: #fff8e1;
-            border-color: #ff8f00;      /* サフラン寄りのオレンジ */
-        }
-        body[data-region="india"] #ranking-list {
-            background: #fff3e0;
-            border-color: #ffb74d;
-        }
-        body[data-region="india"] #ranking-title {
-            color: #d81b60;             /* マゼンタ系アクセント */
-        }
-        body[data-region="india"] #q-text {
-            color: #ff6f00;             /* 強めのサフランオレンジ */
-        }
+        body[data-region="india"] #question-box { background: #fff8e1; border-color: #ff8f00; }
+        body[data-region="india"] #ranking-list { background: #fff3e0; border-color: #d81b60; color: #4e342e; }
+        body[data-region="india"] .section-label { background: linear-gradient(to right, #ff8f00, #d81b60); color: #fffde7; }
+        body[data-region="india"] #q-text { color: #e65100; }
         body[data-region="india"] .mode-btn,
-        body[data-region="india"] .era-btn {
-            background: linear-gradient(135deg, #ffb74d, #f06292);  /* オレンジ×マゼンタ */
-            border-color: #d81b60;
-            color: #fff8e1;
-        }
+        body[data-region="india"] .era-btn { background: linear-gradient(135deg, #ffb74d, #f06292); border-color: #d81b60; color: #fff8e1; }
         body[data-region="india"] .mode-btn.active,
-        body[data-region="india"] .era-btn.active {
-            background: linear-gradient(135deg, #d84315, #ad1457);
-            border-color: #6a1b9a;
-            color: #fffde7;
-        }
+        body[data-region="india"] .era-btn.active { background: linear-gradient(135deg, #e65100, #ad1457); border-color: #6a1b9a; color: #fffde7; }
         body[data-region="india"] #next-btn,
-        body[data-region="india"] .score-badge {
-            background: #ff6f00;
-            color: #fffde7;
-        }
-        body[data-region="india"] #map-container {
-            background: radial-gradient(circle at 20% 20%, #f8bbd0 0, #f8bbd0 18%, #ffe082 40%, #ffcc80 75%, #ffb74d 100%);
-            border-color: #d84315;
-        }
+        body[data-region="india"] .score-badge { background: #ff6f00; color: #fffde7; }
+        body[data-region="india"] #map-container { background: radial-gradient(circle at 20% 20%, #f8bbd0 0, #ffe082 40%, #ffb74d 100%); border-color: #d81b60; }
 
-        /* 中国：深いチャイニーズレッド＋黄金色（紫禁城イメージ） */
-        body[data-region="china"] {
-            background-color: #3e0808;
-            color: #ffecb3;
-        }
+        /* 中国：朱色と黄金（紫禁城風） */
+        body[data-region="china"] { background-color: #3e0808; color: #ffecb3; }
         body[data-region="china"] #user-panel,
         body[data-region="china"] #admin-panel,
-        body[data-region="china"] #question-box {
-            background: #4a0f0f;
-            border-color: #fbc02d;
-        }
-        body[data-region="china"] #ranking-list {
-            background: #2b0505;
-            border-color: #fbc02d;
-        }
-        body[data-region="china"] #ranking-title {
-            color: #fbc02d;
-        }
-        body[data-region="china"] #q-text {
-            color: #ffeb3b;
-        }
+        body[data-region="china"] #question-box { background: #4a0f0f; border-color: #fbc02d; }
+        body[data-region="china"] #ranking-list { background: #2b0505; border-color: #fbc02d; color: #ffecb3; }
+        body[data-region="china"] .section-label { background: linear-gradient(to right, #b71c1c, #fbc02d); color: #3e2723; }
+        body[data-region="china"] #q-text { color: #ffeb3b; }
         body[data-region="china"] .mode-btn,
-        body[data-region="china"] .era-btn {
-            background: #b71c1c;
-            border-color: #fbc02d;
-            color: #ffecb3;
-        }
+        body[data-region="china"] .era-btn { background: #b71c1c; border-color: #fbc02d; color: #ffecb3; }
         body[data-region="china"] .mode-btn.active,
-        body[data-region="china"] .era-btn.active {
-            background: linear-gradient(135deg, #b71c1c, #880e4f);
-            border-color: #fdd835;
-            color: #fff8e1;
-        }
+        body[data-region="china"] .era-btn.active { background: #d32f2f; border-color: #ffd54f; color: #fff8e1; }
         body[data-region="china"] #next-btn,
-        body[data-region="china"] .score-badge {
-            background: #b71c1c;
-            color: #fff8e1;
-        }
-        body[data-region="china"] #map-container {
-            background: radial-gradient(circle at 15% 20%, #fbc02d 0, #fbc02d 20%, #4a0f0f 55%, #2b0505 100%);
-            border-color: #fbc02d;
-        }
+        body[data-region="china"] .score-badge { background: #b71c1c; color: #fff8e1; }
+        body[data-region="china"] #map-container { background: radial-gradient(circle at 15% 20%, #fbc02d 0, #4a0f0f 50%, #2b0505 100%); border-color: #fbc02d; }
 
-        /* 東南アジア：ジャングルグリーン＋ゴールド（アンコールワット＆熱帯） */
-        body[data-region="southeast_asia"] {
-            background: radial-gradient(circle at top, #2e7d32 0, #2e7d32 35%, #1b5e20 70%, #0d3b16 100%);
-            color: #e8f5e9;
-        }
+        /* 東南アジア：深緑とオレンジ（ジャングル・仏教風） */
+        body[data-region="southeast_asia"] { background: radial-gradient(circle at top, #2e7d32 0, #1b5e20 60%, #0d3b16 100%); color: #e8f5e9; }
         body[data-region="southeast_asia"] #user-panel,
         body[data-region="southeast_asia"] #admin-panel,
-        body[data-region="southeast_asia"] #question-box {
-            background: rgba(13, 59, 22, 0.9);
-            border-color: #ffa000;
-        }
-        body[data-region="southeast_asia"] #ranking-list {
-            background: rgba(27, 94, 32, 0.9);
-            border-color: #ffb300;
-        }
-        body[data-region="southeast_asia"] #ranking-title {
-            color: #ffa000;
-        }
-        body[data-region="southeast_asia"] #q-text {
-            color: #ffca28;
-        }
+        body[data-region="southeast_asia"] #question-box { background: rgba(13, 59, 22, 0.95); border-color: #ffa000; }
+        body[data-region="southeast_asia"] #ranking-list { background: rgba(27, 94, 32, 0.95); border-color: #ffa000; color: #fffde7; }
+        body[data-region="southeast_asia"] .section-label { background: linear-gradient(to right, #1b5e20, #ffa000); color: #fffde7; }
+        body[data-region="southeast_asia"] #q-text { color: #ffca28; }
         body[data-region="southeast_asia"] .mode-btn,
-        body[data-region="southeast_asia"] .era-btn {
-            background: linear-gradient(135deg, #388e3c, #ffa000);
-            border-color: #ffb300;
-            color: #fffde7;
-        }
+        body[data-region="southeast_asia"] .era-btn { background: linear-gradient(135deg, #388e3c, #ffa000); border-color: #ffb300; color: #fffde7; }
         body[data-region="southeast_asia"] .mode-btn.active,
-        body[data-region="southeast_asia"] .era-btn.active {
-            background: linear-gradient(135deg, #2e7d32, #f57f17);
-            border-color: #ffb300;
-            color: #fffde7;
-        }
+        body[data-region="southeast_asia"] .era-btn.active { background: linear-gradient(135deg, #2e7d32, #f57f17); border-color: #ffb300; color: #fffde7; }
         body[data-region="southeast_asia"] #next-btn,
-        body[data-region="southeast_asia"] .score-badge {
-            background: #ffa000;
-            color: #fffde7;
-        }
-        body[data-region="southeast_asia"] #map-container {
-            background: radial-gradient(circle at 25% 25%, #a5d6a7 0, #a5d6a7 18%, #2e7d32 45%, #1b5e20 75%, #0d3b16 100%);
-            border-color: #ffa000;
-        }
-        
-        /* サイドバー */
-        #sidebar { width: 300px; display: flex; flex-direction: column; gap: 10px; height: 92vh; overflow-y: auto; padding-right: 5px; }
-        
+        body[data-region="southeast_asia"] .score-badge { background: #ffa000; color: #fffde7; }
+        body[data-region="southeast_asia"] #map-container { background: radial-gradient(circle at 25% 25%, #a5d6a7 0, #2e7d32 45%, #0d3b16 100%); border-color: #ffa000; }
+
+
+        /* ===== 共通：騎士風の枠組み（全地域・全時代で使用） ===== */
+        #sidebar { width: 300px; display: flex; flex-direction: column; gap: 10px; height: 92vh; overflow-y: auto; padding-right: 5px; border: 4px double #B0BEC5; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
+
         /* ユーザー・ランキングパネル */
-        #user-panel { background: #efebe9; padding: 12px; border-radius: 10px; border: 2px solid #a1887f; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        #user-panel, #admin-panel, #question-box {
+            border: 4px double #B0BEC5;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        }
+        #user-panel { background: #efebe9; padding: 12px; }
         .score-badge { display: inline-block; background: #5d4037; color: white; padding: 2px 10px; border-radius: 15px; font-weight: bold; }
         #ranking-title { font-weight: bold; font-size: 12px; margin-top: 10px; color: #d32f2f; }
-        #ranking-list { font-size: 11px; background: white; padding: 8px; border-radius: 6px; margin-top: 5px; border: 1px solid #d7ccc8; min-height: 60px; line-height: 1.6; }
+        #ranking-list { font-size: 11px; background: white; padding: 8px; border-radius: 8px; margin-top: 5px; border: 4px double #B0BEC5; min-height: 60px; line-height: 1.6; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
         .rank-row { margin: 2px 0; }
         .rank-title-badge { display: inline-block; margin-left: 4px; padding: 1px 6px; font-size: 10px; font-weight: bold; background: linear-gradient(135deg, #ffd54f, #ff8f00); color: #3e2723; border-radius: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
 
         /* セレクター（地域・時代） */
-        .section-label { font-size: 11px; font-weight: bold; color: #8d6e63; margin-bottom: 2px; }
-        #mode-selector, #era-selector { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 5px; }
-        .mode-btn, .era-btn { 
-            flex: 1; min-width: 70px; padding: 8px 5px; font-size: 11px; cursor: pointer; border-radius: 6px; 
-            border: 1px solid #5d4037; background: #d7ccc8; font-weight: bold; transition: 0.2s;
+        .section-label { font-size: 11px; font-weight: bold; margin-bottom: 2px; padding: 4px 8px; border-radius: 6px; color: #5d4037; }
+        #mode-selector, #era-selector { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 5px; min-height: 32px; }
+        .mode-btn, .era-btn {
+            flex: 1; min-width: 70px; padding: 8px 5px; font-size: 11px; cursor: pointer; border-radius: 8px;
+            border: 4px double #B0BEC5; background: #d7ccc8; font-weight: bold; transition: 0.2s;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
         }
-        .mode-btn.active, .era-btn.active { background: #5d4037; color: white; transform: translateY(-2px); box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .mode-btn.active, .era-btn.active { background: #5d4037; color: #fff; transform: translateY(-2px); box-shadow: 0 0 10px rgba(255,215,0,0.35); }
 
         /* クイズエリア */
-        #question-box { background: white; padding: 15px; border-radius: 10px; border: 3px solid #5d4037; text-align: center; position: relative; }
+        #question-box { background: white; padding: 15px; text-align: center; position: relative; }
         #q-text { display: block; font-size: 22px; font-weight: bold; color: #d32f2f; margin: 10px 0; }
         #result { font-size: 18px; font-weight: bold; min-height: 25px; margin: 5px 0; }
         #next-btn { width: 100%; padding: 10px; background: #5d4037; color: white; border: none; border-radius: 6px; cursor: pointer; display: none; font-weight: bold; font-size: 14px; }
 
         /* マップエリア */
-        #map-container { position: relative; border: 5px solid #3e2723; border-radius: 8px; background: #e0f2f1; line-height: 0; overflow: hidden; max-height: 80vh; box-shadow: 0 4px 15px rgba(0,0,0,0.3); cursor: grab; touch-action: none; }
+        #map-container { position: relative; border: 4px double #B0BEC5; border-radius: 8px; background: #e0f2f1; line-height: 0; overflow: hidden; max-height: 80vh; box-shadow: 0 2px 8px rgba(0,0,0,0.12); cursor: grab; touch-action: none; }
         #map-container.dragging { cursor: grabbing; }
         #map-content { position: relative; display: inline-block; transform-origin: 0 0; }
         #map-image { height: 75vh; width: auto; display: block; -webkit-user-drag: none; pointer-events: none; }
@@ -367,7 +190,7 @@
         }
 
         /* 管理モード */
-        #admin-panel { font-size: 11px; background: rgba(239, 235, 233, 0.9); padding: 10px; border-radius: 8px; border: 1px solid #a1887f; }
+        #admin-panel { font-size: 11px; background: rgba(239, 235, 233, 0.9); padding: 10px; }
         #admin-pin { position: absolute; width: 14px; height: 14px; background: #d32f2f; border: 2px solid white; border-radius: 50%; transform: translate(-50%, -50%); pointer-events: none; z-index: 20; display: none; }
     </style>
 </head>
@@ -398,12 +221,9 @@
     </div>
 </div>
 
-
-            <!-- 地域選択 -->
+            <!-- 地域・時代選択（ここに地域ボタン・時代ボタンがJSで入ります） -->
             <div class="section-label">REGION / 地域</div>
             <div id="mode-selector"></div>
-
-            <!-- 時代選択 -->
             <div class="section-label">ERA / 時代</div>
             <div id="era-selector">地域を先に選んでね</div>
 
@@ -474,7 +294,7 @@
             // 時代タグ(例: europe_ancient)でフィルタリング
             const tag = `${currentRegion}_${currentEra}`;
             const filtered = scores.filter(s => s.tag === tag).sort((a, b) => b.score - a.score);
-            
+
             if(filtered.length === 0) {
                 list.innerHTML = "この時代の挑戦者は君が初めてかも！";
             } else {
@@ -779,6 +599,7 @@ function updateScoreUI() {
             });
             document.getElementById("export-area").value = JSON.stringify(fullData, null, 2);
         }
+
         window.onload = fetchQuestions;
     </script>
 </body>

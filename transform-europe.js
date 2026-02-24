@@ -4,20 +4,37 @@ const path = require("path");
 const jsonPath = path.join(__dirname, "questions.json");
 const data = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
 
-// 4つの基準点（緯度経度 → 画像上の top/left %）
+// 10つの基準点（緯度経度 → 画像上の top/left %）
 const refs = [
   { name: "パリ", top: 11.5, left: 28.3, lat: 48.8566, lon: 2.3522 },
   { name: "ローマ", top: 40.0, left: 47.0, lat: 41.8902, lon: 12.4922 },
   { name: "ベルリン", top: 10.5, left: 46.0, lat: 52.52, lon: 13.405 },
-  { name: "アテネ", top: 54.6, left: 68.5, lat: 37.9838, lon: 23.7275 }
+  { name: "アテネ", top: 54.6, left: 68.5, lat: 37.9838, lon: 23.7275 },
+  { name: "カルタゴ", top: 58.2, left: 42.5, lat: 36.8529, lon: 10.3230 },
+  { name: "マッシリア", top: 34.5, left: 33.4, lat: 43.2965, lon: 5.3698 },
+  { name: "アンティオキア", top: 61.7, left: 93.3, lat: 36.2, lon: 36.15 },
+  { name: "エフェソス", top: 55.6, left: 75.4, lat: 37.9392, lon: 27.3414 },
+  { name: "コルドバ", top: 56.3, left: 15.0, lat: 37.8882, lon: -4.7794 },
+  { name: "エルサレム", top: 76.4, left: 90.9, lat: 31.7683, lon: 35.2137 }
 ];
+
+// メルカトル投影: 緯度 φ(rad) → y = ln(tan(π/4 + φ/2))
+function mercatorY(latDeg) {
+  const phi = (latDeg * Math.PI) / 180;
+  return Math.log(Math.tan(Math.PI / 4 + phi / 2));
+}
+// メルカトル逆変換: y → 緯度(度)
+function mercatorYInv(y) {
+  const phi = 2 * Math.atan(Math.exp(y)) - Math.PI / 2;
+  return (phi * 180) / Math.PI;
+}
 
 // ヨーロッパ全地点の緯度経度（名称の先頭一致で使用）
 const coords = {
   "アテネ": [37.9838, 23.7275],
   "ローマ": [41.8902, 12.4922],
   "アレクサンドリア": [31.2001, 29.9187],
-  "カルタゴ": [36.8531, 10.3233],
+  "カルタゴ": [36.8529, 10.3230],
   "スパルタ": [37.0819, 22.4536],
   "ミラノ": [45.4642, 9.19],
   "マッシリア": [43.2965, 5.3698],
@@ -103,18 +120,43 @@ function inv3(M) {
   ];
 }
 
-// 4点すべてを使ってアフィン係数を最小二乗で求める
-const A = refs.map(p => [1, p.lat, p.lon]);
-const bTop = refs.map(p => p.top);
-const bLeft = refs.map(p => p.left);
-const a = leastSquares(A, bTop);  // top = a[0] + a[1]*lat + a[2]*lon
-const b = leastSquares(A, bLeft); // left = b[0] + b[1]*lat + b[2]*lon
+// 基準点から「画像の緯度経度範囲」を逆算（europe.png = 矩形メルカトルと仮定）
+// left = 100*(lon - lonMin)/(lonMax - lonMin) → lon と left は線形
+const leftRatios = refs.map(p => p.left / 100);
+const lons = refs.map(p => p.lon);
+const meanLeft = leftRatios.reduce((s, x) => s + x, 0) / refs.length;
+const meanLon = lons.reduce((s, x) => s + x, 0) / refs.length;
+let covLonLeft = 0, varLeft = 0;
+for (let i = 0; i < refs.length; i++) {
+  covLonLeft += (lons[i] - meanLon) * (leftRatios[i] - meanLeft);
+  varLeft += (leftRatios[i] - meanLeft) ** 2;
+}
+const lonRange = varLeft > 1e-10 ? covLonLeft / varLeft : 40;
+const lonMin = meanLon - lonRange * meanLeft;
+const lonMax = lonMin + lonRange;
 
-console.log("Affine (least squares): top =", a[0].toFixed(4), "+", a[1].toFixed(4), "*lat +", a[2].toFixed(4), "*lon");
-console.log("Affine (least squares): left =", b[0].toFixed(4), "+", b[1].toFixed(4), "*lat +", b[2].toFixed(4), "*lon");
+// top = 100*(M(latMax)-M(lat))/(M(latMax)-M(latMin)) → M(lat) と top は線形
+const topRatios = refs.map(p => p.top / 100);
+const mVal = refs.map(p => mercatorY(p.lat));
+const meanTop = topRatios.reduce((s, x) => s + x, 0) / refs.length;
+const meanM = mVal.reduce((s, x) => s + x, 0) / refs.length;
+let covMTop = 0, varTop = 0;
+for (let i = 0; i < refs.length; i++) {
+  covMTop += (mVal[i] - meanM) * (topRatios[i] - meanTop);
+  varTop += (topRatios[i] - meanTop) ** 2;
+}
+const mRange = varTop > 1e-10 ? -covMTop / varTop : 1; // top↑ → M↓ なので負
+const mNorth = meanM + mRange * meanTop;  // top=0 のとき M = M_north
+const mSouth = meanM - mRange * (1 - meanTop); // top=1 のとき M = M_south
+const latMax = mercatorYInv(mNorth);
+const latMin = mercatorYInv(mSouth);
+
+console.log("europe.png の推定範囲 (基準点から逆算):");
+console.log("  lon:", lonMin.toFixed(2), "～", lonMax.toFixed(2), "  lat:", latMin.toFixed(2), "～", latMax.toFixed(2));
+console.log("  矩形メルカトル: left = 100*(lon-lonMin)/lonRange, top = 100*(M(latMax)-M(lat))/M_range");
 refs.forEach(p => {
-  const topFit = a[0] + a[1] * p.lat + a[2] * p.lon;
-  const leftFit = b[0] + b[1] * p.lat + b[2] * p.lon;
+  const topFit = 100 * (mercatorY(latMax) - mercatorY(p.lat)) / (mercatorY(latMax) - mercatorY(latMin));
+  const leftFit = 100 * (p.lon - lonMin) / (lonMax - lonMin);
   console.log("  ", p.name, "=> top", topFit.toFixed(1), "(ref", p.top, "), left", leftFit.toFixed(1), "(ref", p.left, ")");
 });
 
@@ -124,8 +166,9 @@ function toPercent(topVal, leftVal) {
   return { top: t.toFixed(1) + "%", left: l.toFixed(1) + "%" };
 }
 function transform(lat, lon) {
-  const top = a[0] + a[1] * lat + a[2] * lon;
-  const left = b[0] + b[1] * lat + b[2] * lon;
+  const mRange = mercatorY(latMax) - mercatorY(latMin);
+  const top = 100 * (mercatorY(latMax) - mercatorY(lat)) / mRange; // 北→top小
+  const left = 100 * (lon - lonMin) / (lonMax - lonMin);
   return toPercent(top, left);
 }
 
@@ -149,4 +192,4 @@ for (const eraKey of Object.keys(europe.eras)) {
 }
 
 fs.writeFileSync(jsonPath, JSON.stringify(data, null, 2), "utf8");
-console.log("Done. Europe top/left updated (4-point least squares affine).");
+console.log("Done. Europe top/left updated (europe.png の範囲を基準点から逆算したメルカトル変換).");

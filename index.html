@@ -4,174 +4,236 @@
     <meta charset="UTF-8">
     <title>WorldAtlas</title>
     <style>
-        body { font-family: 'Helvetica Neue', Arial, sans-serif; background-color: #f4f1ea; color: #3e2723; margin: 0; padding: 10px; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+        /* =====================================================
+           CSS変数定義（デフォルト値）
+           各テーマは変数だけ上書き → コンポーネント側は共通ルールのみ
+           ===================================================== */
+        :root {
+            --bg: #f4f1ea;      --text: #3e2723;
+            --panel: #efebe9;   --border: #B0BEC5;
+            --lbl-a: #8d6e63;   --lbl-b: #5d4037;  --lbl-text: #fffaf0;
+            --q: #d32f2f;
+            --btn: #d7ccc8;     --btn-c: #3e2723;  --btn-bd: #B0BEC5;
+            --btn-on: #5d4037;  --btn-on-c: #fff;  --btn-on-bd: #B0BEC5;
+            --act: #5d4037;     --act-c: white;
+            --map: #e0f2f1;
+            --rank: white;      --rank-bd: #B0BEC5; --rank-c: inherit;
+            --rank-title: #d32f2f;
+        }
+
+        /* 古代ヨーロッパ（石板・砂色） */
+        body[data-era="ancient"] {
+            --bg: #f5ecd8;      --text: #4a3526;
+            --panel: #fbf3dd;   --border: #6d4c41;
+            --lbl-a: #8d6e63;   --lbl-b: #5d4037;
+            --q: #5d4037;
+            --btn: #e0c9a6;     --btn-c: #4a3526;  --btn-bd: #6d4c41;
+            --btn-on: #6d4c41;  --btn-on-c: #fffaf0; --btn-on-bd: #5d4037;
+            --act: #6d4c41;     --act-c: #fffaf0;
+            --map: #f2e4c8;
+            --rank: #fffaf0;    --rank-bd: #8d6e63; --rank-c: #4a3526;
+        }
+        /* 中世ヨーロッパ（ロイヤルブルー・クリムゾン） */
+        body[data-era="medieval"] {
+            --bg: #0a2d5c;      --text: #FFFFFF;
+            --panel: #0D47A1;   --border: #B0BEC5;
+            --lbl-a: #D32F2F;   --lbl-b: #0D47A1;  --lbl-text: #FFFFFF;
+            --q: #FFFFFF;
+            --btn: #1565C0;     --btn-c: #FFFFFF;  --btn-bd: #B0BEC5;
+            --btn-on: #D32F2F;  --btn-on-c: #FFD700;
+            --act: #D32F2F;     --act-c: #FFD700;
+            --map: #0a2d5c;
+            --rank: #0D47A1;    --rank-bd: #B0BEC5; --rank-c: #FFFFFF;
+            --rank-title: #FFFFFF;
+        }
+        /* 近世・近代ヨーロッパ（グレー＋ネイビー） */
+        body[data-era="modern"] {
+            --bg: #eceff1;      --text: #263238;
+            --panel: #ffffff;   --border: #37474f;
+            --lbl-a: #546e7a;   --lbl-b: #37474f;  --lbl-text: #eceff1;
+            --q: #1e3a5f;
+            --btn: #cfd8dc;     --btn-c: #263238;  --btn-bd: #455a64;
+            --btn-on: #263238;  --btn-on-c: #e0f7fa; --btn-on-bd: #37474f;
+            --act: #263238;     --act-c: #e0f7fa;
+            --map: #eceff1;
+            --rank: #fafafa;    --rank-bd: #90a4ae;
+        }
+        /* イスラーム・トルコモンゴル（ターコイズ＋ゴールド） */
+        body[data-era="islamic_expansion"],
+        body[data-era="turco_mongol"] {
+            --bg: #e0f7fa;      --text: #004d40;
+            --panel: #fff8e1;   --border: #c49b47;
+            --lbl-a: #00796b;   --lbl-b: #c49b47;  --lbl-text: #fffde7;
+            --q: #00695c;
+            --btn: #b2ebf2;     --btn-c: #004d40;  --btn-bd: #c49b47;
+            --btn-on: #00796b;  --btn-on-c: #ffd54f; --btn-on-bd: #c49b47;
+            --act: #c49b47;     --act-c: #fffaf0;
+            --map: radial-gradient(circle at 30% 30%, #b2ebf2 0, #e0f7fa 50%, #fff8e1 100%);
+            --rank: #fdf4da;    --rank-bd: #c49b47; --rank-c: #4a3420;
+        }
+        /* インド（サフラン＋マゼンタ） */
+        body[data-region="india"] {
+            --bg: radial-gradient(circle at top, #ffe082 0, #fff3e0 50%, #ffe0b2 100%);
+            --text: #4e342e;
+            --panel: #fff8e1;   --border: #ff8f00;
+            --lbl-a: #ff8f00;   --lbl-b: #d81b60;  --lbl-text: #fffde7;
+            --q: #e65100;
+            --btn: linear-gradient(135deg,#ffb74d,#f06292); --btn-c: #fff8e1; --btn-bd: #d81b60;
+            --btn-on: linear-gradient(135deg,#e65100,#ad1457); --btn-on-c: #fffde7; --btn-on-bd: #6a1b9a;
+            --act: #ff6f00;     --act-c: #fffde7;
+            --map: radial-gradient(circle at 20% 20%, #f8bbd0 0, #ffe082 40%, #ffb74d 100%);
+            --rank: #fff3e0;    --rank-bd: #d81b60; --rank-c: #4e342e;
+        }
+        /* 中国（朱＋黄金） */
+        body[data-region="china"] {
+            --bg: #3e0808;      --text: #ffecb3;
+            --panel: #4a0f0f;   --border: #fbc02d;
+            --lbl-a: #b71c1c;   --lbl-b: #fbc02d;  --lbl-text: #3e2723;
+            --q: #ffeb3b;
+            --btn: #b71c1c;     --btn-c: #ffecb3;  --btn-bd: #fbc02d;
+            --btn-on: #d32f2f;  --btn-on-c: #fff8e1; --btn-on-bd: #ffd54f;
+            --act: #b71c1c;     --act-c: #fff8e1;
+            --map: radial-gradient(circle at 15% 20%, #fbc02d 0, #4a0f0f 50%, #2b0505 100%);
+            --rank: #2b0505;    --rank-bd: #fbc02d; --rank-c: #ffecb3;
+        }
+        /* 北アメリカ開拓時代（羊皮紙・セピア） */
+        body[data-era="frontier"] {
+            --bg: #f5e6c8;      --text: #3d2b1f;
+            --panel: #faf0d8;   --border: #8b5e3c;
+            --lbl-a: #8b5e3c;   --lbl-b: #5c3317;  --lbl-text: #fdf8ef;
+            --q: #5c3317;
+            --btn: #e0c99a;     --btn-c: #3d2b1f;  --btn-bd: #8b5e3c;
+            --btn-on: #5c3317;  --btn-on-c: #fdf8ef; --btn-on-bd: #8b5e3c;
+            --act: #8b5e3c;     --act-c: #fdf8ef;
+            --map: #f0dbb5;
+            --rank: #faf0d8;    --rank-bd: #8b5e3c; --rank-c: #3d2b1f;
+            --rank-title: #5c3317;
+        }
+        /* アメリカ独立革命（星条旗 赤・白・青） */
+        body[data-era="independence"] {
+            --bg: #e8eef8;      --text: #1a2744;
+            --panel: #ffffff;   --border: #B22234;
+            --lbl-a: #3C3B6E;   --lbl-b: #B22234;  --lbl-text: #FFFFFF;
+            --q: #B22234;
+            --btn: #c8d4ee;     --btn-c: #1a2744;  --btn-bd: #3C3B6E;
+            --btn-on: #B22234;  --btn-on-c: #FFFFFF; --btn-on-bd: #3C3B6E;
+            --act: #3C3B6E;     --act-c: #FFFFFF;
+            --map: #dce4f4;
+            --rank: #f5f5ff;    --rank-bd: #B22234; --rank-c: #1a2744;
+            --rank-title: #B22234;
+        }
+        /* 南北戦争（煤・灰・深紅） */
+        body[data-era="civil_war"] {
+            --bg: #1e1e1e;      --text: #dcdcdc;
+            --panel: #2a2a2a;   --border: #757575;
+            --lbl-a: #424242;   --lbl-b: #616161;  --lbl-text: #dcdcdc;
+            --q: #ef9a9a;
+            --btn: #383838;     --btn-c: #dcdcdc;  --btn-bd: #757575;
+            --btn-on: #B22234;  --btn-on-c: #FFFFFF; --btn-on-bd: #757575;
+            --act: #B22234;     --act-c: #FFFFFF;
+            --map: #1e1e1e;
+            --rank: #2a2a2a;    --rank-bd: #757575; --rank-c: #dcdcdc;
+            --rank-title: #ef9a9a;
+        }
+        /* ラテンアメリカ 太陽の帝国（テラコッタ・黄金） */
+        body[data-era="sun_empire"] {
+            --bg: radial-gradient(circle at 20% 10%, #bf360c 0, #6d1f05 50%, #3e1000 100%);
+            --text: #ffe082;
+            --panel: rgba(62,16,0,0.95); --border: #ffd54f;
+            --lbl-a: #bf360c;   --lbl-b: #ffd54f;  --lbl-text: #3e1000;
+            --q: #ffca28;
+            --btn: #bf360c;     --btn-c: #fff8e1;  --btn-bd: #ffd54f;
+            --btn-on: #e64a19;  --btn-on-c: #fff8e1; --btn-on-bd: #ffa000;
+            --act: #bf360c;     --act-c: #fff8e1;
+            --map: radial-gradient(circle at 20% 20%, #ffd54f 0, #7b2d00 40%, #3e1000 100%);
+            --rank: rgba(62,16,0,0.95); --rank-bd: #ffd54f; --rank-c: #ffe082;
+            --rank-title: #ffd54f;
+        }
+        /* ラテンアメリカ 黄金と十字架（深緋・紋章金） */
+        body[data-era="colonial_era"] {
+            --bg: radial-gradient(circle at 80% 10%, #4a148c 0, #311b92 50%, #1a0050 100%);
+            --text: #f5deb3;
+            --panel: rgba(26,0,80,0.95); --border: #ffc107;
+            --lbl-a: #6a1b9a;   --lbl-b: #ffc107;  --lbl-text: #fff8e1;
+            --q: #ffd54f;
+            --btn: #6a1b9a;     --btn-c: #fff8e1;  --btn-bd: #ffc107;
+            --btn-on: #8e24aa;  --btn-on-c: #fff8e1; --btn-on-bd: #ffd54f;
+            --act: #6a1b9a;     --act-c: #fff8e1;
+            --map: radial-gradient(circle at 80% 10%, #ffc107 0, #4a148c 45%, #1a0050 100%);
+            --rank: rgba(26,0,80,0.95); --rank-bd: #ffc107; --rank-c: #f5deb3;
+            --rank-title: #ffc107;
+        }
+        /* ラテンアメリカ 解放者の嵐（革命的緑・赤・金） */
+        body[data-era="liberation_era"] {
+            --bg: linear-gradient(160deg, #004d00 0%, #002200 60%, #1a0000 100%);
+            --text: #e8f5e9;
+            --panel: rgba(0,34,0,0.95); --border: #ffcc02;
+            --lbl-a: #1b5e20;   --lbl-b: #c62828;  --lbl-text: #fffde7;
+            --q: #ffcc02;
+            --btn: #1b5e20;     --btn-c: #fffde7;  --btn-bd: #ffcc02;
+            --btn-on: #c62828;  --btn-on-c: #fffde7; --btn-on-bd: #ffcc02;
+            --act: #c62828;     --act-c: #fffde7;
+            --map: linear-gradient(160deg, #1b5e20 0%, #004d00 60%, #b71c1c 100%);
+            --rank: rgba(0,34,0,0.95); --rank-bd: #ffcc02; --rank-c: #e8f5e9;
+            --rank-title: #ffcc02;
+        }
+        /* 東南アジア（深緑＋オレンジ） */
+        body[data-region="southeast_asia"] {
+            --bg: radial-gradient(circle at top, #2e7d32 0, #1b5e20 60%, #0d3b16 100%);
+            --text: #e8f5e9;
+            --panel: rgba(13,59,22,0.95); --border: #ffa000;
+            --lbl-a: #1b5e20;   --lbl-b: #ffa000;  --lbl-text: #fffde7;
+            --q: #ffca28;
+            --btn: linear-gradient(135deg,#388e3c,#ffa000); --btn-c: #fffde7; --btn-bd: #ffb300;
+            --btn-on: linear-gradient(135deg,#2e7d32,#f57f17); --btn-on-c: #fffde7; --btn-on-bd: #ffb300;
+            --act: #ffa000;     --act-c: #fffde7;
+            --map: radial-gradient(circle at 25% 25%, #a5d6a7 0, #2e7d32 45%, #0d3b16 100%);
+            --rank: rgba(27,94,32,0.95); --rank-bd: #ffa000; --rank-c: #fffde7;
+        }
+
+        /* =====================================================
+           共通コンポーネントスタイル（変数を参照するだけ）
+           ===================================================== */
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; height: 100vh; overflow: hidden; display: flex; flex-direction: column; transition: background 0.3s, color 0.2s; }
         h1 { font-size: 20px; margin: 0 0 10px 0; text-align: center; letter-spacing: 2px; }
         #main-layout { display: flex; gap: 15px; flex: 1; align-items: flex-start; justify-content: center; }
 
-        /* 時代・地域別テーマ（色のみ上書き。枠は共通の騎士風を継承） */
+        #sidebar { width: 300px; display: flex; flex-direction: column; gap: 10px; height: 92vh; overflow-y: auto; padding-right: 5px; border: 4px double var(--border); border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
 
-        /* 古代：砂色と焦茶（石板風） */
-        body[data-era="ancient"] { background-color: #f5ecd8; color: #4a3526; }
-        body[data-era="ancient"] #user-panel,
-        body[data-era="ancient"] #admin-panel,
-        body[data-era="ancient"] #question-box { background: #fbf3dd; border-color: #6d4c41; }
-        body[data-era="ancient"] #ranking-list { background: #fffaf0; border-color: #8d6e63; color: #4a3526; }
-        body[data-era="ancient"] .section-label { background: linear-gradient(to right, #8d6e63, #5d4037); color: #fffaf0; }
-        body[data-era="ancient"] #q-text { color: #5d4037; }
-        body[data-era="ancient"] .mode-btn,
-        body[data-era="ancient"] .era-btn { background: #e0c9a6; border-color: #6d4c41; color: #4a3526; }
-        body[data-era="ancient"] .mode-btn.active,
-        body[data-era="ancient"] .era-btn.active { background: #6d4c41; color: #fffaf0; border-color: #5d4037; }
-        body[data-era="ancient"] #next-btn,
-        body[data-era="ancient"] .score-badge { background: #6d4c41; color: #fffaf0; }
-        body[data-era="ancient"] #map-container { background: #f2e4c8; border-color: #6d4c41; }
+        /* 試験範囲バナー（question-box 内に配置） */
+        #scope-banner { display: none; font-size: 10px; line-height: 1.5; padding: 5px 8px; border-radius: 5px; background: linear-gradient(135deg, #1a237e, #283593); color: #e8eaf6; border: 2px solid #5c6bc0; box-shadow: 0 1px 4px rgba(0,0,0,0.3); margin-bottom: 6px; }
 
-        /* 中世（ヨーロッパ）：ロイヤルブルー・クリムゾン・金（騎士の紋章風） */
-        body[data-era="medieval"] { background-color: #0a2d5c; color: #FFFFFF; }
-        body[data-era="medieval"] #user-panel,
-        body[data-era="medieval"] #admin-panel,
-        body[data-era="medieval"] #question-box { background: #0D47A1; color: #FFFFFF; border-color: #B0BEC5; }
-        body[data-era="medieval"] #ranking-list { background: #0D47A1; border-color: #B0BEC5; color: #FFFFFF; }
-        body[data-era="medieval"] #ranking-title { color: #FFFFFF; }
-        body[data-era="medieval"] .section-label { background: linear-gradient(to right, #D32F2F, #0D47A1); color: #FFFFFF; }
-        body[data-era="medieval"] #q-text { color: #FFFFFF; }
-        body[data-era="medieval"] .mode-btn,
-        body[data-era="medieval"] .era-btn { background: #1565C0; border-color: #B0BEC5; color: #FFFFFF; }
-        body[data-era="medieval"] .mode-btn.active,
-        body[data-era="medieval"] .era-btn.active { background: #D32F2F; color: #FFD700; border-color: #B0BEC5; }
-        body[data-era="medieval"] #next-btn,
-        body[data-era="medieval"] .score-badge { background: #D32F2F; color: #FFD700; }
-        body[data-era="medieval"] #map-container { background: #0a2d5c; border-color: #B0BEC5; }
-
-        /* 近代（ヨーロッパ）：クールなグレー＋ダークネイビー */
-        body[data-era="modern"] { background-color: #eceff1; color: #263238; }
-        body[data-era="modern"] #user-panel,
-        body[data-era="modern"] #admin-panel,
-        body[data-era="modern"] #question-box { background: #ffffff; border-color: #37474f; }
-        body[data-era="modern"] #ranking-list { background: #fafafa; border-color: #90a4ae; }
-        body[data-era="modern"] .section-label { background: linear-gradient(to right, #546e7a, #37474f); color: #eceff1; }
-        body[data-era="modern"] #q-text { color: #1e3a5f; }
-        body[data-era="modern"] .mode-btn,
-        body[data-era="modern"] .era-btn { background: #cfd8dc; border-color: #455a64; color: #263238; }
-        body[data-era="modern"] .mode-btn.active,
-        body[data-era="modern"] .era-btn.active { background: #263238; color: #e0f7fa; border-color: #37474f; }
-        body[data-era="modern"] #next-btn,
-        body[data-era="modern"] .score-badge { background: #263238; color: #e0f7fa; }
-        body[data-era="modern"] #map-container { background: #eceff1; border-color: #37474f; }
-
-        /* 中東：ターコイズとゴールド（タイル装飾風） */
-        body[data-era="islamic_expansion"],
-        body[data-era="turco_mongol"] { background-color: #e0f7fa; color: #004d40; }
-        body[data-era="islamic_expansion"] #user-panel,
-        body[data-era="islamic_expansion"] #admin-panel,
-        body[data-era="islamic_expansion"] #question-box,
-        body[data-era="turco_mongol"] #user-panel,
-        body[data-era="turco_mongol"] #admin-panel,
-        body[data-era="turco_mongol"] #question-box { background: #fff8e1; border-color: #c49b47; }
-        body[data-era="islamic_expansion"] #ranking-list,
-        body[data-era="turco_mongol"] #ranking-list { background: #fdf4da; border-color: #c49b47; color: #4a3420; }
-        body[data-era="islamic_expansion"] .section-label,
-        body[data-era="turco_mongol"] .section-label { background: linear-gradient(to right, #00796b, #c49b47); color: #fffde7; }
-        body[data-era="islamic_expansion"] #q-text,
-        body[data-era="turco_mongol"] #q-text { color: #00695c; }
-        body[data-era="islamic_expansion"] .mode-btn,
-        body[data-era="islamic_expansion"] .era-btn,
-        body[data-era="turco_mongol"] .mode-btn,
-        body[data-era="turco_mongol"] .era-btn { background: #b2ebf2; border-color: #c49b47; color: #004d40; }
-        body[data-era="islamic_expansion"] .mode-btn.active,
-        body[data-era="islamic_expansion"] .era-btn.active,
-        body[data-era="turco_mongol"] .mode-btn.active,
-        body[data-era="turco_mongol"] .era-btn.active { background: #00796b; color: #ffd54f; border-color: #c49b47; }
-        body[data-era="islamic_expansion"] #next-btn,
-        body[data-era="islamic_expansion"] .score-badge,
-        body[data-era="turco_mongol"] #next-btn,
-        body[data-era="turco_mongol"] .score-badge { background: #c49b47; color: #fffaf0; }
-        body[data-era="islamic_expansion"] #map-container,
-        body[data-era="turco_mongol"] #map-container { background: radial-gradient(circle at 30% 30%, #b2ebf2 0, #e0f7fa 50%, #fff8e1 100%); border-color: #c49b47; }
-
-        /* インド：サフランオレンジとマゼンタ（極彩色風） */
-        body[data-region="india"] { background: radial-gradient(circle at top, #ffe082 0, #fff3e0 50%, #ffe0b2 100%); color: #4e342e; }
-        body[data-region="india"] #user-panel,
-        body[data-region="india"] #admin-panel,
-        body[data-region="india"] #question-box { background: #fff8e1; border-color: #ff8f00; }
-        body[data-region="india"] #ranking-list { background: #fff3e0; border-color: #d81b60; color: #4e342e; }
-        body[data-region="india"] .section-label { background: linear-gradient(to right, #ff8f00, #d81b60); color: #fffde7; }
-        body[data-region="india"] #q-text { color: #e65100; }
-        body[data-region="india"] .mode-btn,
-        body[data-region="india"] .era-btn { background: linear-gradient(135deg, #ffb74d, #f06292); border-color: #d81b60; color: #fff8e1; }
-        body[data-region="india"] .mode-btn.active,
-        body[data-region="india"] .era-btn.active { background: linear-gradient(135deg, #e65100, #ad1457); border-color: #6a1b9a; color: #fffde7; }
-        body[data-region="india"] #next-btn,
-        body[data-region="india"] .score-badge { background: #ff6f00; color: #fffde7; }
-        body[data-region="india"] #map-container { background: radial-gradient(circle at 20% 20%, #f8bbd0 0, #ffe082 40%, #ffb74d 100%); border-color: #d81b60; }
-
-        /* 中国：朱色と黄金（紫禁城風） */
-        body[data-region="china"] { background-color: #3e0808; color: #ffecb3; }
-        body[data-region="china"] #user-panel,
-        body[data-region="china"] #admin-panel,
-        body[data-region="china"] #question-box { background: #4a0f0f; border-color: #fbc02d; }
-        body[data-region="china"] #ranking-list { background: #2b0505; border-color: #fbc02d; color: #ffecb3; }
-        body[data-region="china"] .section-label { background: linear-gradient(to right, #b71c1c, #fbc02d); color: #3e2723; }
-        body[data-region="china"] #q-text { color: #ffeb3b; }
-        body[data-region="china"] .mode-btn,
-        body[data-region="china"] .era-btn { background: #b71c1c; border-color: #fbc02d; color: #ffecb3; }
-        body[data-region="china"] .mode-btn.active,
-        body[data-region="china"] .era-btn.active { background: #d32f2f; border-color: #ffd54f; color: #fff8e1; }
-        body[data-region="china"] #next-btn,
-        body[data-region="china"] .score-badge { background: #b71c1c; color: #fff8e1; }
-        body[data-region="china"] #map-container { background: radial-gradient(circle at 15% 20%, #fbc02d 0, #4a0f0f 50%, #2b0505 100%); border-color: #fbc02d; }
-
-        /* 東南アジア：深緑とオレンジ（ジャングル・仏教風） */
-        body[data-region="southeast_asia"] { background: radial-gradient(circle at top, #2e7d32 0, #1b5e20 60%, #0d3b16 100%); color: #e8f5e9; }
-        body[data-region="southeast_asia"] #user-panel,
-        body[data-region="southeast_asia"] #admin-panel,
-        body[data-region="southeast_asia"] #question-box { background: rgba(13, 59, 22, 0.95); border-color: #ffa000; }
-        body[data-region="southeast_asia"] #ranking-list { background: rgba(27, 94, 32, 0.95); border-color: #ffa000; color: #fffde7; }
-        body[data-region="southeast_asia"] .section-label { background: linear-gradient(to right, #1b5e20, #ffa000); color: #fffde7; }
-        body[data-region="southeast_asia"] #q-text { color: #ffca28; }
-        body[data-region="southeast_asia"] .mode-btn,
-        body[data-region="southeast_asia"] .era-btn { background: linear-gradient(135deg, #388e3c, #ffa000); border-color: #ffb300; color: #fffde7; }
-        body[data-region="southeast_asia"] .mode-btn.active,
-        body[data-region="southeast_asia"] .era-btn.active { background: linear-gradient(135deg, #2e7d32, #f57f17); border-color: #ffb300; color: #fffde7; }
-        body[data-region="southeast_asia"] #next-btn,
-        body[data-region="southeast_asia"] .score-badge { background: #ffa000; color: #fffde7; }
-        body[data-region="southeast_asia"] #map-container { background: radial-gradient(circle at 25% 25%, #a5d6a7 0, #2e7d32 45%, #0d3b16 100%); border-color: #ffa000; }
-
-
-        /* ===== 共通：騎士風の枠組み（全地域・全時代で使用） ===== */
-        #sidebar { width: 300px; display: flex; flex-direction: column; gap: 10px; height: 92vh; overflow-y: auto; padding-right: 5px; border: 4px double #B0BEC5; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
-
-        /* ユーザー・ランキングパネル */
-        #user-panel, #admin-panel, #question-box {
-            border: 4px double #B0BEC5;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-        }
-        #user-panel { background: #efebe9; padding: 12px; }
-        .score-badge { display: inline-block; background: #5d4037; color: white; padding: 2px 10px; border-radius: 15px; font-weight: bold; }
-        #ranking-title { font-weight: bold; font-size: 12px; margin-top: 10px; color: #d32f2f; }
-        #ranking-list { font-size: 11px; background: white; padding: 8px; border-radius: 8px; margin-top: 5px; border: 4px double #B0BEC5; min-height: 60px; line-height: 1.6; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+        #user-panel, #admin-panel, #question-box { border: 4px double var(--border); border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
+        #user-panel { background: var(--panel); padding: 12px; }
+        .score-badge { display: inline-block; background: var(--act); color: var(--act-c); padding: 2px 10px; border-radius: 15px; font-weight: bold; }
+        #ranking-title { font-weight: bold; font-size: 12px; margin-top: 10px; color: var(--rank-title); }
+        #ranking-list { font-size: 11px; background: var(--rank); color: var(--rank-c); padding: 8px; border-radius: 8px; margin-top: 5px; border: 4px double var(--rank-bd); min-height: 60px; max-height: 160px; overflow-y: auto; line-height: 1.6; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
         .rank-row { margin: 2px 0; }
         .rank-title-badge { display: inline-block; margin-left: 4px; padding: 1px 6px; font-size: 10px; font-weight: bold; background: linear-gradient(135deg, #ffd54f, #ff8f00); color: #3e2723; border-radius: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
 
-        /* セレクター（地域・時代） */
-        .section-label { font-size: 11px; font-weight: bold; margin-bottom: 2px; padding: 4px 8px; border-radius: 6px; color: #5d4037; }
-        #mode-selector, #era-selector { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 5px; min-height: 32px; }
-        .mode-btn, .era-btn {
-            flex: 1; min-width: 70px; padding: 8px 5px; font-size: 11px; cursor: pointer; border-radius: 8px;
-            border: 4px double #B0BEC5; background: #d7ccc8; font-weight: bold; transition: 0.2s;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        /* ボタンエリアを sticky にして、サイドバーをスクロールしても常に見える位置に固定 */
+        .section-label {
+            font-size: 11px; font-weight: bold; margin-bottom: 2px; padding: 4px 8px; border-radius: 6px;
+            background: linear-gradient(to right, var(--lbl-a), var(--lbl-b)); color: var(--lbl-text);
+            position: sticky; top: 0; z-index: 10;
         }
-        .mode-btn.active, .era-btn.active { background: #5d4037; color: #fff; transform: translateY(-2px); box-shadow: 0 0 10px rgba(255,215,0,0.35); }
+        #mode-selector, #era-selector {
+            display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 5px; min-height: 32px;
+            position: sticky; z-index: 9;
+            background: var(--bg); /* 透過防止 */
+            padding-bottom: 4px;
+        }
+        #mode-selector { top: 26px; }
+        #era-selector  { top: 70px; }
+        .mode-btn, .era-btn { flex: 1; min-width: 70px; padding: 8px 5px; font-size: 11px; cursor: pointer; border-radius: 8px; border: 4px double var(--btn-bd); background: var(--btn); color: var(--btn-c); font-weight: bold; transition: 0.2s; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+        .mode-btn.active, .era-btn.active { background: var(--btn-on); color: var(--btn-on-c); border-color: var(--btn-on-bd); transform: translateY(-2px); box-shadow: 0 0 10px rgba(255,215,0,0.35); }
 
-        /* クイズエリア */
-        #question-box { background: white; padding: 15px; text-align: center; position: relative; }
-        #q-text { display: block; font-size: 22px; font-weight: bold; color: #d32f2f; margin: 10px 0; }
+        #question-box { background: var(--panel); padding: 15px; text-align: center; position: relative; }
+        #q-text { display: block; font-size: 22px; font-weight: bold; color: var(--q); margin: 10px 0; }
         #result { font-size: 18px; font-weight: bold; min-height: 25px; margin: 5px 0; }
-        #next-btn { width: 100%; padding: 10px; background: #5d4037; color: white; border: none; border-radius: 6px; cursor: pointer; display: none; font-weight: bold; font-size: 14px; }
+        #next-btn { width: 100%; padding: 10px; background: var(--act); color: var(--act-c); border: none; border-radius: 6px; cursor: pointer; display: none; font-weight: bold; font-size: 14px; }
 
-        /* マップエリア */
-        #map-container { position: relative; border: 4px double #B0BEC5; border-radius: 8px; background: #e0f2f1; line-height: 0; overflow: hidden; max-height: 80vh; box-shadow: 0 2px 8px rgba(0,0,0,0.12); cursor: grab; touch-action: none; }
+        #map-container { position: relative; border: 4px double var(--border); border-radius: 8px; background: var(--map); line-height: 0; overflow: hidden; max-height: 80vh; box-shadow: 0 2px 8px rgba(0,0,0,0.12); cursor: grab; touch-action: none; }
         #map-container.dragging { cursor: grabbing; }
         #map-content { position: relative; display: inline-block; transform-origin: 0 0; }
         #map-image { height: 75vh; width: auto; display: block; -webkit-user-drag: none; pointer-events: none; }
@@ -184,14 +246,13 @@
         .target-node.highlight { background: #388e3c !important; border-color: #1b5e20 !important; z-index: 15; animation: pulse-ring 1s infinite; }
 
         @keyframes pulse-ring {
-            0% { box-shadow: 0 0 0 0 rgba(56, 142, 60, 0.7); transform: translate(-50%, -50%) scale(1); }
-            70% { box-shadow: 0 0 0 15px rgba(56, 142, 60, 0); transform: translate(-50%, -50%) scale(1.3); }
-            100% { box-shadow: 0 0 0 0 rgba(56, 142, 60, 0); transform: translate(-50%, -50%) scale(1); }
+            0%   { box-shadow: 0 0 0 0 rgba(56,142,60,.7); transform: translate(-50%,-50%) scale(1); }
+            70%  { box-shadow: 0 0 0 15px rgba(56,142,60,0); transform: translate(-50%,-50%) scale(1.3); }
+            100% { box-shadow: 0 0 0 0 rgba(56,142,60,0); transform: translate(-50%,-50%) scale(1); }
         }
 
-        /* 管理モード */
-        #admin-panel { font-size: 11px; background: rgba(239, 235, 233, 0.9); padding: 10px; }
-        #admin-pin { position: absolute; width: 14px; height: 14px; background: #d32f2f; border: 2px solid white; border-radius: 50%; transform: translate(-50%, -50%); pointer-events: none; z-index: 20; display: none; }
+        #admin-panel { font-size: 11px; background: rgba(239,235,233,0.9); padding: 10px; }
+        #admin-pin { position: absolute; width: 14px; height: 14px; background: #d32f2f; border: 2px solid white; border-radius: 50%; transform: translate(-50%,-50%); pointer-events: none; z-index: 20; display: none; }
     </style>
 </head>
 <body>
@@ -229,6 +290,8 @@
 
             <!-- クイズ箱 -->
             <div id="question-box">
+                <!-- 試験範囲モード時バナー（通常時は非表示） -->
+                <div id="scope-banner"></div>
                 <div id="era-display" style="font-size:10px; color:#8d6e63; margin-bottom:5px;">-</div>
                 <span id="q-text">Ready?</span>
                 <p id="result"></p>
@@ -244,6 +307,12 @@
                     <button onclick="addNewQuestion()" style="width:100%;">一時保存</button>
                     <button onclick="exportAllRegions()" style="width:100%; margin:5px 0;">JSON抽出</button>
                     <textarea id="export-area" readonly style="width:95%; height:60px; font-size:9px;"></textarea>
+                </details>
+                <details id="scope-builder">
+                    <summary>📋 試験範囲URLジェネレーター</summary>
+                    <div style="font-size:10px; color:#888; margin:4px 0;">出題したい時代にチェックを入れてURLを生成・共有してください。</div>
+                    <div id="scope-checklist" style="max-height:160px; overflow-y:auto; border:1px solid var(--border); border-radius:4px; padding:4px; margin:4px 0; background:rgba(0,0,0,0.1);"></div>
+                    <button onclick="copyScopeUrl()" style="width:100%; margin-top:4px;">🔗 試験範囲URLをコピー</button>
                 </details>
             </div>
         </div>
@@ -276,7 +345,13 @@
             "india_ancient_medieval_india": "🕉️ 転輪聖王 (てんりんじょうおう)",
             "india_mughal_colonial": "🕉️ パードシャー",
             "southeast_asia_ancient": "🌴 諸王の王",
-            "southeast_asia_colonial": "🌴 海域の覇者"
+            "southeast_asia_colonial": "🌴 海域の覇者",
+            "north_america_frontier": "🤠 開拓王 (フロンティア・キング)",
+            "north_america_independence": "🦅 建国の父 (ファウンディング・ファーザー)",
+            "north_america_civil_war": "⚔️ 将軍 (ジェネラル)",
+            "latin_america_sun_empire": "☀️ 太陽の皇帝 (サパ・インカ)",
+            "latin_america_colonial_era": "⚜️ 総督閣下 (ビセロイ)",
+            "latin_america_liberation_era": "🦅 リベルタドール (解放者)"
         };
 
         let masterData = {}, currentUser = null, currentRegion = '', currentEra = '', questions = [], currentIdx = 0, isAnswered = false, lastClickedPos = null;
@@ -316,13 +391,111 @@
             }
         };
 
+        // ─── 試験範囲モード ───────────────────────────────────────────────────
+        // scopeStr 例: "europe_ancient,china_ancient_china,mideast_islamic_expansion"
+        function startScopeQuiz(scopeStr) {
+            const pairs = scopeStr.split(',').map(s => {
+                // region キーに "_" が含まれる (north_america 等) ケースを正確に分割
+                const region = Object.keys(masterData).find(r => s.startsWith(r + '_'));
+                if (!region) return null;
+                const era = s.slice(region.length + 1);
+                return masterData[region]?.eras[era] ? { region, era } : null;
+            }).filter(Boolean);
+
+            if (!pairs.length) {
+                console.warn('有効な試験範囲が見つかりませんでした:', scopeStr);
+                return;
+            }
+
+            // 問題を結合してシャッフル
+            const allQ = pairs.flatMap(p => masterData[p.region].eras[p.era].fixed || []);
+            questions = allQ.sort(() => Math.random() - 0.5);
+            currentIdx = 0;
+
+            // 地図は先頭の地域で表示
+            const first = pairs[0];
+            currentRegion = first.region;
+            currentEra    = first.era;
+            document.getElementById('map-image').src = masterData[first.region].img;
+            document.body.dataset.region = first.region;
+            document.body.dataset.era    = first.era;
+
+            // バナー表示
+            const banner = document.getElementById('scope-banner');
+            banner.style.display = 'block';
+            banner.innerHTML = '<strong>📋 試験範囲モード</strong><br>' +
+                pairs.map(p =>
+                    `${masterData[p.region].name}／${masterData[p.region].eras[p.era].name}`
+                ).join('、');
+
+            document.getElementById('era-display').innerText =
+                `📋 試験範囲モード（${pairs.length}時代 / 全${questions.length}問）`;
+
+            showQuestion();
+        }
+
+        // チェックボックス一覧を管理パネルに動的生成
+        function buildScopeChecklist() {
+            const div = document.getElementById('scope-checklist');
+            if (!div) return;
+            div.innerHTML = '';
+            Object.keys(masterData).forEach(region => {
+                const regionName = masterData[region].name;
+                const grp = document.createElement('div');
+                grp.style.cssText = 'margin:4px 0 2px; font-weight:bold; font-size:10px;';
+                grp.innerText = regionName;
+                div.appendChild(grp);
+                Object.keys(masterData[region].eras).forEach(era => {
+                    const eraName = masterData[region].eras[era].name;
+                    const label = document.createElement('label');
+                    label.style.cssText = 'display:block; font-size:10px; padding-left:8px; cursor:pointer;';
+                    label.innerHTML =
+                        `<input type="checkbox" value="${region}_${era}" style="margin-right:4px;">${eraName}`;
+                    div.appendChild(label);
+                });
+            });
+        }
+
+        // チェックした時代からURLを生成してクリップボードにコピー
+        function copyScopeUrl() {
+            const checked = [...document.querySelectorAll('#scope-checklist input:checked')]
+                .map(i => i.value).join(',');
+            if (!checked) { alert('時代を1つ以上チェックしてください'); return; }
+            const url = location.origin + location.pathname + '?scope=' + checked;
+            navigator.clipboard.writeText(url).then(() => {
+                alert('URLをコピーしました！\n生徒にこのURLを共有してください。\n\n' + url);
+            }).catch(() => {
+                // クリップボードAPIが使えない環境向けフォールバック
+                prompt('以下のURLをコピーしてください:', url);
+            });
+        }
+        // ─────────────────────────────────────────────────────────────────────
+
+        // 地域別JSONを並列ロード（data/*.json → フォールバックで questions.json）
         async function fetchQuestions() {
+            const regions = ['europe', 'mideast', 'india', 'china', 'southeast_asia', 'north_america', 'latin_america'];
             try {
-                const res = await fetch('questions.json');
-                masterData = await res.json();
-                setupRegionButtons();
-                checkLocalLogin();
-            } catch (e) { console.error("JSON読込失敗"); }
+                const results = await Promise.all(
+                    regions.map(r => fetch(`data/${r}.json`).then(res => {
+                        if (!res.ok) throw new Error(r);
+                        return res.json();
+                    }))
+                );
+                regions.forEach((r, i) => { masterData[r] = results[i]; });
+            } catch (e) {
+                // フォールバック: 従来の questions.json
+                console.warn("data/*.json 読込失敗、questions.json にフォールバック:", e.message);
+                try {
+                    const res = await fetch('questions.json');
+                    masterData = await res.json();
+                } catch (e2) { console.error("JSON読込失敗"); return; }
+            }
+            setupRegionButtons();
+            buildScopeChecklist();
+            checkLocalLogin();
+            // 試験範囲モード: ?scope=europe_ancient,china_ancient_china,...
+            const scopeParam = new URLSearchParams(window.location.search).get('scope');
+            if (scopeParam) startScopeQuiz(scopeParam);
         }
 
         // 地域ボタン生成
@@ -433,9 +606,11 @@
             if (!GAS_URL.includes("https")) return;
             const tag = `${currentRegion}_${currentEra}`;
             try {
-                await fetch(GAS_URL, { method: "POST", mode: "no-cors", body: JSON.stringify({ name: currentUser, score: score, tag: tag }) });
-                setTimeout(syncRanking, 2000);
+                await fetch(GAS_URL, { method: "POST", mode: "no-cors", body: JSON.stringify({ name: currentUser, score, tag }) });
             } catch (e) { console.error("送信失敗"); }
+            // GASの処理待ちを考慮して2秒・6秒の2段階でランキング再取得
+            setTimeout(syncRanking, 2000);
+            setTimeout(syncRanking, 6000);
         }
 
        // --- ユーザー管理 (ここを差し替え！) ---

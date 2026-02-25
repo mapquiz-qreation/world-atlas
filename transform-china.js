@@ -1,8 +1,9 @@
 const fs = require("fs");
 const path = require("path");
 
-const jsonPath = path.join(__dirname, "questions.json");
-const data = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
+// data/china.json を直接読み書き
+const jsonPath = path.join(__dirname, "data", "china.json");
+const data = { china: JSON.parse(fs.readFileSync(jsonPath, "utf8")) };
 
 // 3つの基準点（china.png 上の実測値。JSON の top/left をそのまま使用）
 const refs = [
@@ -109,5 +110,5 @@ for (const eraKey of Object.keys(china.eras)) {
   }
 }
 
-fs.writeFileSync(jsonPath, JSON.stringify(data, null, 2), "utf8");
-console.log("Done. China top/left updated (china.png の範囲を基準点から逆算したメルカトル変換).");
+fs.writeFileSync(jsonPath, JSON.stringify(data.china, null, 2), "utf8");
+console.log("Done. data/china.json updated (china.png の範囲を基準点から逆算したメルカトル変換).");

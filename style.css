@@ -1,0 +1,274 @@
+/* =====================================================
+   CSS変数定義（デフォルト値）
+   各テーマは変数だけ上書き → コンポーネント側は共通ルールのみ
+   ===================================================== */
+:root {
+    --bg: #f4f1ea;      --text: #3e2723;
+    --panel: #efebe9;   --border: #B0BEC5;
+    --lbl-a: #8d6e63;   --lbl-b: #5d4037;  --lbl-text: #fffaf0;
+    --q: #d32f2f;
+    --btn: #d7ccc8;     --btn-c: #3e2723;  --btn-bd: #B0BEC5;
+    --btn-on: #5d4037;  --btn-on-c: #fff;  --btn-on-bd: #B0BEC5;
+    --act: #5d4037;     --act-c: white;
+    --map: #e0f2f1;
+    --rank: white;      --rank-bd: #B0BEC5; --rank-c: inherit;
+    --rank-title: #d32f2f;
+}
+
+/* 古代ヨーロッパ（石板・砂色） */
+body[data-era="ancient"] {
+    --bg: #f5ecd8;      --text: #4a3526;
+    --panel: #fbf3dd;   --border: #6d4c41;
+    --lbl-a: #8d6e63;   --lbl-b: #5d4037;
+    --q: #5d4037;
+    --btn: #e0c9a6;     --btn-c: #4a3526;  --btn-bd: #6d4c41;
+    --btn-on: #6d4c41;  --btn-on-c: #fffaf0; --btn-on-bd: #5d4037;
+    --act: #6d4c41;     --act-c: #fffaf0;
+    --map: #f2e4c8;
+    --rank: #fffaf0;    --rank-bd: #8d6e63; --rank-c: #4a3526;
+}
+/* 中世ヨーロッパ（ロイヤルブルー・クリムゾン） */
+body[data-era="medieval"] {
+    --bg: #0a2d5c;      --text: #FFFFFF;
+    --panel: #0D47A1;   --border: #B0BEC5;
+    --lbl-a: #D32F2F;   --lbl-b: #0D47A1;  --lbl-text: #FFFFFF;
+    --q: #FFFFFF;
+    --btn: #1565C0;     --btn-c: #FFFFFF;  --btn-bd: #B0BEC5;
+    --btn-on: #D32F2F;  --btn-on-c: #FFD700;
+    --act: #D32F2F;     --act-c: #FFD700;
+    --map: #0a2d5c;
+    --rank: #0D47A1;    --rank-bd: #B0BEC5; --rank-c: #FFFFFF;
+    --rank-title: #FFFFFF;
+}
+/* 近世・近代ヨーロッパ（グレー＋ネイビー） */
+body[data-era="modern"] {
+    --bg: #eceff1;      --text: #263238;
+    --panel: #ffffff;   --border: #37474f;
+    --lbl-a: #546e7a;   --lbl-b: #37474f;  --lbl-text: #eceff1;
+    --q: #1e3a5f;
+    --btn: #cfd8dc;     --btn-c: #263238;  --btn-bd: #455a64;
+    --btn-on: #263238;  --btn-on-c: #e0f7fa; --btn-on-bd: #37474f;
+    --act: #263238;     --act-c: #e0f7fa;
+    --map: #eceff1;
+    --rank: #fafafa;    --rank-bd: #90a4ae;
+}
+/* イスラーム・トルコモンゴル（ターコイズ＋ゴールド） */
+body[data-era="islamic_expansion"],
+body[data-era="turco_mongol"] {
+    --bg: #e0f7fa;      --text: #004d40;
+    --panel: #fff8e1;   --border: #c49b47;
+    --lbl-a: #00796b;   --lbl-b: #c49b47;  --lbl-text: #fffde7;
+    --q: #00695c;
+    --btn: #b2ebf2;     --btn-c: #004d40;  --btn-bd: #c49b47;
+    --btn-on: #00796b;  --btn-on-c: #ffd54f; --btn-on-bd: #c49b47;
+    --act: #c49b47;     --act-c: #fffaf0;
+    --map: radial-gradient(circle at 30% 30%, #b2ebf2 0, #e0f7fa 50%, #fff8e1 100%);
+    --rank: #fdf4da;    --rank-bd: #c49b47; --rank-c: #4a3420;
+}
+/* インド（サフラン＋マゼンタ） */
+body[data-region="india"] {
+    --bg: radial-gradient(circle at top, #ffe082 0, #fff3e0 50%, #ffe0b2 100%);
+    --text: #4e342e;
+    --panel: #fff8e1;   --border: #ff8f00;
+    --lbl-a: #ff8f00;   --lbl-b: #d81b60;  --lbl-text: #fffde7;
+    --q: #e65100;
+    --btn: linear-gradient(135deg,#ffb74d,#f06292); --btn-c: #fff8e1; --btn-bd: #d81b60;
+    --btn-on: linear-gradient(135deg,#e65100,#ad1457); --btn-on-c: #fffde7; --btn-on-bd: #6a1b9a;
+    --act: #ff6f00;     --act-c: #fffde7;
+    --map: radial-gradient(circle at 20% 20%, #f8bbd0 0, #ffe082 40%, #ffb74d 100%);
+    --rank: #fff3e0;    --rank-bd: #d81b60; --rank-c: #4e342e;
+}
+/* 中国（朱＋黄金） */
+body[data-region="china"] {
+    --bg: #3e0808;      --text: #ffecb3;
+    --panel: #4a0f0f;   --border: #fbc02d;
+    --lbl-a: #b71c1c;   --lbl-b: #fbc02d;  --lbl-text: #3e2723;
+    --q: #ffeb3b;
+    --btn: #b71c1c;     --btn-c: #ffecb3;  --btn-bd: #fbc02d;
+    --btn-on: #d32f2f;  --btn-on-c: #fff8e1; --btn-on-bd: #ffd54f;
+    --act: #b71c1c;     --act-c: #fff8e1;
+    --map: radial-gradient(circle at 15% 20%, #fbc02d 0, #4a0f0f 50%, #2b0505 100%);
+    --rank: #2b0505;    --rank-bd: #fbc02d; --rank-c: #ffecb3;
+}
+/* 北アメリカ開拓時代（羊皮紙・セピア） */
+body[data-era="frontier"] {
+    --bg: #f5e6c8;      --text: #3d2b1f;
+    --panel: #faf0d8;   --border: #8b5e3c;
+    --lbl-a: #8b5e3c;   --lbl-b: #5c3317;  --lbl-text: #fdf8ef;
+    --q: #5c3317;
+    --btn: #e0c99a;     --btn-c: #3d2b1f;  --btn-bd: #8b5e3c;
+    --btn-on: #5c3317;  --btn-on-c: #fdf8ef; --btn-on-bd: #8b5e3c;
+    --act: #8b5e3c;     --act-c: #fdf8ef;
+    --map: #f0dbb5;
+    --rank: #faf0d8;    --rank-bd: #8b5e3c; --rank-c: #3d2b1f;
+    --rank-title: #5c3317;
+}
+/* アメリカ独立革命（星条旗 赤・白・青） */
+body[data-era="independence"] {
+    --bg: #e8eef8;      --text: #1a2744;
+    --panel: #ffffff;   --border: #B22234;
+    --lbl-a: #3C3B6E;   --lbl-b: #B22234;  --lbl-text: #FFFFFF;
+    --q: #B22234;
+    --btn: #c8d4ee;     --btn-c: #1a2744;  --btn-bd: #3C3B6E;
+    --btn-on: #B22234;  --btn-on-c: #FFFFFF; --btn-on-bd: #3C3B6E;
+    --act: #3C3B6E;     --act-c: #FFFFFF;
+    --map: #dce4f4;
+    --rank: #f5f5ff;    --rank-bd: #B22234; --rank-c: #1a2744;
+    --rank-title: #B22234;
+}
+/* 南北戦争（煤・灰・深紅） */
+body[data-era="civil_war"] {
+    --bg: #1e1e1e;      --text: #dcdcdc;
+    --panel: #2a2a2a;   --border: #757575;
+    --lbl-a: #424242;   --lbl-b: #616161;  --lbl-text: #dcdcdc;
+    --q: #ef9a9a;
+    --btn: #383838;     --btn-c: #dcdcdc;  --btn-bd: #757575;
+    --btn-on: #B22234;  --btn-on-c: #FFFFFF; --btn-on-bd: #757575;
+    --act: #B22234;     --act-c: #FFFFFF;
+    --map: #1e1e1e;
+    --rank: #2a2a2a;    --rank-bd: #757575; --rank-c: #dcdcdc;
+    --rank-title: #ef9a9a;
+}
+/* ラテンアメリカ 太陽の帝国（テラコッタ・黄金） */
+body[data-era="sun_empire"] {
+    --bg: radial-gradient(circle at 20% 10%, #bf360c 0, #6d1f05 50%, #3e1000 100%);
+    --text: #ffe082;
+    --panel: rgba(62,16,0,0.95); --border: #ffd54f;
+    --lbl-a: #bf360c;   --lbl-b: #ffd54f;  --lbl-text: #3e1000;
+    --q: #ffca28;
+    --btn: #bf360c;     --btn-c: #fff8e1;  --btn-bd: #ffd54f;
+    --btn-on: #e64a19;  --btn-on-c: #fff8e1; --btn-on-bd: #ffa000;
+    --act: #bf360c;     --act-c: #fff8e1;
+    --map: radial-gradient(circle at 20% 20%, #ffd54f 0, #7b2d00 40%, #3e1000 100%);
+    --rank: rgba(62,16,0,0.95); --rank-bd: #ffd54f; --rank-c: #ffe082;
+    --rank-title: #ffd54f;
+}
+/* ラテンアメリカ 黄金と十字架（深緋・紋章金） */
+body[data-era="colonial_era"] {
+    --bg: radial-gradient(circle at 80% 10%, #4a148c 0, #311b92 50%, #1a0050 100%);
+    --text: #f5deb3;
+    --panel: rgba(26,0,80,0.95); --border: #ffc107;
+    --lbl-a: #6a1b9a;   --lbl-b: #ffc107;  --lbl-text: #fff8e1;
+    --q: #ffd54f;
+    --btn: #6a1b9a;     --btn-c: #fff8e1;  --btn-bd: #ffc107;
+    --btn-on: #8e24aa;  --btn-on-c: #fff8e1; --btn-on-bd: #ffd54f;
+    --act: #6a1b9a;     --act-c: #fff8e1;
+    --map: radial-gradient(circle at 80% 10%, #ffc107 0, #4a148c 45%, #1a0050 100%);
+    --rank: rgba(26,0,80,0.95); --rank-bd: #ffc107; --rank-c: #f5deb3;
+    --rank-title: #ffc107;
+}
+/* ラテンアメリカ 解放者の嵐（革命的緑・赤・金） */
+body[data-era="liberation_era"] {
+    --bg: linear-gradient(160deg, #004d00 0%, #002200 60%, #1a0000 100%);
+    --text: #e8f5e9;
+    --panel: rgba(0,34,0,0.95); --border: #ffcc02;
+    --lbl-a: #1b5e20;   --lbl-b: #c62828;  --lbl-text: #fffde7;
+    --q: #ffcc02;
+    --btn: #1b5e20;     --btn-c: #fffde7;  --btn-bd: #ffcc02;
+    --btn-on: #c62828;  --btn-on-c: #fffde7; --btn-on-bd: #ffcc02;
+    --act: #c62828;     --act-c: #fffde7;
+    --map: linear-gradient(160deg, #1b5e20 0%, #004d00 60%, #b71c1c 100%);
+    --rank: rgba(0,34,0,0.95); --rank-bd: #ffcc02; --rank-c: #e8f5e9;
+    --rank-title: #ffcc02;
+}
+/* 東南アジア（深緑＋オレンジ） */
+body[data-region="southeast_asia"] {
+    --bg: radial-gradient(circle at top, #2e7d32 0, #1b5e20 60%, #0d3b16 100%);
+    --text: #e8f5e9;
+    --panel: rgba(13,59,22,0.95); --border: #ffa000;
+    --lbl-a: #1b5e20;   --lbl-b: #ffa000;  --lbl-text: #fffde7;
+    --q: #ffca28;
+    --btn: linear-gradient(135deg,#388e3c,#ffa000); --btn-c: #fffde7; --btn-bd: #ffb300;
+    --btn-on: linear-gradient(135deg,#2e7d32,#f57f17); --btn-on-c: #fffde7; --btn-on-bd: #ffb300;
+    --act: #ffa000;     --act-c: #fffde7;
+    --map: radial-gradient(circle at 25% 25%, #a5d6a7 0, #2e7d32 45%, #0d3b16 100%);
+    --rank: rgba(27,94,32,0.95); --rank-bd: #ffa000; --rank-c: #fffde7;
+}
+
+/* =====================================================
+   共通コンポーネントスタイル（変数を参照するだけ）
+   ===================================================== */
+body { font-family: 'Helvetica Neue', Arial, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; height: 100vh; overflow: hidden; display: flex; flex-direction: column; transition: background 0.3s, color 0.2s; }
+h1 { font-size: 20px; margin: 0 0 10px 0; text-align: center; letter-spacing: 2px; }
+#main-layout { display: flex; gap: 15px; flex: 1; align-items: flex-start; justify-content: center; }
+
+#sidebar { width: 300px; display: flex; flex-direction: column; gap: 10px; height: 92vh; overflow-y: auto; padding-right: 5px; border: 4px double var(--border); border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
+
+/* 試験範囲バナー（question-box 内に配置） */
+#scope-banner { display: none; font-size: 10px; line-height: 1.5; padding: 5px 8px; border-radius: 5px; background: linear-gradient(135deg, #1a237e, #283593); color: #e8eaf6; border: 2px solid #5c6bc0; box-shadow: 0 1px 4px rgba(0,0,0,0.3); margin-bottom: 6px; }
+
+#user-panel, #admin-panel, #question-box { border: 4px double var(--border); border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
+#user-panel { background: var(--panel); padding: 12px; }
+.score-badge { display: inline-block; background: var(--act); color: var(--act-c); padding: 2px 10px; border-radius: 15px; font-weight: bold; }
+#ranking-title { font-weight: bold; font-size: 12px; margin-top: 10px; color: var(--rank-title); }
+#ranking-list { font-size: 11px; background: var(--rank); color: var(--rank-c); padding: 8px; border-radius: 8px; margin-top: 5px; border: 4px double var(--rank-bd); min-height: 60px; max-height: 160px; overflow-y: auto; line-height: 1.6; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+.rank-row { margin: 2px 0; }
+.rank-title-badge { display: inline-block; margin-left: 4px; padding: 1px 6px; font-size: 10px; font-weight: bold; background: linear-gradient(135deg, #ffd54f, #ff8f00); color: #3e2723; border-radius: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+
+/* ボタンエリアを sticky にして、サイドバーをスクロールしても常に見える位置に固定 */
+.section-label {
+    font-size: 11px; font-weight: bold; margin-bottom: 2px; padding: 4px 8px; border-radius: 6px;
+    background: linear-gradient(to right, var(--lbl-a), var(--lbl-b)); color: var(--lbl-text);
+    position: sticky; top: 0; z-index: 10;
+}
+#mode-selector, #era-selector {
+    display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 5px; min-height: 32px;
+    position: sticky; z-index: 9;
+    background: var(--bg);
+    padding-bottom: 4px;
+}
+#mode-selector { top: 26px; }
+#era-selector  { top: 70px; }
+.mode-btn, .era-btn { flex: 1; min-width: 70px; padding: 8px 5px; font-size: 11px; cursor: pointer; border-radius: 8px; border: 4px double var(--btn-bd); background: var(--btn); color: var(--btn-c); font-weight: bold; transition: 0.2s; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+.mode-btn.active, .era-btn.active { background: var(--btn-on); color: var(--btn-on-c); border-color: var(--btn-on-bd); transform: translateY(-2px); box-shadow: 0 0 10px rgba(255,215,0,0.35); }
+
+#question-box { background: var(--panel); padding: 15px; text-align: center; position: relative; }
+#q-text { display: block; font-size: 22px; font-weight: bold; color: var(--q); margin: 10px 0; }
+#result { font-size: 18px; font-weight: bold; min-height: 25px; margin: 5px 0; }
+#next-btn { width: 100%; padding: 10px; background: var(--act); color: var(--act-c); border: none; border-radius: 6px; cursor: pointer; display: none; font-weight: bold; font-size: 14px; }
+
+#map-container { position: relative; border: 4px double var(--border); border-radius: 8px; background: var(--map); line-height: 0; overflow: hidden; max-height: 80vh; box-shadow: 0 2px 8px rgba(0,0,0,0.12); cursor: grab; touch-action: none; }
+#map-container.dragging { cursor: grabbing; }
+#map-content { position: relative; display: inline-block; transform-origin: 0 0; }
+#map-image { height: 75vh; width: auto; display: block; -webkit-user-drag: none; pointer-events: none; }
+#map-content .target-node { pointer-events: auto; }
+#map-reset-btn { position: absolute; bottom: 10px; right: 10px; z-index: 25; padding: 6px 12px; font-size: 12px; background: rgba(62,39,35,0.9); color: #fff; border: 1px solid #fff; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.3); }
+#map-reset-btn:hover { background: #5d4037; }
+.target-node { position: absolute; width: 20px; height: 20px; border-radius: 50%; transform: translate(-50%, -50%); border: 2px solid #5d4037; background: white; cursor: pointer; z-index: 5; transition: 0.2s; }
+.target-node.correct { background: #388e3c !important; border-color: #1b5e20 !important; box-shadow: 0 0 10px #388e3c; z-index: 10; }
+.target-node.wrong { background: #d32f2f !important; opacity: 0.6; }
+.target-node.highlight { background: #388e3c !important; border-color: #1b5e20 !important; z-index: 15; animation: pulse-ring 1s infinite; }
+
+@keyframes pulse-ring {
+    0%   { box-shadow: 0 0 0 0 rgba(56,142,60,.7); transform: translate(-50%,-50%) scale(1); }
+    70%  { box-shadow: 0 0 0 15px rgba(56,142,60,0); transform: translate(-50%,-50%) scale(1.3); }
+    100% { box-shadow: 0 0 0 0 rgba(56,142,60,0); transform: translate(-50%,-50%) scale(1); }
+}
+
+#admin-panel { font-size: 11px; background: rgba(239,235,233,0.9); padding: 10px; }
+#admin-pin { position: absolute; width: 14px; height: 14px; background: #d32f2f; border: 2px solid white; border-radius: 50%; transform: translate(-50%,-50%); pointer-events: none; z-index: 20; display: none; }
+
+/* =====================================================
+   横向き（landscape）最適化
+   高さが極端に減るので各要素をコンパクトに調整
+   ===================================================== */
+@media (orientation: landscape) and (max-height: 560px) {
+    body  { padding: 4px; }
+    h1    { font-size: 14px; margin: 0 0 4px 0; }
+
+    #sidebar { height: 96vh; gap: 5px; }
+    #user-panel { padding: 6px; }
+    #ranking-list { max-height: 80px; }
+
+    .section-label  { font-size: 10px; padding: 2px 6px; position: static; }
+    #mode-selector, #era-selector { position: static; }
+    .mode-btn, .era-btn { padding: 5px 3px; font-size: 10px; }
+
+    #question-box { padding: 8px; }
+    #q-text  { font-size: 17px; margin: 5px 0; }
+    #result  { font-size: 14px; min-height: 18px; margin: 3px 0; }
+    #next-btn { padding: 6px; font-size: 12px; }
+
+    #map-image    { height: 90vh; }
+    #map-container { max-height: 94vh; }
+}

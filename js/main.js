@@ -1,10 +1,10 @@
-import { state } from './state.js';
-import { setupMapZoomPan, resetMapView } from './map.js';
-import { syncRanking } from './ranking.js';
+import { state }                                         from './state.js';
+import { initMap, flyToRegion }                           from './map.js';
+import { syncRanking }                                    from './ranking.js';
 import { checkLocalLogin, updateScoreUI, loginUser, logoutUser } from './user.js';
-import { showQuestion, nextQuestion } from './quiz.js';
+import { showQuestion, nextQuestion }                     from './quiz.js';
 import { startScopeQuiz, buildScopeChecklist, copyScopeUrl } from './scope.js';
-import { setupAdminPanel } from './admin.js';
+import { setupAdminPanel }                                from './admin.js';
 
 async function fetchQuestions() {
     const regions = ['europe', 'mideast', 'india', 'china', 'southeast_asia', 'north_america', 'latin_america'];
@@ -17,14 +17,8 @@ async function fetchQuestions() {
         );
         regions.forEach((r, i) => { state.masterData[r] = results[i]; });
     } catch (e) {
-        console.warn('data/*.json 読込失敗、questions.json にフォールバック:', e.message);
-        try {
-            const res = await fetch('questions.json');
-            state.masterData = await res.json();
-        } catch (e2) {
-            console.error('JSON読込失敗');
-            return;
-        }
+        console.warn('data/*.json 読込失敗:', e.message);
+        return;
     }
     setupRegionButtons();
     buildScopeChecklist();
@@ -49,7 +43,10 @@ function setupRegionButtons() {
 function selectRegion(key) {
     state.currentRegion = key;
     const data = state.masterData[key];
-    document.getElementById('map-image').src = data.img;
+
+    // Leaflet で地域 bounds にジャンプ
+    if (data.bounds) flyToRegion(data.bounds);
+
     document.querySelectorAll('.mode-btn').forEach(b =>
         b.classList.toggle('active', b.id === `btn-${key}`)
     );
@@ -65,10 +62,8 @@ function selectRegion(key) {
         eraSelector.appendChild(btn);
     });
 
-    document.getElementById('admin-pin').style.display = 'none';
     document.body.removeAttribute('data-era');
     document.body.dataset.region = key;
-    resetMapView();
 }
 
 export function startQuiz(regionKey, eraKey) {
@@ -91,9 +86,8 @@ export function startQuiz(regionKey, eraKey) {
     updateScoreUI();
 }
 
-// モジュール script は defer 相当なので DOMContentLoaded 時点では DOM が確実に存在する
-document.addEventListener('DOMContentLoaded', function() {
-    setupMapZoomPan();
+document.addEventListener('DOMContentLoaded', async function() {
+    await initMap();
     setupAdminPanel(startQuiz);
     document.getElementById('login-btn').addEventListener('click', loginUser);
     document.getElementById('logout-btn').addEventListener('click', logoutUser);

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=1100">
     <title>WorldAtlas</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -54,6 +55,24 @@
                     <button id="export-btn" style="width:100%; margin:5px 0;">JSON抽出</button>
                     <textarea id="export-area" readonly style="width:95%; height:60px; font-size:9px;"></textarea>
                 </details>
+                <details id="area-tool">
+                    <summary>🗺️ エリア問題作成ツール</summary>
+                    <div style="font-size:10px; color:#888; margin:4px 0;">地図をクリックして頂点を打ち、エリアを定義します。</div>
+                    <div style="margin:4px 0; font-size:10px;">
+                        ラベル: <input type="text" id="area-label-input" placeholder="例: 斉" style="width:55px; padding:2px;">
+                        正解: <input type="checkbox" id="area-correct-check">
+                        色: <input type="color" id="area-color-input" value="#e53935" style="width:28px; height:20px; padding:0; border:none; cursor:pointer;">
+                    </div>
+                    <div style="font-size:10px; margin:2px 0;">
+                        頂点数: <strong id="area-vertex-count">0</strong>
+                        <button id="area-clear-btn" style="font-size:9px; margin-left:6px; padding:1px 5px;">クリア</button>
+                    </div>
+                    <button id="area-confirm-btn" style="width:100%; margin:3px 0;">✅ このエリアを確定</button>
+                    <div id="area-list" style="font-size:10px; min-height:20px; max-height:80px; overflow-y:auto; border:1px solid var(--border); border-radius:3px; padding:3px; margin:3px 0;"></div>
+                    <input type="text" id="area-question-text" placeholder="問題文 例: 斉はどこ？" style="width:90%; margin:3px 0; padding:3px;">
+                    <button id="area-save-btn" style="width:100%;">💾 エリア問題として保存</button>
+                    <button id="area-reset-all-btn" style="width:100%; margin-top:3px; font-size:9px; color:#d32f2f; background:none; border:1px solid #d32f2f; border-radius:3px; padding:2px; cursor:pointer;">全リセット</button>
+                </details>
                 <details id="scope-builder">
                     <summary>📋 試験範囲URLジェネレーター</summary>
                     <div style="font-size:10px; color:#888; margin:4px 0;">出題したい時代にチェックを入れてURLを生成・共有してください。</div>
@@ -64,16 +83,10 @@
         </div>
 
         <!-- マップ -->
-        <div id="map-container">
-            <div id="map-content">
-                <img id="map-image" src="map.png" draggable="false">
-                <div id="admin-pin"></div>
-                <div id="node-container"></div>
-            </div>
-            <button type="button" id="map-reset-btn" title="全体表示">全体表示</button>
-        </div>
+        <div id="map"></div>
     </div>
 
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script type="module" src="js/main.js"></script>
 </body>
 </html>

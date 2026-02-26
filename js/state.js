@@ -10,14 +10,7 @@ export const state = {
     isAnswered:     false,
     lastClickedPos: null,
 
-    // 地図ズーム・ドラッグ用
-    mapScale:       1,
-    mapTranslateX:  0,
-    mapTranslateY:  0,
-    mapDragging:    false,
-    mapDragStartX:  0,
-    mapDragStartY:  0,
-    mapDragStartTx: 0,
-    mapDragStartTy: 0,
-    mapJustDragged: false,
+    // Leaflet インスタンス（map.js が設定）
+    map:        null,
+    quizLayer:  null,
 };

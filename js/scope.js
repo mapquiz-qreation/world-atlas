@@ -1,6 +1,7 @@
-import { state } from './state.js';
-import { shuffle } from './shuffle.js';
-import { showQuestion } from './quiz.js';
+import { state }          from './state.js';
+import { shuffle }        from './shuffle.js';
+import { showQuestion }   from './quiz.js';
+import { flyToRegion }    from './map.js';
 
 // scopeStr 例: "europe_ancient,china_ancient_china,mideast_islamic_expansion"
 export function startScopeQuiz(scopeStr) {
@@ -24,7 +25,8 @@ export function startScopeQuiz(scopeStr) {
     const first = pairs[0];
     state.currentRegion = first.region;
     state.currentEra    = first.era;
-    document.getElementById('map-image').src = state.masterData[first.region].img;
+    const bounds = state.masterData[first.region].bounds;
+    if (bounds) flyToRegion(bounds);
     document.body.dataset.region = first.region;
     document.body.dataset.era    = first.era;
 

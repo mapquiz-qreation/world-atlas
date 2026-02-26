@@ -1,52 +1,147 @@
-import { state } from './state.js';
+/**
+ * js/quiz.js — Leaflet ベースのクイズ表示
+ */
+
+import { state }   from './state.js';
 import { shuffle } from './shuffle.js';
 import { addPoint } from './user.js';
+import { clearQuizLayer, getQuizLayer } from './map.js';
 
+// ── 問題表示エントリ ─────────────────────────────────────────
 export function showQuestion() {
     if (!state.questions.length) return;
     state.isAnswered = false;
     const q = state.questions[state.currentIdx];
-    document.getElementById('q-text').innerText        = q.text;
-    document.getElementById('result').innerText        = '';
-    document.getElementById('next-btn').style.display  = 'none';
+    document.getElementById('q-text').innerText       = q.text;
+    document.getElementById('result').innerText       = '';
+    document.getElementById('next-btn').style.display = 'none';
 
-    const container = document.getElementById('node-container');
-    container.innerHTML = '';
+    clearQuizLayer();
 
-    const others      = shuffle(state.questions.filter(o => o.text !== q.text));
+    if (q.type === 'area') {
+        showAreaQuestion(q);
+    } else {
+        showPointQuestion(q);
+    }
+}
+
+// ── 点クリック問題 ────────────────────────────────────────────
+function showPointQuestion(q) {
+    const layer  = getQuizLayer();
+    const others = shuffle(
+        state.questions.filter(o => o.text !== q.text && o.type !== 'area')
+    );
     const choiceCount = Math.min(3, others.length);
     const choices     = shuffle([{ ...q, correct: true }, ...others.slice(0, choiceCount)]);
 
     choices.forEach(c => {
-        const n = document.createElement('div');
-        n.className  = 'target-node';
-        n.style.top  = c.top;
-        n.style.left = c.left;
-        if (c.correct) n.dataset.isCorrect = 'true';
+        const marker = L.circleMarker([c.lat, c.lng], {
+            radius:      14,
+            color:       '#fff',
+            weight:      2,
+            fillColor:   '#e53935',
+            fillOpacity: 0.85,
+        });
+        marker.addTo(layer);
 
-        n.onclick = (e) => {
-            e.stopPropagation();
+        // クリックハンドラー
+        marker.on('click', () => {
             if (state.isAnswered) return;
             state.isAnswered = true;
             if (c.correct) {
-                n.classList.add('correct');
+                marker.setStyle({ fillColor: '#43a047', color: '#fff' });
                 document.getElementById('result').innerText = '⭕ 正解！';
                 addPoint();
             } else {
-                n.classList.add('wrong');
+                marker.setStyle({ fillColor: '#9e9e9e', fillOpacity: 0.4 });
                 document.getElementById('result').innerText = '❌ 不正解';
-                highlightCorrect();
+                highlightCorrectMarker(layer, q);
             }
             document.getElementById('next-btn').style.display = 'block';
-        };
-        container.appendChild(n);
+        });
+
+        // 答え確認用にマーカーに情報を付与
+        marker._isCorrect = c.correct;
+        marker._latlng_ref = [c.lat, c.lng];
     });
 }
 
-export function highlightCorrect() {
-    document.querySelectorAll('.target-node').forEach(n => {
-        if (n.dataset.isCorrect === 'true') n.classList.add('highlight');
+function highlightCorrectMarker(layer, q) {
+    layer.eachLayer(marker => {
+        if (marker._isCorrect) {
+            marker.setStyle({ fillColor: '#43a047', color: '#fff' });
+            marker.setRadius(18);
+        }
     });
+}
+
+// ── エリア選択問題 ────────────────────────────────────────────
+function showAreaQuestion(q) {
+    const layer = getQuizLayer();
+
+    q.areas.forEach(area => {
+        const polygon = L.polygon(area.latlngs, {
+            color:       area.color,
+            weight:      1.5,
+            fillColor:   area.color,
+            fillOpacity: 0.35,
+            className:   'area-polygon',
+        });
+        polygon.addTo(layer);
+        polygon._areaData = area;
+
+        // ラベルは回答前は非表示（クイズの答えになるため）
+        const center  = getLatLngCenter(area.latlngs);
+        const tooltip = L.tooltip({
+            permanent:   true,
+            direction:   'center',
+            className:   'area-label-tooltip',
+            interactive: false,
+            opacity:     0,
+        }).setContent(area.label);
+        polygon.bindTooltip(tooltip).openTooltip(center);
+        polygon._labelTooltip = tooltip;
+
+        // クリックハンドラー
+        polygon.on('click', (e) => {
+            L.DomEvent.stopPropagation(e);
+            if (state.isAnswered) return;
+            state.isAnswered = true;
+            if (area.correct) {
+                polygon.setStyle({ fillColor: area.color, fillOpacity: 0.75, weight: 3 });
+                document.getElementById('result').innerText = '⭕ 正解！';
+                addPoint();
+                // 正解時：クリックしたポリゴン（正解）のラベルだけ表示
+                polygon._labelTooltip?.setOpacity(1);
+            } else {
+                polygon.setStyle({ fillOpacity: 0.1, weight: 0.5 });
+                document.getElementById('result').innerText = '❌ 不正解';
+                // 不正解時：クリックしたポリゴンのラベル＋正解のラベルを表示
+                polygon._labelTooltip?.setOpacity(1);
+                highlightCorrectArea(layer);
+            }
+            document.getElementById('next-btn').style.display = 'block';
+        });
+    });
+}
+
+function highlightCorrectArea(layer) {
+    layer.eachLayer(polygon => {
+        const area = polygon._areaData;
+        if (area?.correct) {
+            polygon.setStyle({ fillOpacity: 0.8, weight: 3 });
+            polygon.getElement()?.classList.add('area-pulse');
+            polygon._labelTooltip?.setOpacity(1);
+        }
+    });
+}
+
+// ── ユーティリティ ────────────────────────────────────────────
+export function getLatLngCenter(latlngs) {
+    const n   = latlngs.length;
+    const lat = latlngs.reduce((s, p) => s + p[0], 0) / n;
+    const lng = latlngs.reduce((s, p) => s + p[1], 0) / n;
+    return L.latLng(lat, lng);
 }
 
 export function nextQuestion() {

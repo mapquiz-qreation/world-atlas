@@ -1,106 +1,120 @@
+/**
+ * js/map.js — Leaflet ベースのマップ初期化・操作
+ */
+
 import { state } from './state.js';
 
-export function applyMapTransform() {
-    const content = document.getElementById('map-content');
-    content.style.transform =
-        `translate(${state.mapTranslateX}px, ${state.mapTranslateY}px) scale(${state.mapScale})`;
-}
+// ── 内部変数 ────────────────────────────────────────────────
+let map          = null;   // L.Map インスタンス
+let quizLayer    = null;   // クイズマーカー用 LayerGroup
+let adminClickCb = null;   // 管理者クリックコールバック (latlng) => void
 
-export function containerToContentPercent(clientX, clientY) {
-    const container = document.getElementById('map-container');
-    const content   = document.getElementById('map-content');
-    const rect = container.getBoundingClientRect();
-    const cx = clientX - rect.left;
-    const cy = clientY - rect.top;
-    const cw = content.offsetWidth;
-    const ch = content.offsetHeight;
-    if (!cw || !ch) return null;
-    const contentX = (cx - state.mapTranslateX) / state.mapScale;
-    const contentY = (cy - state.mapTranslateY) / state.mapScale;
-    return {
-        top:  (contentY / ch * 100).toFixed(1) + '%',
-        left: (contentX / cw * 100).toFixed(1) + '%',
-    };
-}
+// 地図スタイル定数
+const BASE_STYLE = {
+    color:       '#555',
+    weight:      0.8,
+    fillColor:   '#c8d8a0',
+    fillOpacity: 0.6,
+};
 
-export function resetMapView() {
-    state.mapScale      = 1;
-    state.mapTranslateX = 0;
-    state.mapTranslateY = 0;
-    applyMapTransform();
-}
+const RIVER_STYLE = {
+    color:   '#4fc3f7',
+    weight:  0.7,
+    opacity: 0.7,
+};
 
-export function setupMapZoomPan() {
-    const container = document.getElementById('map-container');
-    const MIN_SCALE = 0.5, MAX_SCALE = 3;
-
-    container.addEventListener('wheel', function(e) {
-        e.preventDefault();
-        const rect   = container.getBoundingClientRect();
-        const cx     = e.clientX - rect.left;
-        const cy     = e.clientY - rect.top;
-        const factor = e.deltaY > 0 ? 0.9 : 1.1;
-        const newScale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, state.mapScale * factor));
-        const contentX = (cx - state.mapTranslateX) / state.mapScale;
-        const contentY = (cy - state.mapTranslateY) / state.mapScale;
-        state.mapTranslateX = cx - contentX * newScale;
-        state.mapTranslateY = cy - contentY * newScale;
-        state.mapScale = newScale;
-        applyMapTransform();
-    }, { passive: false });
-
-    container.addEventListener('mousedown', function(e) {
-        if (e.target.closest('.target-node') || e.target.closest('#map-reset-btn')) return;
-        state.mapDragging    = true;
-        state.mapJustDragged = false;
-        state.mapDragStartX  = e.clientX;
-        state.mapDragStartY  = e.clientY;
-        state.mapDragStartTx = state.mapTranslateX;
-        state.mapDragStartTy = state.mapTranslateY;
-        container.classList.add('dragging');
+// ── 初期化 ──────────────────────────────────────────────────
+export async function initMap() {
+    map = L.map('map', {
+        zoomControl:       true,
+        attributionControl: true,
+        minZoom: 2,
+        maxZoom: 10,
+        worldCopyJump: true,
     });
 
-    document.addEventListener('mousemove', function(e) {
-        if (!state.mapDragging) return;
-        state.mapTranslateX  = state.mapDragStartTx + (e.clientX - state.mapDragStartX);
-        state.mapTranslateY  = state.mapDragStartTy + (e.clientY - state.mapDragStartY);
-        state.mapJustDragged = true;
-        applyMapTransform();
-    });
+    // デフォルト表示: 全体（ユーラシア中心）
+    map.setView([30, 50], 2);
 
-    document.addEventListener('mouseup', function() {
-        if (state.mapDragging) container.classList.remove('dragging');
-        state.mapDragging = false;
-    });
+    // Natural Earth ベースレイヤー
+    await loadBaseLayer();
 
-    container.addEventListener('touchstart', function(e) {
-        if (e.target.closest('.target-node') || e.target.closest('#map-reset-btn')) return;
-        if (e.touches.length === 1) {
-            state.mapDragging    = true;
-            state.mapJustDragged = false;
-            state.mapDragStartX  = e.touches[0].clientX;
-            state.mapDragStartY  = e.touches[0].clientY;
-            state.mapDragStartTx = state.mapTranslateX;
-            state.mapDragStartTy = state.mapTranslateY;
+    // 河川レイヤー（任意）
+    loadRiversLayer();
+
+    // クイズ用レイヤーグループ
+    quizLayer = L.layerGroup().addTo(map);
+    state.quizLayer = quizLayer;
+
+    // 管理者クリックハンドラー
+    map.on('click', (e) => {
+        if (typeof adminClickCb === 'function') {
+            adminClickCb(e.latlng);
         }
-    }, { passive: true });
-
-    container.addEventListener('touchmove', function(e) {
-        if (state.mapDragging && e.touches.length === 1) {
-            e.preventDefault();
-            state.mapTranslateX  = state.mapDragStartTx + (e.touches[0].clientX - state.mapDragStartX);
-            state.mapTranslateY  = state.mapDragStartTy + (e.touches[0].clientY - state.mapDragStartY);
-            state.mapJustDragged = true;
-            applyMapTransform();
-        }
-    }, { passive: false });
-
-    container.addEventListener('touchend', function() {
-        state.mapDragging = false;
     });
 
-    document.getElementById('map-reset-btn').addEventListener('click', function(e) {
-        e.stopPropagation();
-        resetMapView();
-    });
+    state.map = map;
+}
+
+async function loadBaseLayer() {
+    try {
+        const res  = await fetch('data/ne/countries.geojson');
+        const data = await res.json();
+        L.geoJSON(data, {
+            style:         BASE_STYLE,
+            onEachFeature: (feature, layer) => {
+                // 管理者ツール用に国名 tooltip（hover 時）
+                const name = feature.properties?.NAME || feature.properties?.name;
+                if (name) layer.bindTooltip(name, { permanent: false, className: 'map-tooltip' });
+            },
+        }).addTo(map);
+    } catch (e) {
+        console.warn('countries.geojson の読み込みに失敗:', e);
+    }
+}
+
+async function loadRiversLayer() {
+    try {
+        const res  = await fetch('data/ne/rivers.geojson');
+        const data = await res.json();
+        L.geoJSON(data, { style: RIVER_STYLE }).addTo(map);
+    } catch (e) {
+        // 河川はオプションなので失敗しても無視
+    }
+}
+
+// ── 地域ジャンプ ─────────────────────────────────────────────
+/**
+ * @param {[[number,number],[number,number]]} bounds  [[minLat,minLng],[maxLat,maxLng]]
+ */
+export function flyToRegion(bounds) {
+    if (!map) return;
+    map.fitBounds(bounds, { animate: true, duration: 0.6 });
+}
+
+// ── クイズレイヤー操作 ────────────────────────────────────────
+export function clearQuizLayer() {
+    if (quizLayer) quizLayer.clearLayers();
+}
+
+export function getQuizLayer() {
+    return quizLayer;
+}
+
+// ── 管理者クリック ───────────────────────────────────────────
+/**
+ * 管理者クリックコールバックを設定する
+ * @param {(latlng: L.LatLng) => void} cb
+ */
+export function setupAdminClick(cb) {
+    adminClickCb = cb;
+}
+
+export function removeAdminClick() {
+    adminClickCb = null;
+}
+
+// ── マップインスタンス取得 ────────────────────────────────────
+export function getMap() {
+    return map;
 }

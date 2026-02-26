@@ -3,11 +3,13 @@ export const GAS_URL = "https://script.google.com/macros/s/AKfycby59Krxk8EB8kGPO
 
 // 地域・時代タグごとの第1位称号
 export const TAG_TITLES = {
+    "china_five_hu":               "⚔️ 単于 (ぜんう)",
     "china_ancient_china":         "👑 始皇帝",
     "china_medieval_china":        "👑 天可汗 (てんかがん)",
     "china_early_modern_china":    "👑 総督 (そうとく)",
     "mideast_islamic_expansion":   "☪️ 正統カリフ",
     "mideast_turco_mongol":        "☪️ スルタン・ハン",
+    "europe_germanic":             "⚔️ 大王 (グロースケーニヒ)",
     "europe_ancient":              "🏛️ インペラトル",
     "europe_medieval":             "🏛️ 教皇 (パパ)",
     "europe_modern":               "🏛️ 啓蒙専制君主",

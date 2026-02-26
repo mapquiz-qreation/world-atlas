@@ -5,7 +5,7 @@
 import { state }   from './state.js';
 import { shuffle } from './shuffle.js';
 import { addPoint } from './user.js';
-import { clearQuizLayer, getQuizLayer } from './map.js';
+import { clearQuizLayer, getQuizLayer, flyToRegion } from './map.js';
 
 // ── 問題表示エントリ ─────────────────────────────────────────
 export function showQuestion() {
@@ -78,6 +78,9 @@ function highlightCorrectMarker(layer, q) {
 // ── エリア選択問題 ────────────────────────────────────────────
 function showAreaQuestion(q) {
     const layer = getQuizLayer();
+
+    // 問題ごとに指定された広域ビューがあればズーム（モンゴル帝国など広大な地域用）
+    if (q.mapBounds) flyToRegion(q.mapBounds);
 
     q.areas.forEach(area => {
         const polygon = L.polygon(area.latlngs, {

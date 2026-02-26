@@ -7,7 +7,7 @@ export function loginUser() {
     state.currentUser = name;
     localStorage.setItem('quiz_current_user', name);
     showUserInfo();
-    if (state.currentRegion && state.currentEra) syncRanking();
+    syncRanking();
 }
 
 export function logoutUser() {
@@ -24,7 +24,11 @@ export function logoutUser() {
 
 export function checkLocalLogin() {
     const saved = localStorage.getItem('quiz_current_user');
-    if (saved) { state.currentUser = saved; showUserInfo(); }
+    if (saved) {
+        state.currentUser = saved;
+        showUserInfo();
+        syncRanking();
+    }
 }
 
 export function showUserInfo() {
@@ -35,8 +39,20 @@ export function showUserInfo() {
 }
 
 export function updateScoreUI() {
-    if (!state.currentUser || !state.currentEra) {
+    if (!state.currentUser) {
         document.getElementById('user-total-score').innerText = '0';
+        return;
+    }
+    if (!state.currentEra) {
+        // ホーム画面：ローカルに保存された全タグのスコアを合算して表示
+        let total = 0;
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key?.startsWith(`score_${state.currentUser}_`)) {
+                total += parseInt(localStorage.getItem(key) || 0);
+            }
+        }
+        document.getElementById('user-total-score').innerText = total;
         return;
     }
     const tag   = `${state.currentRegion}_${state.currentEra}`;

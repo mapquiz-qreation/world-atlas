@@ -2,6 +2,7 @@ import { state }          from './state.js';
 import { shuffle }        from './shuffle.js';
 import { showQuestion }   from './quiz.js';
 import { flyToRegion }    from './map.js';
+import { clearQuizLayer } from './map.js';
 
 // scopeStr 例: "europe_ancient,china_ancient_china,mideast_islamic_expansion"
 export function startScopeQuiz(scopeStr) {
@@ -43,26 +44,69 @@ export function startScopeQuiz(scopeStr) {
     showQuestion();
 }
 
-// チェックボックス一覧を管理パネルに動的生成
+// チェックボックス一覧を動的生成
 export function buildScopeChecklist() {
     const div = document.getElementById('scope-checklist');
     if (!div) return;
     div.innerHTML = '';
     Object.keys(state.masterData).forEach(region => {
         const grp = document.createElement('div');
-        grp.style.cssText = 'margin:4px 0 2px; font-weight:bold; font-size:10px;';
         grp.innerText = state.masterData[region].name;
         div.appendChild(grp);
 
         Object.keys(state.masterData[region].eras).forEach(era => {
             const eraName = state.masterData[region].eras[era].name;
             const label   = document.createElement('label');
-            label.style.cssText = 'display:block; font-size:10px; padding-left:8px; cursor:pointer;';
-            label.innerHTML =
-                `<input type="checkbox" value="${region}_${era}" style="margin-right:4px;">${eraName}`;
+            label.innerHTML = `<input type="checkbox" value="${region}_${era}">${eraName}`;
             div.appendChild(label);
         });
     });
+}
+
+// キーワードで問題を全文検索してクイズ開始
+export function startKeywordQuiz() {
+    const input    = document.getElementById('keyword-input').value.trim();
+    if (!input) { alert('キーワードを入力してください'); return; }
+
+    // スペース・読点・改行・カンマで分割、2文字以上のみ有効
+    const keywords = input.split(/[\s,、。\n]+/).filter(k => k.length >= 2);
+
+    const matched = [];
+    Object.keys(state.masterData).forEach(region => {
+        Object.keys(state.masterData[region].eras).forEach(era => {
+            (state.masterData[region].eras[era].fixed || []).forEach(q => {
+                if (keywords.some(kw => q.text.includes(kw))) {
+                    matched.push(q);
+                }
+            });
+        });
+    });
+
+    if (!matched.length) {
+        alert(`「${keywords.join('・')}」に一致する問題が見つかりませんでした`);
+        return;
+    }
+
+    clearQuizLayer();
+    state.questions     = shuffle(matched);
+    state.currentIdx    = 0;
+    state.currentRegion = null;
+    state.currentEra    = null;
+
+    document.querySelectorAll('.mode-btn, .era-btn').forEach(b => b.classList.remove('active'));
+    document.body.removeAttribute('data-era');
+    document.body.removeAttribute('data-region');
+
+    const banner = document.getElementById('scope-banner');
+    banner.style.display = 'block';
+    banner.innerHTML =
+        `<strong>🔍 キーワード検索モード</strong><br>` +
+        `「${keywords.join('・')}」に関連する問題 ${matched.length}問`;
+
+    document.getElementById('era-display').innerText =
+        `🔍 キーワード検索（${matched.length}問）`;
+
+    showQuestion();
 }
 
 // チェックした時代からURLを生成してクリップボードにコピー

@@ -1,13 +1,13 @@
 import { state }                                         from './state.js';
-import { initMap, flyToRegion }                           from './map.js';
+import { initMap, flyToRegion, resetMapView, clearQuizLayer } from './map.js';
 import { syncRanking }                                    from './ranking.js';
 import { checkLocalLogin, updateScoreUI, loginUser, logoutUser } from './user.js';
 import { showQuestion, nextQuestion }                     from './quiz.js';
-import { startScopeQuiz, buildScopeChecklist, copyScopeUrl } from './scope.js';
+import { startScopeQuiz, buildScopeChecklist, copyScopeUrl, startKeywordQuiz } from './scope.js';
 import { setupAdminPanel }                                from './admin.js';
 
 async function fetchQuestions() {
-    const regions = ['europe', 'mideast', 'india', 'china', 'southeast_asia', 'north_america', 'latin_america'];
+    const regions = ['europe', 'mideast', 'africa', 'india', 'china', 'southeast_asia', 'north_america', 'latin_america'];
     try {
         const results = await Promise.all(
             regions.map(r => fetch(`data/${r}.json`).then(res => {
@@ -86,6 +86,34 @@ export function startQuiz(regionKey, eraKey) {
     updateScoreUI();
 }
 
+function goHome() {
+    // クイズ状態をリセット
+    state.questions  = [];
+    state.currentIdx = 0;
+    clearQuizLayer();
+
+    // ボタンのアクティブ状態をリセット
+    document.querySelectorAll('.mode-btn, .era-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('era-selector').innerHTML = '地域を先に選んでね';
+
+    // 問題ボックスをリセット
+    document.getElementById('q-text').innerText        = 'Ready?';
+    document.getElementById('result').innerText        = '';
+    document.getElementById('next-btn').style.display  = 'none';
+    document.getElementById('era-display').innerText   = '-';
+    document.getElementById('scope-banner').style.display = 'none';
+
+    // テーマをリセット
+    document.body.removeAttribute('data-era');
+    document.body.removeAttribute('data-region');
+
+    // 地図をワールドビューに戻す
+    resetMapView();
+
+    // ログイン中なら総合ランキングを表示
+    if (state.currentUser) syncRanking();
+}
+
 document.addEventListener('DOMContentLoaded', async function() {
     await initMap();
     setupAdminPanel(startQuiz);
@@ -93,5 +121,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     document.getElementById('logout-btn').addEventListener('click', logoutUser);
     document.getElementById('next-btn').addEventListener('click', nextQuestion);
     document.getElementById('copy-scope-url-btn').addEventListener('click', copyScopeUrl);
+    document.getElementById('keyword-start-btn').addEventListener('click', startKeywordQuiz);
+    document.getElementById('home-btn').addEventListener('click', goHome);
     fetchQuestions();
 });

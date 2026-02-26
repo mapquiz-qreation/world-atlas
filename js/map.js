@@ -83,6 +83,12 @@ async function loadRiversLayer() {
     }
 }
 
+// ── デフォルト表示に戻す ──────────────────────────────────────
+export function resetMapView() {
+    if (!map) return;
+    map.flyTo([30, 50], 2, { animate: true, duration: 0.6 });
+}
+
 // ── 地域ジャンプ ─────────────────────────────────────────────
 /**
  * @param {[[number,number],[number,number]]} bounds  [[minLat,minLng],[maxLat,maxLng]]

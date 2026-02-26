@@ -9,76 +9,88 @@
 </head>
 <body>
 
-    <h1>🗺️ WorldAtlas</h1>
+    <div id="title-bar">
+        <h1>🗺️ WorldAtlas</h1>
+        <button id="home-btn" title="ホームへ戻る">🏠 ホーム</button>
+    </div>
 
     <div id="main-layout">
         <div id="sidebar">
-            <!-- ユーザー登録 -->
-            <div id="user-panel">
-                <div id="login-form">
-                    <strong>👤 受験生登録</strong><br>
-                    <input type="text" id="user-name-input" placeholder="名前を入力" style="width:140px; margin-top:5px; padding:5px;">
-                    <button id="login-btn" class="mode-btn" style="min-width:60px;">参戦</button>
-                </div>
-                <div id="user-info-area" style="display:none;">
-                    ログイン中: <span id="display-name" style="font-weight:bold;"></span><br>
-                    正解数: <span class="score-badge" id="user-total-score">0</span>
-                    <hr>
-                    <div id="ranking-title">🏆 時代別TOP10</div>
-                    <div id="ranking-list">時代を選択してね</div>
-                    <button id="logout-btn" style="font-size:10px; margin-top:10px; color:#d32f2f; cursor:pointer; background:none; border:1px solid #d32f2f; border-radius:3px; padding:2px 5px;">ログアウト / ユーザー変更</button>
-                </div>
+            <!-- 上部固定ゾーン：地域・時代選択 -->
+            <div id="sidebar-controls">
+                <div class="section-label">REGION / 地域</div>
+                <div id="mode-selector"></div>
+                <div class="section-label">ERA / 時代</div>
+                <div id="era-selector">地域を先に選んでね</div>
             </div>
 
-            <!-- 地域・時代選択 -->
-            <div class="section-label">REGION / 地域</div>
-            <div id="mode-selector"></div>
-            <div class="section-label">ERA / 時代</div>
-            <div id="era-selector">地域を先に選んでね</div>
+            <!-- 下部スクロールゾーン：問題・ユーザー・その他 -->
+            <div id="sidebar-content">
+                <!-- クイズ -->
+                <div id="question-box">
+                    <div id="scope-banner"></div>
+                    <div id="era-display" style="font-size:10px; color:#8d6e63; margin-bottom:5px;">-</div>
+                    <span id="q-text">Ready?</span>
+                    <p id="result"></p>
+                    <button id="next-btn">次の問題へ →</button>
+                </div>
 
-            <!-- クイズ -->
-            <div id="question-box">
-                <div id="scope-banner"></div>
-                <div id="era-display" style="font-size:10px; color:#8d6e63; margin-bottom:5px;">-</div>
-                <span id="q-text">Ready?</span>
-                <p id="result"></p>
-                <button id="next-btn">次の問題へ →</button>
-            </div>
+                <!-- ユーザー登録 -->
+                <div id="user-panel">
+                    <div id="login-form">
+                        <strong>👤 受験生登録</strong><br>
+                        <input type="text" id="user-name-input" placeholder="名前を入力" style="width:140px; margin-top:5px; padding:5px;">
+                        <button id="login-btn" class="mode-btn" style="min-width:60px;">参戦</button>
+                    </div>
+                    <div id="user-info-area" style="display:none;">
+                        ログイン中: <span id="display-name" style="font-weight:bold;"></span><br>
+                        正解数: <span class="score-badge" id="user-total-score">0</span>
+                        <hr>
+                        <div id="ranking-title">🏆 時代別TOP10</div>
+                        <div id="ranking-list">時代を選択してね</div>
+                        <button id="logout-btn" style="font-size:10px; margin-top:10px; color:#d32f2f; cursor:pointer; background:none; border:1px solid #d32f2f; border-radius:3px; padding:2px 5px;">ログアウト / ユーザー変更</button>
+                    </div>
+                </div>
 
-            <!-- 管理モード -->
-            <div id="admin-panel">
-                <details>
-                    <summary>🛠️ 座標調整ツール</summary>
-                    座標: <strong id="selected-coord" style="color:red;">未選択</strong>
-                    <input type="text" id="new-q-text" placeholder="地点名" style="width:90%; margin:5px 0; padding:3px;">
-                    <button id="add-question-btn" style="width:100%;">一時保存</button>
-                    <button id="export-btn" style="width:100%; margin:5px 0;">JSON抽出</button>
-                    <textarea id="export-area" readonly style="width:95%; height:60px; font-size:9px;"></textarea>
-                </details>
-                <details id="area-tool">
-                    <summary>🗺️ エリア問題作成ツール</summary>
-                    <div style="font-size:10px; color:#888; margin:4px 0;">地図をクリックして頂点を打ち、エリアを定義します。</div>
-                    <div style="margin:4px 0; font-size:10px;">
-                        ラベル: <input type="text" id="area-label-input" placeholder="例: 斉" style="width:55px; padding:2px;">
-                        正解: <input type="checkbox" id="area-correct-check">
-                        色: <input type="color" id="area-color-input" value="#e53935" style="width:28px; height:20px; padding:0; border:none; cursor:pointer;">
-                    </div>
-                    <div style="font-size:10px; margin:2px 0;">
-                        頂点数: <strong id="area-vertex-count">0</strong>
-                        <button id="area-clear-btn" style="font-size:9px; margin-left:6px; padding:1px 5px;">クリア</button>
-                    </div>
-                    <button id="area-confirm-btn" style="width:100%; margin:3px 0;">✅ このエリアを確定</button>
-                    <div id="area-list" style="font-size:10px; min-height:20px; max-height:80px; overflow-y:auto; border:1px solid var(--border); border-radius:3px; padding:3px; margin:3px 0;"></div>
-                    <input type="text" id="area-question-text" placeholder="問題文 例: 斉はどこ？" style="width:90%; margin:3px 0; padding:3px;">
-                    <button id="area-save-btn" style="width:100%;">💾 エリア問題として保存</button>
-                    <button id="area-reset-all-btn" style="width:100%; margin-top:3px; font-size:9px; color:#d32f2f; background:none; border:1px solid #d32f2f; border-radius:3px; padding:2px; cursor:pointer;">全リセット</button>
-                </details>
-                <details id="scope-builder">
-                    <summary>📋 試験範囲URLジェネレーター</summary>
-                    <div style="font-size:10px; color:#888; margin:4px 0;">出題したい時代にチェックを入れてURLを生成・共有してください。</div>
-                    <div id="scope-checklist" style="max-height:160px; overflow-y:auto; border:1px solid var(--border); border-radius:4px; padding:4px; margin:4px 0; background:rgba(0,0,0,0.1);"></div>
-                    <button id="copy-scope-url-btn" style="width:100%; margin-top:4px;">🔗 試験範囲URLをコピー</button>
-                </details>
+                <!-- 試験範囲設定 -->
+                <div class="section-label">📋 試験範囲設定</div>
+                <div id="scope-panel">
+                    <div id="scope-checklist"></div>
+                    <button id="copy-scope-url-btn">🔗 試験範囲URLをコピー</button>
+                    <div class="scope-divider">または キーワードで検索</div>
+                    <textarea id="keyword-input" placeholder="例：アッバース朝　バグダード　マリ帝国&#10;スペース・改行区切りでOK"></textarea>
+                    <button id="keyword-start-btn">🔍 この内容でスタート</button>
+                </div>
+
+                <!-- 管理モード -->
+                <div id="admin-panel">
+                    <details>
+                        <summary>🛠️ 座標調整ツール</summary>
+                        座標: <strong id="selected-coord" style="color:red;">未選択</strong>
+                        <input type="text" id="new-q-text" placeholder="地点名" style="width:90%; margin:5px 0; padding:3px;">
+                        <button id="add-question-btn" style="width:100%;">一時保存</button>
+                        <button id="export-btn" style="width:100%; margin:5px 0;">JSON抽出</button>
+                        <textarea id="export-area" readonly style="width:95%; height:60px; font-size:9px;"></textarea>
+                    </details>
+                    <details id="area-tool">
+                        <summary>🗺️ エリア問題作成ツール</summary>
+                        <div style="font-size:10px; color:#888; margin:4px 0;">地図をクリックして頂点を打ち、エリアを定義します。</div>
+                        <div style="margin:4px 0; font-size:10px;">
+                            ラベル: <input type="text" id="area-label-input" placeholder="例: 斉" style="width:55px; padding:2px;">
+                            正解: <input type="checkbox" id="area-correct-check">
+                            色: <input type="color" id="area-color-input" value="#e53935" style="width:28px; height:20px; padding:0; border:none; cursor:pointer;">
+                        </div>
+                        <div style="font-size:10px; margin:2px 0;">
+                            頂点数: <strong id="area-vertex-count">0</strong>
+                            <button id="area-clear-btn" style="font-size:9px; margin-left:6px; padding:1px 5px;">クリア</button>
+                        </div>
+                        <button id="area-confirm-btn" style="width:100%; margin:3px 0;">✅ このエリアを確定</button>
+                        <div id="area-list" style="font-size:10px; min-height:20px; max-height:80px; overflow-y:auto; border:1px solid var(--border); border-radius:3px; padding:3px; margin:3px 0;"></div>
+                        <input type="text" id="area-question-text" placeholder="問題文 例: 斉はどこ？" style="width:90%; margin:3px 0; padding:3px;">
+                        <button id="area-save-btn" style="width:100%;">💾 エリア問題として保存</button>
+                        <button id="area-reset-all-btn" style="width:100%; margin-top:3px; font-size:9px; color:#d32f2f; background:none; border:1px solid #d32f2f; border-radius:3px; padding:2px; cursor:pointer;">全リセット</button>
+                    </details>
+                </div>
             </div>
         </div>
 

@@ -35,9 +35,18 @@ export async function uploadScore(score) {
 window.receiveRanking = function(scores) {
     const list = document.getElementById('ranking-list');
     if (!Array.isArray(scores) || scores.length === 0) {
-        list.innerHTML = 'この時代のデータはまだないよ！';
+        list.innerHTML = 'データはまだないよ！';
         return;
     }
+
+    // ホーム画面（時代未選択）→ 総合ランキング
+    if (!state.currentRegion || !state.currentEra) {
+        showOverallRanking(scores, list);
+        return;
+    }
+
+    // 時代別ランキング
+    document.getElementById('ranking-title').innerText = '🏆 時代別TOP10';
     const tag      = `${state.currentRegion}_${state.currentEra}`;
     const filtered = scores
         .filter(s => s.tag === tag)
@@ -63,3 +72,32 @@ window.receiveRanking = function(scores) {
         }
     }
 };
+
+function showOverallRanking(scores, list) {
+    document.getElementById('ranking-title').innerText = '🌍 総合TOP10';
+
+    // ユーザーごとに全タグのスコアを合算
+    const totals = {};
+    scores.forEach(s => {
+        totals[s.name] = (totals[s.name] || 0) + s.score;
+    });
+    const sorted = Object.entries(totals)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 10);
+
+    if (sorted.length === 0) {
+        list.innerHTML = 'まだ挑戦者がいないよ！';
+        return;
+    }
+
+    list.innerHTML = sorted.map(([name, total], i) => {
+        const badge = i === 0 ? ` <span class="rank-title-badge">🗺️ Atlas</span>` : '';
+        return `<div class="rank-row">${i + 1}位: ${name}${badge} (${total}点)</div>`;
+    }).join('');
+
+    // 自分の合計スコアを表示
+    if (state.currentUser) {
+        const myTotal = totals[state.currentUser] || 0;
+        document.getElementById('user-total-score').innerText = myTotal;
+    }
+}

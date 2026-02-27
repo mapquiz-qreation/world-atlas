@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=1100">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>WorldAtlas</title>
     <link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
     <link rel="apple-touch-icon" href="icon-192.png" sizes="192x192">
@@ -104,6 +104,24 @@
         <!-- マップ -->
         <div id="map"></div>
     </div>
+
+    <!-- モバイル：問題カードのラッパー（question-boxがJSで移動される） -->
+    <div id="mobile-question-wrapper"></div>
+
+    <!-- モバイル：ボトムシート -->
+    <div id="mobile-sheet">
+        <div class="sheet-handle"></div>
+        <div id="mobile-sheet-inner"></div>
+    </div>
+    <div id="mobile-backdrop"></div>
+
+    <!-- モバイル：ボトムナビ -->
+    <nav id="mobile-nav">
+        <button class="mob-tab" data-tab="region">🌍<span>地域</span></button>
+        <button class="mob-tab" data-tab="era">🕐<span>時代</span></button>
+        <button class="mob-tab" data-tab="quiz">❓<span>問題</span></button>
+        <button class="mob-tab" data-tab="rank">🏆<span>ランク</span></button>
+    </nav>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script type="module" src="js/main.js"></script>

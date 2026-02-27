@@ -5,6 +5,7 @@ import { checkLocalLogin, updateScoreUI, loginUser, logoutUser } from './user.js
 import { showQuestion, nextQuestion }                     from './quiz.js';
 import { startScopeQuiz, buildScopeChecklist, copyScopeUrl, startKeywordQuiz } from './scope.js';
 import { setupAdminPanel }                                from './admin.js';
+import { initMobile, closeMobileSheet }                   from './mobile.js';
 
 async function fetchQuestions() {
     const regions = ['europe', 'mideast', 'africa', 'india', 'china', 'southeast_asia', 'north_america', 'latin_america'];
@@ -85,6 +86,7 @@ export function startQuiz(regionKey, eraKey) {
         `${state.masterData[regionKey].name} / ${eraData.name}`;
 
     if (state.masterData[regionKey].bounds) flyToRegion(state.masterData[regionKey].bounds);
+    closeMobileSheet();
     showQuestion();
     syncRanking();
     updateScoreUI();
@@ -130,4 +132,5 @@ document.addEventListener('DOMContentLoaded', async function() {
     document.getElementById('keyword-start-btn').addEventListener('click', startKeywordQuiz);
     document.getElementById('home-btn').addEventListener('click', goHome);
     fetchQuestions();
+    initMobile();
 });

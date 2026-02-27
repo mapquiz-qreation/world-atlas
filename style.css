@@ -536,22 +536,43 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; background: var(--bg); 
         bottom: 10px;
         left: 8px;
         right: 8px;
-        z-index: 1000; /* Leaflet の全レイヤー（最大800）より上 */
+        z-index: 1000;
         border-radius: 16px;
         box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
-        max-height: 44vh;
+        max-height: 33vh; /* 画面の1/3を上限に */
         overflow-y: auto;
-        display: flex;
-        flex-direction: column;
-        /* 完全不透明 */
         background: var(--panel);
+        /* コンパクトなパディング */
+        padding: 10px 12px;
     }
-    /* 「次の問題へ」ボタンを常に下部に固定 */
+    /* 問題文：モバイルで読みやすいサイズに縮小 */
+    #map #question-box.in-map-overlay #q-text {
+        font-size: 17px;
+        margin: 4px 0 6px;
+        line-height: 1.4;
+    }
+    /* 時代表示・解答結果を小さく */
+    #map #question-box.in-map-overlay #era-display {
+        font-size: 9px;
+        margin-bottom: 3px;
+    }
+    #map #question-box.in-map-overlay #result {
+        font-size: 15px;
+        min-height: 18px;
+        margin: 4px 0;
+    }
+    #map #question-box.in-map-overlay #explanation-box {
+        font-size: 11px;
+        padding: 6px 8px;
+        margin-top: 6px;
+    }
+    /* 「次の問題へ」ボタンを常に下部に表示 */
     #map #question-box.in-map-overlay #next-btn {
         position: sticky;
         bottom: 0;
         margin-top: 6px;
-        flex-shrink: 0;
+        padding: 8px;
+        font-size: 13px;
     }
     /* home 画面はpanelが半透明なので上書き */
     body:not([data-region]):not([data-era]) #map #question-box.in-map-overlay {

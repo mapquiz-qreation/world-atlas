@@ -531,6 +531,8 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; background: var(--bg); 
         left: 8px;
         right: 8px;
         z-index: 200;
+        touch-action: auto;
+        -webkit-transform: translateZ(0); /* iOS: 確実に前面のレイヤーに */
     }
     #mobile-question-wrapper #question-box {
         border-radius: 16px;
@@ -551,6 +553,8 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; background: var(--bg); 
         border-top: 2px solid var(--border);
         z-index: 300;
         padding-bottom: env(safe-area-inset-bottom, 0);
+        touch-action: auto;
+        -webkit-transform: translateZ(0);
     }
 
     .mob-tab {

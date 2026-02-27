@@ -118,12 +118,40 @@ function setupNav() {
 }
 
 // ── 公開エントリポイント ─────────────────────────────────────
+// ── Leafletへのタッチ貫通を防ぐ ─────────────────────────────
+function blockLeafletTouch() {
+    const targets = [
+        'mobile-question-wrapper',
+        'mobile-nav',
+        'mobile-sheet',
+        'mobile-backdrop',
+    ];
+    targets.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+
+        // Leaflet公式のイベント伝播ブロック（L は CDN でグローバルに存在）
+        if (window.L && window.L.DomEvent) {
+            window.L.DomEvent.disableClickPropagation(el);
+            window.L.DomEvent.disableScrollPropagation(el);
+        }
+
+        // 念のためネイティブでも止める
+        ['touchstart', 'touchend', 'touchmove'].forEach(type => {
+            el.addEventListener(type, e => e.stopPropagation(), { passive: true });
+        });
+    });
+}
+
 export function initMobile() {
     if (isMobile()) moveQuestionBox();
     setupNav();
 
-    // レイアウト確定後にLeafletのサイズを再計算
-    setTimeout(invalidateMapSize, 100);
+    // Leaflet 初期化後（DOMContentLoaded + initMap が完了している）に実行
+    setTimeout(() => {
+        blockLeafletTouch();
+        invalidateMapSize();
+    }, 150);
 
     window.addEventListener('resize', () => {
         if (isMobile()) {

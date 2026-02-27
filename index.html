@@ -17,6 +17,14 @@
         <button id="home-btn" title="ホームへ戻る">🏠 ホーム</button>
     </div>
 
+    <!-- モバイル：トップナビ（デスクトップでは非表示） -->
+    <nav id="mobile-nav">
+        <button class="mob-tab" data-tab="region">🌍<span>地域</span></button>
+        <button class="mob-tab" data-tab="era">🕐<span>時代</span></button>
+        <button class="mob-tab" data-tab="quiz">❓<span>問題</span></button>
+        <button class="mob-tab" data-tab="rank">🏆<span>ランク</span></button>
+    </nav>
+
     <div id="main-layout">
         <div id="sidebar">
             <!-- 上部固定ゾーン：地域・時代選択 -->
@@ -105,23 +113,15 @@
         <div id="map"></div>
     </div>
 
-    <!-- モバイル：問題カードのラッパー（question-boxがJSで移動される） -->
-    <div id="mobile-question-wrapper"></div>
+    <!-- モバイル：問題パネル（画面下部に固定） -->
+    <div id="mobile-question-panel"></div>
 
-    <!-- モバイル：ボトムシート -->
+    <!-- モバイル：ボトムシート（地域・時代・ランク選択） -->
     <div id="mobile-sheet">
         <div class="sheet-handle"></div>
         <div id="mobile-sheet-inner"></div>
     </div>
     <div id="mobile-backdrop"></div>
-
-    <!-- モバイル：ボトムナビ -->
-    <nav id="mobile-nav">
-        <button class="mob-tab" data-tab="region">🌍<span>地域</span></button>
-        <button class="mob-tab" data-tab="era">🕐<span>時代</span></button>
-        <button class="mob-tab" data-tab="quiz">❓<span>問題</span></button>
-        <button class="mob-tab" data-tab="rank">🏆<span>ランク</span></button>
-    </nav>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script type="module" src="js/main.js"></script>

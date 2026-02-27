@@ -12,13 +12,14 @@ function isMobile() {
 }
 
 // ── question-box の移動 ──────────────────────────────────────
-// #map の内側に配置することで Leaflet のタッチ貫通を根本解決する
+// #mobile-question-panel（地図の下の固定パネル）に移動することで
+// タッチ貫通問題を根本解決し、ボタンも確実に表示できる
 function moveQuestionBox() {
-    const qBox = document.getElementById('question-box');
-    const map  = document.getElementById('map');
-    if (qBox && map && qBox.parentElement !== map) {
-        map.appendChild(qBox);
-        qBox.classList.add('in-map-overlay');
+    const qBox  = document.getElementById('question-box');
+    const panel = document.getElementById('mobile-question-panel');
+    if (qBox && panel && qBox.parentElement !== panel) {
+        qBox.classList.remove('in-map-overlay');
+        panel.appendChild(qBox);
     }
 }
 

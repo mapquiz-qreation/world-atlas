@@ -479,119 +479,43 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; background: var(--bg); 
 
 /* =====================================================
    モバイルレイアウト（スマホ縦持ち）
+   ─────────────────────────────────────────────────────
+   [title-bar]
+   [mobile-nav  ← タブナビ（上部）]
+   [main-layout / map  ← 地図（中間・flex:1）]
+   [mobile-question-panel  ← 問題パネル（下部固定高）]
    ===================================================== */
 
-/* デフォルトは非表示（デスクトップでは使わない） */
-#mobile-question-wrapper,
+/* デスクトップでは非表示 */
 #mobile-nav,
+#mobile-question-panel,
 #mobile-sheet,
 #mobile-backdrop { display: none; }
 
 @media (max-width: 768px) {
 
-    /* body: サイドパディングを除去してフルスクリーン化
-       padding-bottom でボトムナビ分の余白を確保（高さ計算をflexboxに任せる） */
+    /* ── body ── */
     body {
         padding: 0;
         padding-top: env(safe-area-inset-top, 0);
-        padding-bottom: 60px;
     }
 
-    /* タイトルバー: マージン調整 */
+    /* ── タイトルバー ── */
     #title-bar {
         margin-bottom: 0;
-        padding: 6px 12px;
+        padding: 5px 12px;
+        flex-shrink: 0;
     }
+    #app-title { font-size: 20px; letter-spacing: 3px; }
 
-    /* サイドバー非表示 */
-    #sidebar { display: none !important; }
-
-    /* メインレイアウト：地図がフル幅
-       overflow: hidden + position/z-index で #map のスタッキングを封じ込める */
-    #main-layout {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        gap: 0;
-        align-items: stretch;
-        overflow: hidden;
-        position: relative;
-        z-index: 0;
-    }
-
-    /* 地図：flexboxに高さを自動計算させる（ハードコード排除） */
-    #map {
-        flex: 1;
-        width: 100%;
-        height: 0; /* flex: 1 が実際の高さを決める */
-        border-radius: 0;
-        border-left: none;
-        border-right: none;
-        margin: 0;
-    }
-
-    /* ── 問題カード（#map 内に絶対配置してタッチ貫通を根本解決） ── */
-    #map #question-box.in-map-overlay {
-        position: absolute;
-        bottom: 10px;
-        left: 8px;
-        right: 8px;
-        z-index: 1000;
-        border-radius: 16px;
-        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
-        max-height: 33vh; /* 画面の1/3を上限に */
-        overflow-y: auto;
-        background: var(--panel);
-        /* コンパクトなパディング */
-        padding: 10px 12px;
-    }
-    /* 問題文：モバイルで読みやすいサイズに縮小 */
-    #map #question-box.in-map-overlay #q-text {
-        font-size: 17px;
-        margin: 4px 0 6px;
-        line-height: 1.4;
-    }
-    /* 時代表示・解答結果を小さく */
-    #map #question-box.in-map-overlay #era-display {
-        font-size: 9px;
-        margin-bottom: 3px;
-    }
-    #map #question-box.in-map-overlay #result {
-        font-size: 15px;
-        min-height: 18px;
-        margin: 4px 0;
-    }
-    #map #question-box.in-map-overlay #explanation-box {
-        font-size: 11px;
-        padding: 6px 8px;
-        margin-top: 6px;
-    }
-    /* 「次の問題へ」ボタンを常に下部に表示 */
-    #map #question-box.in-map-overlay #next-btn {
-        position: sticky;
-        bottom: 0;
-        margin-top: 6px;
-        padding: 8px;
-        font-size: 13px;
-    }
-    /* home 画面はpanelが半透明なので上書き */
-    body:not([data-region]):not([data-era]) #map #question-box.in-map-overlay {
-        background: #0d1b2a;
-    }
-
-    /* ── ボトムナビ ── */
+    /* ── トップナビ（タブ） ── */
     #mobile-nav {
         display: flex;
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 60px;
+        flex-shrink: 0;
+        height: 50px;
         background: var(--panel);
-        border-top: 2px solid var(--border);
+        border-bottom: 2px solid var(--border);
         z-index: 2000;
-        padding-bottom: env(safe-area-inset-bottom, 0);
-        touch-action: auto;
     }
 
     .mob-tab {
@@ -601,31 +525,115 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; background: var(--bg); 
         align-items: center;
         justify-content: center;
         gap: 2px;
-        font-size: 22px;
+        font-size: 20px;
         background: none;
         border: none;
         color: var(--text);
         cursor: pointer;
         transition: color 0.15s, transform 0.1s;
         -webkit-tap-highlight-color: transparent;
-        padding: 6px 0;
+        padding: 4px 0;
     }
     .mob-tab span {
         font-size: 10px;
         font-weight: 700;
         letter-spacing: 0.5px;
     }
-    .mob-tab.active  { color: var(--act); }
-    .mob-tab:active  { transform: scale(0.9); }
+    .mob-tab.active { color: var(--act); }
+    .mob-tab:active { transform: scale(0.9); }
 
-    /* ── ボトムシート ── */
+    /* ── サイドバー非表示 ── */
+    #sidebar { display: none !important; }
+
+    /* ── メインレイアウト（地図を包む） ── */
+    #main-layout {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        align-items: stretch;
+        overflow: hidden;
+        position: relative;
+        z-index: 0;
+        min-height: 0;
+    }
+
+    /* ── 地図：残り高さをすべて使う ── */
+    #map {
+        flex: 1;
+        width: 100%;
+        height: 0; /* flex:1 が実際の高さを決める */
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        margin: 0;
+    }
+
+    /* ── 問題パネル（下部固定エリア） ── */
+    #mobile-question-panel {
+        display: block;
+        flex-shrink: 0;
+        height: 30vh;
+        overflow-y: auto;
+        background: var(--panel);
+        border-top: 4px double var(--border);
+        box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.2);
+    }
+    /* home 画面は panel が半透明なので上書き */
+    body:not([data-region]):not([data-era]) #mobile-question-panel {
+        background: #0d1b2a;
+    }
+
+    /* 問題パネル内の question-box スタイル調整 */
+    #mobile-question-panel #question-box {
+        padding: 10px 14px;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        background: transparent;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    #mobile-question-panel #q-text {
+        font-size: 17px;
+        margin: 4px 0 6px;
+        line-height: 1.45;
+    }
+    #mobile-question-panel #era-display {
+        font-size: 9px;
+        margin-bottom: 3px;
+    }
+    #mobile-question-panel #result {
+        font-size: 15px;
+        min-height: 18px;
+        margin: 4px 0;
+    }
+    #mobile-question-panel #explanation-box {
+        font-size: 11px;
+        padding: 6px 8px;
+        margin-top: 4px;
+        overflow-y: auto;
+        flex: 1;
+    }
+    /* 「次の問題へ」を常にパネル下部に固定 */
+    #mobile-question-panel #next-btn {
+        position: sticky;
+        bottom: 0;
+        margin-top: 6px;
+        padding: 9px;
+        font-size: 13px;
+        flex-shrink: 0;
+    }
+
+    /* ── ボトムシート（地域・時代・ランク選択） ── */
     #mobile-sheet {
         display: block;
         position: fixed;
-        bottom: 60px;
+        bottom: 0;
         left: 0;
         right: 0;
-        max-height: 65vh;
+        max-height: 70vh;
         background: var(--panel);
         border-radius: 20px 20px 0 0;
         border: 2px solid var(--border);
@@ -634,7 +642,7 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; background: var(--bg); 
         transform: translateY(100%);
         transition: transform 0.3s ease;
         overflow-y: auto;
-        padding: 8px 14px 20px;
+        padding: 8px 14px 24px;
     }
     #mobile-sheet.open { transform: translateY(0); }
 
@@ -646,28 +654,22 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; background: var(--bg); 
         margin: 4px auto 14px;
     }
 
-    /* シート内のボタンを大きく見やすく */
     #mobile-sheet-inner .mode-btn,
     #mobile-sheet-inner .era-btn {
         font-size: 13px;
         padding: 10px 6px;
     }
 
-    /* ── バックドロップ ── */
-    /* pointer-events: none でタッチを地図に透過させる
-       シートは同じタブを再タップ or ❓タブで閉じる */
+    /* ── バックドロップ（タッチ透過：地図操作を妨げない） ── */
     #mobile-backdrop {
         display: none;
         position: fixed;
         inset: 0;
-        background: rgba(0, 0, 0, 0.25);
+        background: rgba(0, 0, 0, 0.2);
         z-index: 1800;
         pointer-events: none;
     }
     #mobile-backdrop.active { display: block; }
-
-    /* タイトルバーのフォントを縮小 */
-    #app-title { font-size: 20px; letter-spacing: 3px; }
 }
 
 /* =====================================================

@@ -380,8 +380,8 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; background: var(--bg); 
 #sidebar { width: 300px; display: flex; flex-direction: column; height: 100%; border: 4px double var(--border); border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.12); overflow: hidden; }
 /* 上部固定ゾーン：地域・時代選択（スクロールしない） */
 #sidebar-controls { flex-shrink: 0; padding: 6px 8px 4px; border-bottom: 2px solid var(--border); display: flex; flex-direction: column; gap: 5px; }
-/* 下部スクロールゾーン：問題・ユーザー・その他 */
-#sidebar-content { flex: 1 1 0; min-height: 0; overflow-y: auto; padding: 8px; display: flex; flex-direction: column; gap: 10px; }
+/* 下部スクロールゾーン：問題・ユーザー・その他（最下部の管理ツールがフッターに隠れないよう余白を多めに） */
+#sidebar-content { flex: 1 1 0; min-height: 0; overflow-y: auto; padding: 8px 8px 24px; display: flex; flex-direction: column; gap: 10px; }
 
 /* 試験範囲バナー（question-box 内に配置） */
 #scope-banner { display: none; font-size: 10px; line-height: 1.5; padding: 5px 8px; border-radius: 5px; background: linear-gradient(135deg, #1a237e, #283593); color: #e8eaf6; border: 2px solid #5c6bc0; box-shadow: 0 1px 4px rgba(0,0,0,0.3); margin-bottom: 6px; }
@@ -642,7 +642,7 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; background: var(--bg); 
         transform: translateY(100%);
         transition: transform 0.3s ease;
         overflow-y: auto;
-        padding: 8px 14px 24px;
+        padding: 8px 14px max(32px, env(safe-area-inset-bottom));
     }
     #mobile-sheet.open { transform: translateY(0); }
 
@@ -711,6 +711,10 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; background: var(--bg); 
    ===================================================== */
 #legal-footer {
     display: none;
+}
+/* ホーム時：フッター分の余白を確保し、サイドバー最下部（座標・エリアツール）が隠れないようにする */
+body:not([data-region]):not([data-era]) {
+    padding-bottom: 52px;
 }
 body:not([data-region]):not([data-era]) #legal-footer {
     display: block;

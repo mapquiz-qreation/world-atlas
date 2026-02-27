@@ -15,6 +15,7 @@ export function showQuestion() {
     document.getElementById('q-text').innerText       = q.text;
     document.getElementById('result').innerText       = '';
     document.getElementById('next-btn').style.display = 'none';
+    hideExplanation();
 
     clearQuizLayer();
 
@@ -45,13 +46,15 @@ function showPointQuestion(q) {
         marker.addTo(layer);
 
         // クリックハンドラー
-        marker.on('click', () => {
+        marker.on('click', (e) => {
+            L.DomEvent.stopPropagation(e);
             if (state.isAnswered) return;
             state.isAnswered = true;
             if (c.correct) {
                 marker.setStyle({ fillColor: '#43a047', color: '#fff' });
                 document.getElementById('result').innerText = '⭕ 正解！';
                 addPoint();
+                showExplanation(q);
             } else {
                 marker.setStyle({ fillColor: '#9e9e9e', fillOpacity: 0.4 });
                 document.getElementById('result').innerText = '❌ 不正解';
@@ -114,6 +117,7 @@ function showAreaQuestion(q) {
                 polygon.setStyle({ fillColor: area.color, fillOpacity: 0.75, weight: 3 });
                 document.getElementById('result').innerText = '⭕ 正解！';
                 addPoint();
+                showExplanation(q);
                 // 正解時：クリックしたポリゴン（正解）のラベルだけ表示
                 polygon._labelTooltip?.setOpacity(1);
             } else {
@@ -150,4 +154,29 @@ export function getLatLngCenter(latlngs) {
 export function nextQuestion() {
     state.currentIdx = (state.currentIdx + 1) % state.questions.length;
     showQuestion();
+}
+
+// ── 解説・関連用語表示 ─────────────────────────────────────────
+function showExplanation(q) {
+    const box = document.getElementById('explanation-box');
+    const textEl = document.getElementById('explanation-text');
+    const termsEl = document.getElementById('related-terms');
+    if (!q.explanation && (!q.relatedTerms || q.relatedTerms.length === 0)) {
+        box.style.display = 'none';
+        return;
+    }
+    textEl.textContent = q.explanation || '';
+    textEl.style.display = q.explanation ? 'block' : 'none';
+    if (q.relatedTerms && q.relatedTerms.length > 0) {
+        termsEl.innerHTML = '<strong>関連用語：</strong> ' + q.relatedTerms.join('　・　');
+        termsEl.style.display = 'block';
+    } else {
+        termsEl.style.display = 'none';
+    }
+    box.style.display = 'block';
+}
+
+function hideExplanation() {
+    const box = document.getElementById('explanation-box');
+    box.style.display = 'none';
 }

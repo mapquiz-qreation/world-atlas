@@ -15,6 +15,43 @@
     --rank-title: #d32f2f;
 }
 
+/* ホーム画面（宇宙風・グラデーションアニメーション） */
+body:not([data-region]):not([data-era]) {
+    background: linear-gradient(-45deg, #0d1b2a, #1a3a5c, #16213e, #0d1b2a);
+    background-size: 400% 400%;
+    animation: spaceGradient 8s ease infinite;
+    color: #e8eaf6;
+    --text: #e8eaf6;
+    --panel: rgba(13, 27, 42, 0.92);
+    --border: #4a90d9;
+    --lbl-a: #1a3a5c;
+    --lbl-b: #4a90d9;
+    --lbl-text: #fff;
+    --q: #fff;
+    --btn: rgba(26, 58, 92, 0.85);
+    --btn-c: #e8eaf6;
+    --btn-bd: #4a90d9;
+    --btn-on: #4a90d9;
+    --btn-on-c: #fff;
+    --act: #4a90d9;
+    --act-c: #fff;
+    --map: #0d1b2a;
+    --rank: rgba(13, 27, 42, 0.95);
+    --rank-bd: #4a90d9;
+    --rank-c: #e8eaf6;
+    --rank-title: #ffd54f;
+}
+@keyframes spaceGradient {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+@keyframes mapSpaceGradient {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
 /* 古代ヨーロッパ（石板・砂色） */
 body[data-era="ancient"] {
     --bg: #f5ecd8;      --text: #4a3526;
@@ -53,6 +90,20 @@ body[data-era="modern"] {
     --rank: #fafafa;    --rank-bd: #90a4ae;
 }
 /* イスラーム・トルコモンゴル（ターコイズ＋ゴールド） */
+/* 古代オリエント（粘土板・砂漠・ナイル） */
+body[data-era="ancient_orient"] {
+    --bg: linear-gradient(160deg, #8b7355 0%, #5c4033 50%, #3e2723 100%);
+    --text: #f5e6d3;
+    --panel: rgba(62,39,35,0.95); --border: #d4a574;
+    --lbl-a: #6d4c41;   --lbl-b: #8d6e63;  --lbl-text: #fff8e1;
+    --q: #ffd54f;
+    --btn: #5d4037;     --btn-c: #f5e6d3;  --btn-bd: #d4a574;
+    --btn-on: #8d6e63;  --btn-on-c: #fff8e1; --btn-on-bd: #ffd54f;
+    --act: #6d4c41;     --act-c: #fff8e1;
+    --map: linear-gradient(160deg, #a1887f 0%, #6d4c41 60%, #3e2723 100%);
+    --rank: rgba(62,39,35,0.95); --rank-bd: #d4a574; --rank-c: #f5e6d3;
+    --rank-title: #ffd54f;
+}
 body[data-era="islamic_expansion"],
 body[data-era="turco_mongol"] {
     --bg: #e0f7fa;      --text: #004d40;
@@ -232,7 +283,26 @@ body[data-region="southeast_asia"] {
    ===================================================== */
 body { font-family: 'Helvetica Neue', Arial, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; height: 100vh; overflow: hidden; display: flex; flex-direction: column; transition: background 0.3s, color 0.2s; }
 #title-bar { display: flex; align-items: center; justify-content: center; position: relative; margin-bottom: 10px; }
-h1 { font-size: 20px; margin: 0; text-align: center; letter-spacing: 2px; }
+#app-title {
+    font-size: 28px;
+    font-weight: 800;
+    margin: 0;
+    text-align: center;
+    letter-spacing: 6px;
+    background: linear-gradient(135deg, #ffd54f 0%, #4fc3f7 50%, #b388ff 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    -webkit-text-stroke: 2px rgba(0, 0, 0, 0.9);
+    paint-order: stroke fill;
+    filter: drop-shadow(0 0 12px rgba(79, 195, 247, 0.4)) drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+    animation: titleShimmer 6s ease-in-out infinite;
+}
+@keyframes titleShimmer {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
 #home-btn { position: absolute; right: 0; font-size: 12px; padding: 4px 10px; border-radius: 6px; border: 2px solid var(--border); background: var(--panel); color: var(--text); cursor: pointer; transition: background 0.2s, color 0.2s; }
 #home-btn:hover { background: var(--act); color: var(--act-c); }
 #main-layout { display: flex; gap: 15px; flex: 1; align-items: flex-start; justify-content: center; }
@@ -267,6 +337,8 @@ h1 { font-size: 20px; margin: 0; text-align: center; letter-spacing: 2px; }
 #question-box { background: var(--panel); padding: 15px; text-align: center; position: relative; }
 #q-text { display: block; font-size: 22px; font-weight: bold; color: var(--q); margin: 10px 0; }
 #result { font-size: 18px; font-weight: bold; min-height: 25px; margin: 5px 0; }
+#explanation-box { display: none; text-align: left; font-size: 12px; margin-top: 10px; padding: 10px; background: rgba(0,0,0,0.05); border-radius: 6px; border-left: 4px solid var(--act); line-height: 1.6; }
+#explanation-box #related-terms { margin-top: 8px; }
 #next-btn { width: 100%; padding: 10px; background: var(--act); color: var(--act-c); border: none; border-radius: 6px; cursor: pointer; display: none; font-weight: bold; font-size: 14px; }
 
 /* =====================================================
@@ -278,7 +350,9 @@ h1 { font-size: 20px; margin: 0; text-align: center; letter-spacing: 2px; }
     border: 4px double var(--border);
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-    background: #c8d8a0;
+    background: linear-gradient(135deg, #0d1b2a 0%, #1a3a5c 50%, #16213e 100%);
+    background-size: 400% 400%;
+    animation: mapSpaceGradient 10s ease infinite;
     min-width: 0;
 }
 
@@ -339,7 +413,7 @@ h1 { font-size: 20px; margin: 0; text-align: center; letter-spacing: 2px; }
    ===================================================== */
 @media (orientation: landscape) and (max-height: 560px) {
     body  { padding: 4px; }
-    h1    { font-size: 14px; margin: 0 0 4px 0; }
+    #app-title { font-size: 18px; letter-spacing: 4px; }
 
     #sidebar { height: 96vh; gap: 5px; }
     #user-panel { padding: 6px; }
@@ -352,6 +426,7 @@ h1 { font-size: 20px; margin: 0; text-align: center; letter-spacing: 2px; }
     #question-box { padding: 8px; }
     #q-text  { font-size: 17px; margin: 5px 0; }
     #result  { font-size: 14px; min-height: 18px; margin: 3px 0; }
+    #explanation-box { font-size: 11px; padding: 6px; margin-top: 6px; }
     #next-btn { padding: 6px; font-size: 12px; }
 
     #map { height: calc(96vh - 8px); }

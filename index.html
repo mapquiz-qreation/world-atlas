@@ -4,13 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=1100">
     <title>WorldAtlas</title>
+    <link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
+    <link rel="apple-touch-icon" href="icon-192.png" sizes="192x192">
+    <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <div id="title-bar">
-        <h1>🗺️ WorldAtlas</h1>
+        <h1 id="app-title">🗺️ WorldAtlas</h1>
         <button id="home-btn" title="ホームへ戻る">🏠 ホーム</button>
     </div>
 
@@ -32,6 +35,10 @@
                     <div id="era-display" style="font-size:10px; color:#8d6e63; margin-bottom:5px;">-</div>
                     <span id="q-text">Ready?</span>
                     <p id="result"></p>
+                    <div id="explanation-box">
+                        <div id="explanation-text"></div>
+                        <div id="related-terms"></div>
+                    </div>
                     <button id="next-btn">次の問題へ →</button>
                 </div>
 

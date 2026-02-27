@@ -1,8 +1,7 @@
 import { state }          from './state.js';
 import { shuffle }        from './shuffle.js';
 import { showQuestion }   from './quiz.js';
-import { flyToRegion }    from './map.js';
-import { clearQuizLayer } from './map.js';
+import { flyToRegion, clearQuizLayer } from './map.js';
 
 // scopeStr 例: "europe_ancient,china_ancient_china,mideast_islamic_expansion"
 export function startScopeQuiz(scopeStr) {

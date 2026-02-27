@@ -79,7 +79,7 @@ async function loadRiversLayer() {
         const data = await res.json();
         L.geoJSON(data, { style: RIVER_STYLE }).addTo(map);
     } catch (e) {
-        // 河川はオプションなので失敗しても無視
+        console.warn('rivers.geojson の読み込みに失敗:', e);
     }
 }
 

@@ -7,6 +7,7 @@ export const TAG_TITLES = {
     "china_ancient_china":         "👑 始皇帝",
     "china_medieval_china":        "👑 大ハーン (カアン)",
     "china_early_modern_china":    "👑 総督 (そうとく)",
+    "mideast_ancient_orient":      "📜 大王 (シャル・キッシャティ)",
     "mideast_islamic_expansion":   "☪️ 正統カリフ",
     "mideast_turco_mongol":        "☪️ スルタン・ハン",
     "africa_african_kingdoms":     "👑 ムサ王 (マンサ・ムーサ)",

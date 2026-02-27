@@ -31,6 +31,13 @@ export async function uploadScore(score) {
     setTimeout(syncRanking, 6000);
 }
 
+function escapeHtml(str) {
+    if (typeof str !== 'string') return '';
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
+
 // JSONP コールバック（グローバルに公開）
 window.receiveRanking = function(scores) {
     const list = document.getElementById('ranking-list');
@@ -58,9 +65,9 @@ window.receiveRanking = function(scores) {
         const titleForTag = TAG_TITLES[tag] || '';
         list.innerHTML = filtered.slice(0, 10).map((s, i) => {
             const badge = i === 0 && titleForTag
-                ? ` <span class="rank-title-badge">${titleForTag}</span>`
+                ? ` <span class="rank-title-badge">${escapeHtml(titleForTag)}</span>`
                 : '';
-            return `<div class="rank-row">${i + 1}位: ${s.name}${badge} (${s.score}点)</div>`;
+            return `<div class="rank-row">${i + 1}位: ${escapeHtml(s.name)}${badge} (${s.score}点)</div>`;
         }).join('');
     }
 
@@ -92,7 +99,7 @@ function showOverallRanking(scores, list) {
 
     list.innerHTML = sorted.map(([name, total], i) => {
         const badge = i === 0 ? ` <span class="rank-title-badge">🗺️ Atlas</span>` : '';
-        return `<div class="rank-row">${i + 1}位: ${name}${badge} (${total}点)</div>`;
+        return `<div class="rank-row">${i + 1}位: ${escapeHtml(name)}${badge} (${total}点)</div>`;
     }).join('');
 
     // 自分の合計スコアを表示

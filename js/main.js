@@ -71,7 +71,10 @@ export function startQuiz(regionKey, eraKey) {
     state.currentEra    = eraKey;
     document.body.dataset.era = eraKey;
     const eraData = state.masterData[regionKey].eras[eraKey];
-    const added   = JSON.parse(localStorage.getItem(`quiz_added_${regionKey}_${eraKey}`) || '[]');
+    let added = [];
+    try {
+        added = JSON.parse(localStorage.getItem(`quiz_added_${regionKey}_${eraKey}`) || '[]');
+    } catch (_) { /* 不正なJSONは無視 */ }
     state.questions  = [...(eraData.fixed || []), ...added];
     state.currentIdx = 0;
 
@@ -81,6 +84,7 @@ export function startQuiz(regionKey, eraKey) {
     document.getElementById('era-display').innerText =
         `${state.masterData[regionKey].name} / ${eraData.name}`;
 
+    if (state.masterData[regionKey].bounds) flyToRegion(state.masterData[regionKey].bounds);
     showQuestion();
     syncRanking();
     updateScoreUI();
@@ -88,8 +92,10 @@ export function startQuiz(regionKey, eraKey) {
 
 function goHome() {
     // クイズ状態をリセット
-    state.questions  = [];
-    state.currentIdx = 0;
+    state.questions     = [];
+    state.currentIdx    = 0;
+    state.currentRegion = '';
+    state.currentEra    = '';
     clearQuizLayer();
 
     // ボタンのアクティブ状態をリセット
@@ -110,8 +116,8 @@ function goHome() {
     // 地図をワールドビューに戻す
     resetMapView();
 
-    // ログイン中なら総合ランキングを表示
-    if (state.currentUser) syncRanking();
+    // 総合ランキングを表示（currentRegion/Era をクリアしたので receiveRanking が総合表示する）
+    syncRanking();
 }
 
 document.addEventListener('DOMContentLoaded', async function() {

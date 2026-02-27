@@ -3,7 +3,7 @@
  */
 
 import { state }       from './state.js';
-import { setupAdminClick, removeAdminClick, getMap, clearQuizLayer } from './map.js';
+import { setupAdminClick, getMap, clearQuizLayer } from './map.js';
 
 // ── エリアツール用の状態 ──────────────────────────────────────
 let areaToolLatlngs = []; // 現在打ち込み中の頂点 [[lat, lng], ...]
@@ -45,7 +45,8 @@ export function setupAdminPanel(startQuizCallback) {
             return alert('名前、場所、時代を確定させてね！');
         }
         const key   = `quiz_added_${state.currentRegion}_${state.currentEra}`;
-        const saved = JSON.parse(localStorage.getItem(key) || '[]');
+        let saved = [];
+        try { saved = JSON.parse(localStorage.getItem(key) || '[]'); } catch (_) {}
         saved.push({ text: t, lat: state.lastClickedPos.lat, lng: state.lastClickedPos.lng });
         localStorage.setItem(key, JSON.stringify(saved));
         document.getElementById('new-q-text').value = '';
@@ -58,7 +59,8 @@ export function setupAdminPanel(startQuizCallback) {
         const fullData = JSON.parse(JSON.stringify(state.masterData));
         Object.keys(fullData).forEach(reg => {
             Object.keys(fullData[reg].eras).forEach(era => {
-                const added = JSON.parse(localStorage.getItem(`quiz_added_${reg}_${era}`) || '[]');
+                let added = [];
+                try { added = JSON.parse(localStorage.getItem(`quiz_added_${reg}_${era}`) || '[]'); } catch (_) {}
                 fullData[reg].eras[era].fixed = [...fullData[reg].eras[era].fixed, ...added];
             });
         });
@@ -126,7 +128,8 @@ function setupAreaTool(startQuizCallback) {
         if (!state.currentEra)                         return alert('先に時代を選択してください');
 
         const key   = `quiz_added_${state.currentRegion}_${state.currentEra}`;
-        const saved = JSON.parse(localStorage.getItem(key) || '[]');
+        let saved = [];
+        try { saved = JSON.parse(localStorage.getItem(key) || '[]'); } catch (_) {}
         saved.push({ type: 'area', text, areas: [...areaToolAreas] });
         localStorage.setItem(key, JSON.stringify(saved));
 

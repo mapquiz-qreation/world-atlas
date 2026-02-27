@@ -523,22 +523,24 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; background: var(--bg); 
         margin: 0;
     }
 
-    /* ── 問題カード（地図の上に浮かぶ） ── */
-    #mobile-question-wrapper {
-        display: block;
-        position: fixed;
-        bottom: 68px;
+    /* ── 問題カード（#map 内に絶対配置してタッチ貫通を根本解決） ── */
+    #map #question-box.in-map-overlay {
+        position: absolute;
+        bottom: 10px;
         left: 8px;
         right: 8px;
-        z-index: 200;
-        touch-action: auto;
-        -webkit-transform: translateZ(0); /* iOS: 確実に前面のレイヤーに */
-    }
-    #mobile-question-wrapper #question-box {
+        z-index: 1000; /* Leaflet の全レイヤー（最大800）より上 */
         border-radius: 16px;
-        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
         max-height: 42vh;
         overflow-y: auto;
+        /* 完全不透明：透過によるタッチ貫通も防ぐ */
+        background: var(--panel);
+        opacity: 1;
+    }
+    /* home 画面はpanelが半透明なので上書き */
+    body:not([data-region]):not([data-era]) #map #question-box.in-map-overlay {
+        background: #0d1b2a;
     }
 
     /* ── ボトムナビ ── */

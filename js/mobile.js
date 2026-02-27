@@ -12,11 +12,13 @@ function isMobile() {
 }
 
 // ── question-box の移動 ──────────────────────────────────────
+// #map の内側に配置することで Leaflet のタッチ貫通を根本解決する
 function moveQuestionBox() {
-    const qBox    = document.getElementById('question-box');
-    const wrapper = document.getElementById('mobile-question-wrapper');
-    if (qBox && wrapper && qBox.parentElement !== wrapper) {
-        wrapper.appendChild(qBox);
+    const qBox = document.getElementById('question-box');
+    const map  = document.getElementById('map');
+    if (qBox && map && qBox.parentElement !== map) {
+        map.appendChild(qBox);
+        qBox.classList.add('in-map-overlay');
     }
 }
 
@@ -24,6 +26,7 @@ function returnQuestionBox() {
     const qBox    = document.getElementById('question-box');
     const content = document.getElementById('sidebar-content');
     if (qBox && content && qBox.parentElement !== content) {
+        qBox.classList.remove('in-map-overlay');
         content.prepend(qBox);
     }
 }
@@ -118,29 +121,19 @@ function setupNav() {
 }
 
 // ── 公開エントリポイント ─────────────────────────────────────
-// ── Leafletへのタッチ貫通を防ぐ ─────────────────────────────
+// ── Leafletへのタッチ貫通を防ぐ（ナビ・シート用） ────────────
 function blockLeafletTouch() {
-    const targets = [
-        'mobile-question-wrapper',
-        'mobile-nav',
-        'mobile-sheet',
-        'mobile-backdrop',
-    ];
+    // ナビとシートは#mapの外にある → Leaflet公式のブロックを適用
+    const targets = ['mobile-nav', 'mobile-sheet', 'mobile-backdrop'];
     targets.forEach(id => {
         const el = document.getElementById(id);
         if (!el) return;
-
-        // Leaflet公式のイベント伝播ブロック（L は CDN でグローバルに存在）
         if (window.L && window.L.DomEvent) {
             window.L.DomEvent.disableClickPropagation(el);
             window.L.DomEvent.disableScrollPropagation(el);
         }
-
-        // 念のためネイティブでも止める
-        ['touchstart', 'touchend', 'touchmove'].forEach(type => {
-            el.addEventListener(type, e => e.stopPropagation(), { passive: true });
-        });
     });
+    // question-box は #map の内側に移動済みなので Leaflet が自動認識する
 }
 
 export function initMobile() {

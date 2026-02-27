@@ -1,6 +1,9 @@
 // ★君のGASのURLを貼り付けてね！
 export const GAS_URL = "https://script.google.com/macros/s/AKfycby-dUq_dfcitTMzpl8GPbyoQZUB9DGYEJyd7tZfxb9ToAs3XwMkgLRc7V64VlrsUrwo/exec";
 
+// ★StripeのPayment LinkのURLを貼り付けてね！（Stripeアカウント作成後に設定）
+export const STRIPE_PAYMENT_URL = "";
+
 // 地域・時代タグごとの第1位称号
 export const TAG_TITLES = {
     "china_five_hu":               "⚔️ 単于 (ぜんう)",

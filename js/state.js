@@ -14,6 +14,9 @@ export const state = {
     srsData:        {},
     isReviewMode:   false,
 
+    // 有料プラン
+    isPaid:         false,
+
     // Leaflet インスタンス（map.js が設定）
     map:        null,
     quizLayer:  null,

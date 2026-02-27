@@ -1,4 +1,5 @@
 import { state }                                         from './state.js';
+import { GAS_URL, STRIPE_PAYMENT_URL }                   from './config.js';
 import { initMap, flyToRegion, resetMapView, clearQuizLayer } from './map.js';
 import { syncRanking }                                    from './ranking.js';
 import { checkLocalLogin, updateScoreUI, loginUser, logoutUser } from './user.js';
@@ -120,8 +121,8 @@ function goHome() {
 
 // ── 復習モード ────────────────────────────────────────────────
 export async function startReviewMode() {
-    if (!state.currentUser) {
-        alert('復習モードを使うには先にログインしてね！');
+    if (!state.currentUser || !state.isPaid) {
+        alert('復習モードは有料プランが必要です。\nログイン後にご利用いただけます。');
         return;
     }
 
@@ -176,6 +177,18 @@ document.addEventListener('DOMContentLoaded', async function() {
     document.getElementById('keyword-start-btn').addEventListener('click', startKeywordQuiz);
     document.getElementById('home-btn').addEventListener('click', goHome);
     document.getElementById('review-btn').addEventListener('click', startReviewMode);
+
+    // Stripe 購入ボタンに URL をセット
+    const buyBtn = document.getElementById('buy-btn');
+    if (buyBtn && STRIPE_PAYMENT_URL) {
+        buyBtn.href = STRIPE_PAYMENT_URL;
+    } else if (buyBtn) {
+        buyBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            alert('準備中です。もうしばらくお待ちください。');
+        });
+    }
+
     fetchQuestions();
     initMobile();
 });

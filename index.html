@@ -53,9 +53,12 @@
                 <!-- ユーザー登録 -->
                 <div id="user-panel">
                     <div id="login-form">
-                        <strong>👤 受験生登録</strong><br>
-                        <input type="text" id="user-name-input" placeholder="名前を入力" style="width:140px; margin-top:5px; padding:5px;">
+                        <strong>👤 受験生登録</strong>
+                        <p class="login-note">スコア保存・ランキング・復習モードは有料プランが必要です。</p>
+                        <input type="text" id="user-name-input" placeholder="購入時のユーザー名" style="width:140px; margin-top:5px; padding:5px;">
                         <button id="login-btn" class="mode-btn" style="min-width:60px;">参戦</button>
+                        <a id="buy-btn" href="#" target="_blank" rel="noopener">👑 購入する（980円）</a>
+                        <p class="login-note coupon-note">塾生の方は専用クーポンで無料！</p>
                     </div>
                     <div id="user-info-area" style="display:none;">
                         ログイン中: <span id="display-name" style="font-weight:bold;"></span><br>
@@ -125,6 +128,14 @@
         <div id="mobile-sheet-inner"></div>
     </div>
     <div id="mobile-backdrop"></div>
+
+    <footer id="legal-footer">
+        <a href="legal.html">特定商取引法に基づく表記</a>
+        <span>｜</span>
+        <a href="terms.html">利用規約</a>
+        <span>｜</span>
+        <a href="privacy.html">プライバシーポリシー</a>
+    </footer>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script type="module" src="js/main.js"></script>

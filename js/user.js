@@ -58,6 +58,16 @@ export async function loginUser() {
     const name = document.getElementById('user-name-input').value.trim();
     if (!name) return alert('ネームを入力してね！');
 
+    // Payment URL が未設定＝有料化前は全員そのままプレイ可能
+    if (!STRIPE_PAYMENT_URL) {
+        state.isPaid      = true;
+        state.currentUser = name;
+        localStorage.setItem('quiz_current_user', name);
+        showUserInfo();
+        syncRanking();
+        return;
+    }
+
     const btn = document.getElementById('login-btn');
     btn.disabled    = true;
     btn.textContent = '確認中...';
@@ -94,6 +104,15 @@ export function logoutUser() {
 export function checkLocalLogin() {
     const saved = localStorage.getItem('quiz_current_user');
     if (!saved) return;
+
+    // Payment URL 未設定＝有料化前は保存されたユーザーでそのままプレイ可能
+    if (!STRIPE_PAYMENT_URL) {
+        state.isPaid      = true;
+        state.currentUser = saved;
+        showUserInfo();
+        syncRanking();
+        return;
+    }
 
     // キャッシュから isPaid を即時反映
     const cacheKey = `paid_${saved}`;

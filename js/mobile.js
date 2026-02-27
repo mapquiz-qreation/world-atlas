@@ -117,7 +117,7 @@ function setupNav() {
         });
     });
 
-    backdrop.addEventListener('click', closeMobileSheet);
+    // backdrop は pointer-events: none のため不要（タブ再タップで閉じる）
 }
 
 // ── 公開エントリポイント ─────────────────────────────────────

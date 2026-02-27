@@ -489,10 +489,12 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; background: var(--bg); 
 
 @media (max-width: 768px) {
 
-    /* body: サイドパディングを除去してフルスクリーン化 */
+    /* body: サイドパディングを除去してフルスクリーン化
+       padding-bottom でボトムナビ分の余白を確保（高さ計算をflexboxに任せる） */
     body {
         padding: 0;
         padding-top: env(safe-area-inset-top, 0);
+        padding-bottom: 60px;
     }
 
     /* タイトルバー: マージン調整 */
@@ -505,21 +507,23 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; background: var(--bg); 
     #sidebar { display: none !important; }
 
     /* メインレイアウト：地図がフル幅
-       position + z-index: 0 で #map のスタッキングコンテキストをここに封じ込める */
+       overflow: hidden + position/z-index で #map のスタッキングを封じ込める */
     #main-layout {
+        flex: 1;
+        display: flex;
         flex-direction: column;
         gap: 0;
         align-items: stretch;
+        overflow: hidden;
         position: relative;
         z-index: 0;
     }
 
-    /* 地図：タイトルバー(44px) + ボトムナビ(60px) を除いた高さを明示 */
+    /* 地図：flexboxに高さを自動計算させる（ハードコード排除） */
     #map {
-        flex: none;
+        flex: 1;
         width: 100%;
-        height: calc(100dvh - 44px - 60px);
-        max-height: calc(100dvh - 44px - 60px);
+        height: 0; /* flex: 1 が実際の高さを決める */
         border-radius: 0;
         border-left: none;
         border-right: none;
@@ -535,11 +539,19 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; background: var(--bg); 
         z-index: 1000; /* Leaflet の全レイヤー（最大800）より上 */
         border-radius: 16px;
         box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
-        max-height: 42vh;
+        max-height: 44vh;
         overflow-y: auto;
-        /* 完全不透明：透過によるタッチ貫通も防ぐ */
+        display: flex;
+        flex-direction: column;
+        /* 完全不透明 */
         background: var(--panel);
-        opacity: 1;
+    }
+    /* 「次の問題へ」ボタンを常に下部に固定 */
+    #map #question-box.in-map-overlay #next-btn {
+        position: sticky;
+        bottom: 0;
+        margin-top: 6px;
+        flex-shrink: 0;
     }
     /* home 画面はpanelが半透明なので上書き */
     body:not([data-region]):not([data-era]) #map #question-box.in-map-overlay {
@@ -621,12 +633,15 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; background: var(--bg); 
     }
 
     /* ── バックドロップ ── */
+    /* pointer-events: none でタッチを地図に透過させる
+       シートは同じタブを再タップ or ❓タブで閉じる */
     #mobile-backdrop {
         display: none;
         position: fixed;
         inset: 0;
-        background: rgba(0, 0, 0, 0.45);
+        background: rgba(0, 0, 0, 0.25);
         z-index: 1800;
+        pointer-events: none;
     }
     #mobile-backdrop.active { display: block; }
 

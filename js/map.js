@@ -124,3 +124,8 @@ export function removeAdminClick() {
 export function getMap() {
     return map;
 }
+
+// ── サイズ再計算（レイアウト変更後に呼ぶ） ────────────────────
+export function invalidateMapSize() {
+    if (map) map.invalidateSize();
+}

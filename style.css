@@ -489,6 +489,18 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; background: var(--bg); 
 
 @media (max-width: 768px) {
 
+    /* body: サイドパディングを除去してフルスクリーン化 */
+    body {
+        padding: 0;
+        padding-top: env(safe-area-inset-top, 0);
+    }
+
+    /* タイトルバー: マージン調整 */
+    #title-bar {
+        margin-bottom: 0;
+        padding: 6px 12px;
+    }
+
     /* サイドバー非表示 */
     #sidebar { display: none !important; }
 
@@ -496,16 +508,19 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; background: var(--bg); 
     #main-layout {
         flex-direction: column;
         gap: 0;
-        padding-bottom: 60px; /* ボトムナビ分を確保 */
+        align-items: stretch;
     }
 
-    /* 地図：縦いっぱいに広げる */
+    /* 地図：タイトルバー(44px) + ボトムナビ(60px) を除いた高さを明示 */
     #map {
-        flex: 1;
-        height: auto;
+        flex: none;
+        width: 100%;
+        height: calc(100dvh - 44px - 60px);
+        max-height: calc(100dvh - 44px - 60px);
         border-radius: 0;
         border-left: none;
         border-right: none;
+        margin: 0;
     }
 
     /* ── 問題カード（地図の上に浮かぶ） ── */
@@ -513,16 +528,14 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; background: var(--bg); 
         display: block;
         position: fixed;
         bottom: 68px;
-        left: 10px;
-        right: 10px;
+        left: 8px;
+        right: 8px;
         z-index: 200;
-        pointer-events: none; /* カード外はタップスルー */
     }
     #mobile-question-wrapper #question-box {
-        pointer-events: auto;
         border-radius: 16px;
         box-shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
-        max-height: 45vh;
+        max-height: 42vh;
         overflow-y: auto;
     }
 

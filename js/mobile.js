@@ -2,6 +2,8 @@
  * js/mobile.js — スマホ向けボトムナビ・ボトムシート・問題オーバーレイ
  */
 
+import { invalidateMapSize } from './map.js';
+
 const BREAKPOINT = 768;
 let sheetOwner   = null; // 現在シートに移動中の要素キー
 
@@ -120,6 +122,9 @@ export function initMobile() {
     if (isMobile()) moveQuestionBox();
     setupNav();
 
+    // レイアウト確定後にLeafletのサイズを再計算
+    setTimeout(invalidateMapSize, 100);
+
     window.addEventListener('resize', () => {
         if (isMobile()) {
             moveQuestionBox();
@@ -127,5 +132,6 @@ export function initMobile() {
             closeMobileSheet();
             returnQuestionBox();
         }
+        setTimeout(invalidateMapSize, 100);
     });
 }

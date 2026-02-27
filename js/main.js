@@ -6,6 +6,7 @@ import { showQuestion, nextQuestion }                     from './quiz.js';
 import { startScopeQuiz, buildScopeChecklist, copyScopeUrl, startKeywordQuiz } from './scope.js';
 import { setupAdminPanel }                                from './admin.js';
 import { initMobile, closeMobileSheet }                   from './mobile.js';
+import { loadSRSData, getDueReviewQuestions, getSRSStats } from './srs.js';
 
 async function fetchQuestions() {
     const regions = ['europe', 'mideast', 'africa', 'india', 'china', 'southeast_asia', 'north_america', 'latin_america'];
@@ -93,33 +94,76 @@ export function startQuiz(regionKey, eraKey) {
 }
 
 function goHome() {
-    // クイズ状態をリセット
     state.questions     = [];
     state.currentIdx    = 0;
     state.currentRegion = '';
     state.currentEra    = '';
+    state.isReviewMode  = false;
     clearQuizLayer();
 
-    // ボタンのアクティブ状態をリセット
     document.querySelectorAll('.mode-btn, .era-btn').forEach(b => b.classList.remove('active'));
     document.getElementById('era-selector').innerHTML = '地域を先に選んでね';
 
-    // 問題ボックスをリセット
     document.getElementById('q-text').innerText        = 'Ready?';
     document.getElementById('result').innerText        = '';
     document.getElementById('next-btn').style.display  = 'none';
     document.getElementById('era-display').innerText   = '-';
     document.getElementById('scope-banner').style.display = 'none';
 
-    // テーマをリセット
     document.body.removeAttribute('data-era');
     document.body.removeAttribute('data-region');
 
-    // 地図をワールドビューに戻す
     resetMapView();
-
-    // 総合ランキングを表示（currentRegion/Era をクリアしたので receiveRanking が総合表示する）
     syncRanking();
+    updateReviewBtn();
+}
+
+// ── 復習モード ────────────────────────────────────────────────
+export async function startReviewMode() {
+    if (!state.currentUser) {
+        alert('復習モードを使うには先にログインしてね！');
+        return;
+    }
+
+    const btn = document.getElementById('review-btn');
+    if (btn) { btn.disabled = true; btn.textContent = '⌛ 読み込み中...'; }
+
+    await loadSRSData();
+    const due = getDueReviewQuestions();
+
+    if (btn) { btn.disabled = false; btn.textContent = '📚 復習スタート'; }
+
+    if (due.length === 0) {
+        alert('今日の復習問題はありません！\nしっかり覚えられています 🎉');
+        return;
+    }
+
+    state.isReviewMode  = true;
+    state.questions     = due;
+    state.currentIdx    = 0;
+
+    document.getElementById('era-display').innerText = '📚 復習モード';
+    document.body.removeAttribute('data-region');
+    document.body.removeAttribute('data-era');
+
+    closeMobileSheet();
+    showQuestion();
+    updateReviewBtn();
+}
+
+function updateReviewBtn() {
+    const btn = document.getElementById('review-btn');
+    if (!btn) return;
+    if (!state.currentUser) {
+        btn.style.display = 'none';
+        return;
+    }
+    btn.style.display = 'block';
+    const stats = getSRSStats();
+    const dueCount = stats.due;
+    btn.textContent = dueCount > 0
+        ? `📚 復習スタート（${dueCount}問）`
+        : `📚 復習スタート`;
 }
 
 document.addEventListener('DOMContentLoaded', async function() {
@@ -131,6 +175,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     document.getElementById('copy-scope-url-btn').addEventListener('click', copyScopeUrl);
     document.getElementById('keyword-start-btn').addEventListener('click', startKeywordQuiz);
     document.getElementById('home-btn').addEventListener('click', goHome);
+    document.getElementById('review-btn').addEventListener('click', startReviewMode);
     fetchQuestions();
     initMobile();
 });

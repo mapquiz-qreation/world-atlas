@@ -10,6 +10,10 @@ export const state = {
     isAnswered:     false,
     lastClickedPos: null,
 
+    // 忘却曲線（SRS）データ
+    srsData:        {},
+    isReviewMode:   false,
+
     // Leaflet インスタンス（map.js が設定）
     map:        null,
     quizLayer:  null,

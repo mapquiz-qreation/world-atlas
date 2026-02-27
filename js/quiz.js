@@ -2,16 +2,29 @@
  * js/quiz.js — Leaflet ベースのクイズ表示
  */
 
-import { state }   from './state.js';
-import { shuffle } from './shuffle.js';
-import { addPoint } from './user.js';
+import { state }          from './state.js';
+import { shuffle }        from './shuffle.js';
+import { addPoint }       from './user.js';
 import { clearQuizLayer, getQuizLayer, flyToRegion } from './map.js';
+import { recordAnswer }   from './srs.js';
 
 // ── 問題表示エントリ ─────────────────────────────────────────
 export function showQuestion() {
     if (!state.questions.length) return;
     state.isAnswered = false;
     const q = state.questions[state.currentIdx];
+
+    // 復習モード：問題ごとに地域・時代を切り替える
+    if (state.isReviewMode && q._regionKey) {
+        state.currentRegion = q._regionKey;
+        state.currentEra    = q._eraKey;
+        const regionName = state.masterData[q._regionKey]?.name || q._regionKey;
+        const eraName    = state.masterData[q._regionKey]?.eras[q._eraKey]?.name || q._eraKey;
+        document.getElementById('era-display').innerText = `📚 復習 / ${regionName} / ${eraName}`;
+        document.body.dataset.region = q._regionKey;
+        document.body.dataset.era    = q._eraKey;
+    }
+
     document.getElementById('q-text').innerText       = q.text;
     document.getElementById('result').innerText       = '';
     document.getElementById('next-btn').style.display = 'none';
@@ -54,10 +67,12 @@ function showPointQuestion(q) {
                 marker.setStyle({ fillColor: '#43a047', color: '#fff' });
                 document.getElementById('result').innerText = '⭕ 正解！';
                 addPoint();
+                recordAnswer(q, true);
                 showExplanation(q);
             } else {
                 marker.setStyle({ fillColor: '#9e9e9e', fillOpacity: 0.4 });
                 document.getElementById('result').innerText = '❌ 不正解';
+                recordAnswer(q, false);
                 highlightCorrectMarker(layer, q);
             }
             document.getElementById('next-btn').style.display = 'block';
@@ -117,13 +132,13 @@ function showAreaQuestion(q) {
                 polygon.setStyle({ fillColor: area.color, fillOpacity: 0.75, weight: 3 });
                 document.getElementById('result').innerText = '⭕ 正解！';
                 addPoint();
+                recordAnswer(q, true);
                 showExplanation(q);
-                // 正解時：クリックしたポリゴン（正解）のラベルだけ表示
                 polygon._labelTooltip?.setOpacity(1);
             } else {
                 polygon.setStyle({ fillOpacity: 0.1, weight: 0.5 });
                 document.getElementById('result').innerText = '❌ 不正解';
-                // 不正解時：クリックしたポリゴンのラベル＋正解のラベルを表示
+                recordAnswer(q, false);
                 polygon._labelTooltip?.setOpacity(1);
                 highlightCorrectArea(layer);
             }

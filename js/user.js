@@ -1,5 +1,6 @@
 import { state } from './state.js';
 import { syncRanking, uploadScore } from './ranking.js';
+import { loadSRSData } from './srs.js';
 
 export function loginUser() {
     const name = document.getElementById('user-name-input').value.trim();
@@ -36,6 +37,11 @@ export function showUserInfo() {
     document.getElementById('user-info-area').style.display = 'block';
     document.getElementById('display-name').innerText       = state.currentUser;
     updateScoreUI();
+    // SRSデータをロードして復習ボタンを表示
+    loadSRSData().then(() => {
+        const btn = document.getElementById('review-btn');
+        if (btn) btn.style.display = 'block';
+    });
 }
 
 export function updateScoreUI() {

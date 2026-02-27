@@ -1,5 +1,5 @@
 // ★君のGASのURLを貼り付けてね！
-export const GAS_URL = "https://script.google.com/macros/s/AKfycby59Krxk8EB8kGPO9Z3oIxQK9j7PbN7ZaOFHuQJ16IF1DIU6f5FuzS3xbRIfE4TcEjN/exec";
+export const GAS_URL = "https://script.google.com/macros/s/AKfycby-dUq_dfcitTMzpl8GPbyoQZUB9DGYEJyd7tZfxb9ToAs3XwMkgLRc7V64VlrsUrwo/exec";
 
 // 地域・時代タグごとの第1位称号
 export const TAG_TITLES = {

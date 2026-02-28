@@ -186,18 +186,19 @@ body[data-region="latin_america"] {
     --rank: rgba(13,32,16,0.95); --rank-bd: #ffd54f; --rank-c: #ffe082;
     --rank-title: #ffd54f;
 }
-/* インド（サフラン＋マゼンタ） */
+/* インド（サフラン＋マゼンタ・中間トーン） */
 body[data-region="india"] {
-    --bg: radial-gradient(circle at top, #ffe082 0, #fff3e0 50%, #ffe0b2 100%);
-    --text: #4e342e;
-    --panel: #fff8e1;   --border: #ff8f00;
-    --lbl-a: #ff8f00;   --lbl-b: #d81b60;  --lbl-text: #fffde7;
-    --q: #e65100;
-    --btn: linear-gradient(135deg,#ffb74d,#f06292); --btn-c: #fff8e1; --btn-bd: #d81b60;
-    --btn-on: linear-gradient(135deg,#e65100,#ad1457); --btn-on-c: #fffde7; --btn-on-bd: #6a1b9a;
-    --act: #ff6f00;     --act-c: #fffde7;
-    --map: radial-gradient(circle at 20% 20%, #f8bbd0 0, #ffe082 40%, #ffb74d 100%);
-    --rank: #fff3e0;    --rank-bd: #d81b60; --rank-c: #4e342e;
+    --bg: linear-gradient(160deg, #5c2800 0%, #3a1400 55%, #1e0900 100%);
+    --text: #fde8c0;
+    --panel: rgba(58,20,0,0.92); --border: #ff8f00;
+    --lbl-a: #8a3800;   --lbl-b: #d81b60;  --lbl-text: #fffde7;
+    --q: #ffb74d;
+    --btn: linear-gradient(135deg,#a84000,#8a0040); --btn-c: #fde8c0; --btn-bd: #ff8f00;
+    --btn-on: linear-gradient(135deg,#e65100,#ad1457); --btn-on-c: #fffde7; --btn-on-bd: #ff8f00;
+    --act: #ff8f00;     --act-c: #1e0900;
+    --map: radial-gradient(circle at 30% 30%, #8a3800 0%, #5c2800 45%, #1e0900 100%);
+    --rank: rgba(58,20,0,0.95); --rank-bd: #d81b60; --rank-c: #fde8c0;
+    --rank-title: #ffb74d;
 }
 /* 中国（朱＋黄金） */
 body[data-region="china"] {
@@ -346,6 +347,35 @@ body[data-region="southeast_asia"] {
     --act: #ffa000;     --act-c: #fffde7;
     --map: radial-gradient(circle at 25% 25%, #a5d6a7 0, #2e7d32 45%, #0d3b16 100%);
     --rank: rgba(27,94,32,0.95); --rank-bd: #ffa000; --rank-c: #fffde7;
+}
+
+/* 二つの大戦（煙・血・鉄 ── ダークグレー×クリムゾン） */
+body[data-region="world_wars"] {
+    --bg: linear-gradient(160deg, #1a0a0a 0%, #2a1010 50%, #0d0505 100%);
+    --text: #e8d8d8;
+    --panel: rgba(26,10,10,0.95); --border: #c0392b;
+    --lbl-a: #3a1010;   --lbl-b: #c0392b;  --lbl-text: #fdecea;
+    --q: #ff8a80;
+    --btn: #3a1010;     --btn-c: #e8d8d8;  --btn-bd: #c0392b;
+    --btn-on: #7f0000;  --btn-on-c: #fdecea; --btn-on-bd: #ff8a80;
+    --act: #c0392b;     --act-c: #1a0a0a;
+    --map: linear-gradient(160deg, #3a1010 0%, #1a0808 55%, #0d0404 100%);
+    --rank: rgba(26,10,10,0.95); --rank-bd: #c0392b; --rank-c: #e8d8d8;
+    --rank-title: #ff8a80;
+}
+/* 鉄のカーテン（核・冷戦 ── アイスブルー×ソビエトレッド） */
+body[data-region="cold_war"] {
+    --bg: linear-gradient(160deg, #060e1a 0%, #0d1e3a 50%, #030810 100%);
+    --text: #cfe8f8;
+    --panel: rgba(6,14,26,0.95); --border: #e53935;
+    --lbl-a: #0d2a4a;   --lbl-b: #e53935;  --lbl-text: #e3f2fd;
+    --q: #82c4f8;
+    --btn: #0d2a4a;     --btn-c: #cfe8f8;  --btn-bd: #e53935;
+    --btn-on: #b71c1c;  --btn-on-c: #e3f2fd; --btn-on-bd: #82c4f8;
+    --act: #e53935;     --act-c: #060e1a;
+    --map: linear-gradient(160deg, #0d2a4a 0%, #060e1a 55%, #03080f 100%);
+    --rank: rgba(6,14,26,0.95); --rank-bd: #e53935; --rank-c: #cfe8f8;
+    --rank-title: #82c4f8;
 }
 
 /* =====================================================

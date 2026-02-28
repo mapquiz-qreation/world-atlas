@@ -10,7 +10,7 @@ import { initMobile, closeMobileSheet }                   from './mobile.js';
 import { loadSRSData, getDueReviewQuestions, getSRSStats } from './srs.js';
 
 async function fetchQuestions() {
-    const regions = ['europe', 'mideast', 'africa', 'india', 'china', 'southeast_asia', 'north_america', 'latin_america'];
+    const regions = ['europe', 'mideast', 'africa', 'india', 'china', 'southeast_asia', 'north_america', 'latin_america', 'world_wars', 'cold_war'];
     try {
         const results = await Promise.all(
             regions.map(r => fetch(`data/${r}.json`).then(res => {
@@ -78,8 +78,9 @@ export function startQuiz(regionKey, eraKey) {
     try {
         added = JSON.parse(localStorage.getItem(`quiz_added_${regionKey}_${eraKey}`) || '[]');
     } catch (_) { /* 不正なJSONは無視 */ }
-    state.questions  = [...(eraData.fixed || []), ...added];
-    state.currentIdx = 0;
+    state.questions      = [...(eraData.fixed || []), ...added];
+    state.currentIdx     = 0;
+    state.missedQuestions = [];
 
     document.querySelectorAll('.era-btn').forEach(b =>
         b.classList.toggle('active', b.id === `era-${eraKey}`)

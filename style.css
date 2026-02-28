@@ -673,6 +673,43 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; background: var(--bg); 
 }
 
 /* =====================================================
+   アプリモード切り替えタブ（地図クイズ ↔ 同時代マップ）
+   ===================================================== */
+#mode-tab-bar {
+    display: flex;
+    flex-shrink: 0;
+    gap: 4px;
+    padding: 0 10px 6px;
+    justify-content: center;
+}
+.mode-tab {
+    padding: 5px 14px;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 20px;
+    border: 2px solid var(--border);
+    background: var(--btn);
+    color: var(--btn-c);
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+    white-space: nowrap;
+}
+.mode-tab:hover { background: var(--act); color: var(--act-c); }
+.mode-tab.active { background: var(--act); color: var(--act-c); border-color: var(--act); }
+.wip-badge {
+    display: inline-block;
+    background: #f57f17;
+    color: #fff;
+    font-size: 9px;
+    padding: 1px 5px;
+    border-radius: 8px;
+    margin-left: 4px;
+    vertical-align: middle;
+    font-weight: bold;
+    letter-spacing: 0.3px;
+}
+
+/* =====================================================
    購入ボタン・ログインフォーム補足テキスト
    ===================================================== */
 .login-note {

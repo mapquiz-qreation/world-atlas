@@ -40,13 +40,30 @@ export function showQuestion() {
 }
 
 // ── 点クリック問題 ────────────────────────────────────────────
+// マーカー同士が近すぎるか判定（度数ベースの近似距離）
+const MIN_DIST_DEG = 5; // 約500km以上離れていること
+function tooClose(a, b) {
+    const dlat = (a.lat ?? 0) - (b.lat ?? 0);
+    const dlng = (a.lng ?? 0) - (b.lng ?? 0);
+    return Math.sqrt(dlat * dlat + dlng * dlng) < MIN_DIST_DEG;
+}
+
 function showPointQuestion(q) {
-    const layer  = getQuizLayer();
-    const others = shuffle(
+    const layer      = getQuizLayer();
+    const candidates = shuffle(
         state.questions.filter(o => o.text !== q.text && o.type !== 'area')
     );
-    const choiceCount = Math.min(3, others.length);
-    const choices     = shuffle([{ ...q, correct: true }, ...others.slice(0, choiceCount)]);
+
+    // 正解から離れていて、かつ選択済みデコイ同士も離れているものを最大3つ選ぶ
+    const decoys = [];
+    for (const c of candidates) {
+        if (tooClose(c, q)) continue;                        // 正解に近すぎる
+        if (decoys.some(d => tooClose(d, c))) continue;     // 他のデコイに近すぎる
+        decoys.push(c);
+        if (decoys.length >= 3) break;
+    }
+
+    const choices = shuffle([{ ...q, correct: true }, ...decoys]);
 
     choices.forEach(c => {
         const marker = L.circleMarker([c.lat, c.lng], {
@@ -74,6 +91,10 @@ function showPointQuestion(q) {
                 document.getElementById('result').innerText = '❌ 不正解';
                 recordAnswer(q, false);
                 highlightCorrectMarker(layer, q);
+                // 間違えた問題を記録（重複なし）
+                if (!state.missedQuestions.some(m => m.text === q.text)) {
+                    state.missedQuestions.push(q);
+                }
             }
             document.getElementById('next-btn').style.display = 'block';
         });
@@ -141,6 +162,10 @@ function showAreaQuestion(q) {
                 recordAnswer(q, false);
                 polygon._labelTooltip?.setOpacity(1);
                 highlightCorrectArea(layer);
+                // 間違えた問題を記録（重複なし）
+                if (!state.missedQuestions.some(m => m.text === q.text)) {
+                    state.missedQuestions.push(q);
+                }
             }
             document.getElementById('next-btn').style.display = 'block';
         });
@@ -167,8 +192,69 @@ export function getLatLngCenter(latlngs) {
 }
 
 export function nextQuestion() {
-    state.currentIdx = (state.currentIdx + 1) % state.questions.length;
-    showQuestion();
+    const nextIdx = state.currentIdx + 1;
+
+    if (nextIdx >= state.questions.length) {
+        // 1周終了
+        if (state.missedQuestions.length === 0) {
+            // 全問正解 → クリア画面
+            showClear();
+        } else {
+            // 間違えた問題だけで次の周回へ
+            state.questions     = [...state.missedQuestions];
+            state.missedQuestions = [];
+            state.currentIdx    = 0;
+            showRetryBanner(state.questions.length);
+            showQuestion();
+        }
+    } else {
+        state.currentIdx = nextIdx;
+        showQuestion();
+    }
+}
+
+function showClear() {
+    clearQuizLayer();
+    const qBox  = document.getElementById('question-box');
+    const qText = document.getElementById('q-text');
+    const result = document.getElementById('result');
+    const nextBtn = document.getElementById('next-btn');
+    const eraDisp = document.getElementById('era-display');
+    const expBox  = document.getElementById('explanation-box');
+
+    if (expBox)  expBox.style.display  = 'none';
+    if (result)  result.innerText      = '';
+    if (eraDisp) eraDisp.innerText     = '🎉 CLEAR!';
+
+    if (qText) {
+        qText.innerHTML = `
+            <div style="text-align:center; padding: 8px 0;">
+                <div style="font-size:2em; margin-bottom:8px;">🏆</div>
+                <div style="font-weight:bold; font-size:1.1em; margin-bottom:6px;">全問正解！</div>
+                <div style="font-size:0.85em; opacity:0.8;">この時代をマスターしました</div>
+            </div>`;
+    }
+
+    if (nextBtn) {
+        nextBtn.style.display  = 'block';
+        nextBtn.textContent    = '🔄 もう一度チャレンジ';
+        nextBtn.onclick = () => {
+            nextBtn.onclick = null;
+            nextBtn.textContent = '次の問題へ →';
+            import('./main.js').then(m => {
+                m.startQuiz(state.currentRegion, state.currentEra);
+            });
+        };
+    }
+}
+
+function showRetryBanner(count) {
+    const eraDisp = document.getElementById('era-display');
+    if (eraDisp) {
+        const prev = eraDisp.innerText;
+        eraDisp.innerText = `❌ 不正解 ${count}問 — 復習ラウンド`;
+        setTimeout(() => { eraDisp.innerText = prev; }, 2500);
+    }
 }
 
 // ── 解説・関連用語表示 ─────────────────────────────────────────

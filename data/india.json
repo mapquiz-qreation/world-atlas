@@ -2,7 +2,7 @@
   "name": "インド",
   "eras": {
     "ancient_medieval_india": {
-      "name": "古代・中世王朝",
+      "name": "仏陀とヴェーダの大地",
       "fixed": [
         {
           "text": "パータリプトラ (マウリヤ朝・グプタ朝の都)",
@@ -58,7 +58,7 @@
       ]
     },
     "mughal_colonial": {
-      "name": "ムガル帝国と植民地化",
+      "name": "象と大砲の時代",
       "fixed": [
         {
           "text": "デリー (ムガル帝国の首都)",

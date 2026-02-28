@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Atlas of Syncro Eras — WorldAtlas</title>
+    <link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
+    <link rel="apple-touch-icon" href="icon-192.png" sizes="192x192">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { overflow: hidden; }
+
+        /* 工事中バナー */
+        #wip-banner {
+            flex-shrink: 0;
+            background: linear-gradient(90deg, #f57f17, #ff8f00);
+            color: #fff;
+            text-align: center;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 5px 12px;
+            letter-spacing: 0.5px;
+        }
+
+        /* スライダーエリア */
+        #slider-area {
+            flex-shrink: 0;
+            padding: 8px 16px 6px;
+            background: var(--panel);
+            border-bottom: 2px solid var(--border);
+        }
+        #year-label {
+            text-align: center;
+            font-size: 17px;
+            font-weight: bold;
+            color: var(--text);
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+        }
+        #year-slider {
+            width: 100%;
+            accent-color: var(--act);
+            cursor: pointer;
+        }
+        #theme-label {
+            text-align: center;
+            font-size: 11px;
+            color: var(--act);
+            font-weight: bold;
+            margin-top: 4px;
+            min-height: 16px;
+        }
+
+        /* パターンフィルター */
+        #pattern-filter {
+            flex-shrink: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            padding: 6px 12px;
+            background: var(--panel);
+            border-bottom: 2px solid var(--border);
+            align-items: center;
+        }
+        #pattern-filter-label {
+            font-size: 10px;
+            color: var(--text);
+            opacity: 0.6;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+        .pattern-btn {
+            font-size: 11px;
+            font-weight: bold;
+            padding: 3px 10px;
+            border-radius: 12px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.15s;
+            white-space: nowrap;
+        }
+        .pattern-btn:hover { opacity: 0.8; }
+        .pattern-btn.active {
+            box-shadow: 0 0 0 2px #fff, 0 0 0 4px currentColor;
+        }
+
+        /* パターン解説バナー */
+        #pattern-desc {
+            flex-shrink: 0;
+            display: none;
+            padding: 6px 14px;
+            font-size: 12px;
+            font-weight: bold;
+            border-left: 4px solid var(--act);
+            background: rgba(0,0,0,0.15);
+            color: var(--text);
+            line-height: 1.5;
+        }
+        #pattern-desc.visible { display: block; }
+
+        /* 地図 */
+        #tl-map {
+            flex: 1;
+            min-height: 0;
+        }
+
+        /* 情報パネル */
+        #info-panel {
+            flex-shrink: 0;
+            height: 26vh;
+            overflow-y: auto;
+            background: var(--panel);
+            border-top: 4px double var(--border);
+            padding: 10px 14px 14px;
+        }
+        #info-panel.empty {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text);
+            opacity: 0.5;
+            font-size: 13px;
+        }
+        #info-region-label { font-size: 10px; font-weight: bold; margin-bottom: 3px; }
+        #info-title        { font-size: 15px; font-weight: bold; color: var(--q); margin-bottom: 4px; }
+        #info-detail       { font-size: 12px; line-height: 1.7; color: var(--text); margin-bottom: 8px; }
+        #info-terms        { font-size: 11px; margin-bottom: 8px; }
+        #info-terms span {
+            display: inline-block;
+            background: var(--lbl-a);
+            color: var(--lbl-text);
+            border-radius: 4px;
+            padding: 2px 7px;
+            margin: 2px 3px 2px 0;
+        }
+        #info-patterns { display: flex; flex-wrap: wrap; gap: 4px; }
+        .info-pattern-badge {
+            font-size: 10px;
+            font-weight: bold;
+            padding: 2px 8px;
+            border-radius: 10px;
+            border: 2px solid transparent;
+        }
+
+        @media (max-width: 768px) {
+            #wip-banner    { font-size: 11px; padding: 4px 8px; }
+            #year-label    { font-size: 15px; }
+            #theme-label   { font-size: 10px; }
+            #info-panel    { height: 30vh; }
+            #info-title    { font-size: 14px; }
+            #info-detail   { font-size: 11px; }
+            .pattern-btn   { font-size: 10px; padding: 2px 8px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="title-bar">
+        <h1 id="app-title">🗺️ WorldAtlas</h1>
+        <a href="index.html" id="home-btn" style="text-decoration:none;">🏠 ホーム</a>
+    </div>
+
+    <div id="mode-tab-bar">
+        <a class="mode-tab" href="index.html">📍 Atlas of Historical Sites</a>
+        <a class="mode-tab active" href="timeline.html">🔄 Atlas of Syncro Eras <span class="wip-badge">工事中</span></a>
+    </div>
+
+    <div id="wip-banner">🚧 開発中です。データ・機能は今後拡充予定！ 🚧</div>
+
+    <div id="slider-area">
+        <div id="year-label">読み込み中...</div>
+        <input type="range" id="year-slider" min="0" max="4" step="1" value="0">
+        <div id="theme-label"></div>
+    </div>
+
+    <!-- パターンフィルター -->
+    <div id="pattern-filter">
+        <span id="pattern-filter-label">🔍 パターン:</span>
+    </div>
+
+    <!-- パターン解説 -->
+    <div id="pattern-desc"></div>
+
+    <div id="tl-map"></div>
+
+    <div id="info-panel" class="empty">
+        <span>マーカーをタップすると詳細が表示されます</span>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+    // ── パターン定義 ─────────────────────────────────────────
+    const PATTERNS = {
+        '交易で栄えた':       { color: '#ffd54f', desc: '交易路を押さえた勢力が繁栄する。金・香辛料・銀・塩など「何が動いたか」が覇権を決めた。共テ頻出：なぜ栄えたかの共通因子。' },
+        '外圧が改革を生む':   { color: '#80cbc4', desc: '外からの脅威（征服・侵攻・文化流入）が内側の変革を加速させる。ペルシア戦争→民主政、アヘン戦争→洋務運動と同じ構造。' },
+        '帝国の拡大と崩壊':   { color: '#ef9a9a', desc: '拡大しすぎた帝国は必ず内部矛盾・外圧で崩壊する。ローマ・モンゴル・唐・アッバース朝…時代・地域を超えて繰り返される。' },
+        '宗教が統治を支えた': { color: '#ce93d8', desc: '宗教が権力の正統性を担保する。アショーカ王の仏教、フランクのキリスト教、イスラームのカリフ制…支配に神の権威が必要だった。' },
+        '知の革命':           { color: '#4fc3f7', desc: '政治的激動期に哲学・宗教・科学が爆発的に生まれる。春秋戦国・ギリシア・ルネサンス・宗教改革…「枢軸の時代」の普遍的パターン。' },
+    };
+
+    const REGION_COLORS = {
+        europe: '#4fc3f7', mideast: '#ffb74d', africa: '#81c784',
+        india: '#ce93d8', china: '#ef9a9a', southeast_asia: '#80cbc4',
+        north_america: '#fff176', latin_america: '#f48fb1',
+    };
+    const REGION_NAMES = {
+        europe: 'ヨーロッパ', mideast: '中東', africa: 'アフリカ',
+        india: 'インド', china: '中国', southeast_asia: '東南アジア',
+        north_america: '北アメリカ', latin_america: 'ラテンアメリカ',
+    };
+
+    // ── 地図初期化 ──────────────────────────────────────────
+    const map = L.map('tl-map', { center: [30, 20], zoom: 2, minZoom: 1, maxZoom: 6 });
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors', opacity: 0.55,
+    }).addTo(map);
+    document.getElementById('tl-map').style.background =
+        'linear-gradient(-45deg, #0d1b2a, #1a3a5c, #16213e, #0d1b2a)';
+
+    let timelineData  = [];
+    let markerLayer   = L.layerGroup().addTo(map);
+    let activePattern = null;
+    let currentIdx    = 0;
+
+    // ── パターンボタン生成 ─────────────────────────────────
+    function buildPatternButtons() {
+        const container = document.getElementById('pattern-filter');
+        Object.entries(PATTERNS).forEach(([name, def]) => {
+            const btn = document.createElement('button');
+            btn.className   = 'pattern-btn';
+            btn.textContent = name;
+            btn.style.background   = def.color + '33';
+            btn.style.borderColor  = def.color;
+            btn.style.color        = def.color;
+            btn.dataset.pattern    = name;
+            btn.addEventListener('click', () => togglePattern(name, btn));
+            container.appendChild(btn);
+        });
+    }
+
+    function togglePattern(name, btn) {
+        const allBtns = document.querySelectorAll('.pattern-btn');
+        const descEl  = document.getElementById('pattern-desc');
+
+        if (activePattern === name) {
+            // 解除
+            activePattern = null;
+            allBtns.forEach(b => b.classList.remove('active'));
+            descEl.classList.remove('visible');
+            descEl.textContent = '';
+        } else {
+            activePattern = name;
+            allBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const def = PATTERNS[name];
+            descEl.style.borderColor = def.color;
+            descEl.style.color       = def.color;
+            descEl.textContent       = `📌 ${name}：${def.desc}`;
+            descEl.classList.add('visible');
+        }
+        renderEpoch(currentIdx);
+    }
+
+    // ── 年代描画 ─────────────────────────────────────────────
+    function renderEpoch(idx) {
+        currentIdx = idx;
+        const epoch = timelineData[idx];
+        if (!epoch) return;
+
+        document.getElementById('year-label').textContent  = epoch.label;
+        document.getElementById('theme-label').textContent = epoch.theme;
+        markerLayer.clearLayers();
+        resetInfoPanel();
+
+        epoch.events.forEach(ev => {
+            const isHighlighted = !activePattern || (ev.patterns || []).includes(activePattern);
+            const baseColor = REGION_COLORS[ev.region] || '#4a90d9';
+            const opacity   = isHighlighted ? 1 : 0.2;
+            const size      = isHighlighted && activePattern ? 26 : 20;
+            const glow      = isHighlighted && activePattern
+                ? `box-shadow:0 0 10px 4px ${PATTERNS[activePattern]?.color || baseColor},0 2px 8px rgba(0,0,0,0.5);`
+                : 'box-shadow:0 2px 6px rgba(0,0,0,0.4);';
+
+            const icon = L.divIcon({
+                className: '',
+                html: `<div style="
+                    background:${baseColor};
+                    border:3px solid #fff;
+                    border-radius:50%;
+                    width:${size}px;height:${size}px;
+                    opacity:${opacity};
+                    ${glow}
+                    cursor:pointer;
+                    transition:all 0.2s;
+                "></div>`,
+                iconSize:   [size, size],
+                iconAnchor: [size / 2, size / 2],
+            });
+
+            const marker = L.marker([ev.lat, ev.lng], { icon }).addTo(markerLayer);
+            if (isHighlighted) {
+                marker.on('click', () => showInfo(ev, baseColor));
+            }
+        });
+    }
+
+    function showInfo(ev, color) {
+        const panel = document.getElementById('info-panel');
+        panel.classList.remove('empty');
+        const patternBadges = (ev.patterns || []).map(p => {
+            const c = PATTERNS[p]?.color || '#888';
+            return `<span class="info-pattern-badge" style="background:${c}22;border-color:${c};color:${c}">${p}</span>`;
+        }).join('');
+        panel.innerHTML = `
+            <div id="info-region-label" style="color:${color}">● ${REGION_NAMES[ev.region] || ev.region}</div>
+            <div id="info-title">${ev.title}</div>
+            <div id="info-detail">${ev.detail}</div>
+            <div id="info-terms">${(ev.terms || []).map(t => `<span>${t}</span>`).join('')}</div>
+            <div id="info-patterns">${patternBadges}</div>
+        `;
+    }
+
+    function resetInfoPanel() {
+        const panel = document.getElementById('info-panel');
+        panel.classList.add('empty');
+        panel.innerHTML = '<span>マーカーをタップすると詳細が表示されます</span>';
+    }
+
+    // ── データ読み込み ────────────────────────────────────────
+    fetch('data/timeline.json')
+        .then(r => r.json())
+        .then(data => {
+            timelineData = data;
+            const slider = document.getElementById('year-slider');
+            slider.max   = data.length - 1;
+            buildPatternButtons();
+            renderEpoch(0);
+        })
+        .catch(() => {
+            document.getElementById('theme-label').textContent = 'データ読み込みに失敗しました';
+        });
+
+    document.getElementById('year-slider').addEventListener('input', e => {
+        renderEpoch(Number(e.target.value));
+    });
+    </script>
+</body>
+</html>

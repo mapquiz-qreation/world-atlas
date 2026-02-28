@@ -14,6 +14,9 @@ export const state = {
     srsData:        {},
     isReviewMode:   false,
 
+    // 1周の正誤追跡
+    missedQuestions: [],  // 今の周で間違えた問題
+
     // 有料プラン
     isPaid:         false,
 

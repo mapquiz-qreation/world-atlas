@@ -11,7 +11,7 @@
     <style>
         body { overflow: hidden; }
 
-        /* 工事中バナー */
+        /* ─── 工事中バナー ─────────────────────────────── */
         #wip-banner {
             flex-shrink: 0;
             background: linear-gradient(90deg, #f57f17, #ff8f00);
@@ -23,7 +23,37 @@
             letter-spacing: 0.5px;
         }
 
-        /* スライダーエリア */
+        /* ─── Syncro サブタブ ──────────────────────────── */
+        #syncro-sub-tabs {
+            flex-shrink: 0;
+            display: flex;
+            background: var(--panel);
+            border-bottom: 2px solid var(--border);
+        }
+        .syncro-sub-tab {
+            flex: 1;
+            padding: 9px 4px;
+            font-size: 12px;
+            font-weight: bold;
+            border: none;
+            background: transparent;
+            color: var(--text);
+            cursor: pointer;
+            opacity: 0.45;
+            transition: opacity 0.2s, color 0.2s;
+            letter-spacing: 0.4px;
+        }
+        .syncro-sub-tab.active {
+            opacity: 1;
+            color: var(--act);
+            border-bottom: 3px solid var(--act);
+            margin-bottom: -2px;
+        }
+
+        /* ─── 探求モード専用エリア ─────────────────────── */
+        #explore-controls { display: contents; }
+        #explore-controls.hidden > * { display: none !important; }
+
         #slider-area {
             flex-shrink: 0;
             padding: 8px 16px 6px;
@@ -51,8 +81,6 @@
             margin-top: 4px;
             min-height: 16px;
         }
-
-        /* パターンフィルター */
         #pattern-filter {
             flex-shrink: 0;
             display: flex;
@@ -84,8 +112,6 @@
         .pattern-btn.active {
             box-shadow: 0 0 0 2px #fff, 0 0 0 4px currentColor;
         }
-
-        /* パターン解説バナー */
         #pattern-desc {
             flex-shrink: 0;
             display: none;
@@ -99,13 +125,10 @@
         }
         #pattern-desc.visible { display: block; }
 
-        /* 地図 */
-        #tl-map {
-            flex: 1;
-            min-height: 0;
-        }
+        /* ─── 共有マップ ───────────────────────────────── */
+        #tl-map { flex: 1; min-height: 0; }
 
-        /* 情報パネル */
+        /* ─── 探求モード・情報パネル ───────────────────── */
         #info-panel {
             flex-shrink: 0;
             height: 26vh;
@@ -143,14 +166,130 @@
             border: 2px solid transparent;
         }
 
+        /* ─── 同時代クイズパネル ───────────────────────── */
+        #quiz-panel {
+            display: none;
+            flex-shrink: 0;
+            background: var(--panel);
+            border-top: 4px double var(--border);
+            padding: 10px 14px 14px;
+            overflow-y: auto;
+            max-height: 48vh;
+        }
+        #quiz-panel.active { display: block; }
+
+        #quiz-counter {
+            font-size: 10px;
+            color: var(--text);
+            opacity: 0.55;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        #quiz-streak {
+            font-size: 10px;
+            font-weight: bold;
+            color: #ffd54f;
+        }
+
+        #quiz-question-text {
+            font-size: 13px;
+            font-weight: bold;
+            color: var(--q);
+            margin-bottom: 10px;
+            line-height: 1.65;
+        }
+        #quiz-question-text .hint {
+            font-size: 10px;
+            font-weight: normal;
+            color: var(--act);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        #quiz-choices {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+        .quiz-choice-btn {
+            padding: 8px 6px;
+            font-size: 11px;
+            border-radius: 7px;
+            border: 2px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
+            cursor: pointer;
+            text-align: left;
+            line-height: 1.4;
+            transition: border-color 0.15s, background 0.15s;
+        }
+        .quiz-choice-btn:hover:not(:disabled) { border-color: var(--act); }
+        .quiz-choice-btn.correct { border-color: #66bb6a !important; background: rgba(102,187,106,0.15); color: #a5d6a7; font-weight: bold; }
+        .quiz-choice-btn.wrong   { border-color: #ef5350 !important; background: rgba(239,83,80,0.12);  color: #ef9a9a; opacity: 0.7; }
+        .quiz-choice-btn:disabled { cursor: default; }
+
+        #quiz-result {
+            font-size: 13px;
+            text-align: center;
+            padding: 4px 0;
+            font-weight: bold;
+            min-height: 22px;
+        }
+        #quiz-result.ok { color: #66bb6a; }
+        #quiz-result.ng { color: #ef5350; }
+
+        #quiz-actions {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 8px;
+        }
+        #quiz-actions.visible { display: flex; }
+
+        .quiz-action-btn {
+            width: 100%;
+            padding: 9px;
+            font-size: 12px;
+            font-weight: bold;
+            border-radius: 8px;
+            border: 2px solid;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            letter-spacing: 0.4px;
+        }
+        .quiz-action-btn:hover { opacity: 0.8; }
+        #quiz-next-btn {
+            background: var(--act);
+            color: var(--act-c);
+            border-color: var(--act);
+        }
+        #quiz-explore-btn {
+            background: transparent;
+            color: var(--act);
+            border-color: var(--act);
+        }
+
+        /* ─── パルスアニメ ─────────────────────────────── */
+        @keyframes pulse {
+            0%   { box-shadow: 0 0 0 0 rgba(255,255,255,0.6); }
+            70%  { box-shadow: 0 0 0 10px rgba(255,255,255,0); }
+            100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); }
+        }
+
+        /* ─── レスポンシブ ─────────────────────────────── */
         @media (max-width: 768px) {
-            #wip-banner    { font-size: 11px; padding: 4px 8px; }
-            #year-label    { font-size: 15px; }
-            #theme-label   { font-size: 10px; }
-            #info-panel    { height: 30vh; }
-            #info-title    { font-size: 14px; }
-            #info-detail   { font-size: 11px; }
-            .pattern-btn   { font-size: 10px; padding: 2px 8px; }
+            #wip-banner  { font-size: 11px; padding: 4px 8px; }
+            #year-label  { font-size: 15px; }
+            #theme-label { font-size: 10px; }
+            #info-panel  { height: 30vh; }
+            #info-title  { font-size: 14px; }
+            #info-detail { font-size: 11px; }
+            .pattern-btn { font-size: 10px; padding: 2px 8px; }
+            #quiz-panel  { max-height: 50vh; }
+            #quiz-question-text { font-size: 12px; }
         }
     </style>
 </head>
@@ -168,24 +307,46 @@
 
     <div id="wip-banner">🚧 開発中です。データ・機能は今後拡充予定！ 🚧</div>
 
-    <div id="slider-area">
-        <div id="year-label">読み込み中...</div>
-        <input type="range" id="year-slider" min="0" max="4" step="1" value="0">
-        <div id="theme-label"></div>
+    <!-- Syncro サブタブ -->
+    <div id="syncro-sub-tabs">
+        <button class="syncro-sub-tab active" id="tab-explore-btn" onclick="switchTab('explore')">🔍 探求モード</button>
+        <button class="syncro-sub-tab"        id="tab-quiz-btn"    onclick="switchTab('quiz')">❓ 同時代クイズ</button>
     </div>
 
-    <!-- パターンフィルター -->
-    <div id="pattern-filter">
-        <span id="pattern-filter-label">🔍 パターン:</span>
+    <!-- ── 探求モード専用コントロール ─────────────── -->
+    <div id="explore-controls">
+        <div id="slider-area">
+            <div id="year-label">読み込み中...</div>
+            <input type="range" id="year-slider" min="0" max="4" step="1" value="0">
+            <div id="theme-label"></div>
+        </div>
+        <div id="pattern-filter">
+            <span id="pattern-filter-label">🔍 パターン:</span>
+        </div>
+        <div id="pattern-desc"></div>
     </div>
 
-    <!-- パターン解説 -->
-    <div id="pattern-desc"></div>
-
+    <!-- 共有マップ -->
     <div id="tl-map"></div>
 
+    <!-- ── 探求モード：情報パネル ─────────────────── -->
     <div id="info-panel" class="empty">
         <span>マーカーをタップすると詳細が表示されます</span>
+    </div>
+
+    <!-- ── 同時代クイズパネル ─────────────────────── -->
+    <div id="quiz-panel">
+        <div id="quiz-counter">
+            <span id="quiz-counter-text">問題 1</span>
+            <span id="quiz-streak"></span>
+        </div>
+        <div id="quiz-question-text"></div>
+        <div id="quiz-choices"></div>
+        <div id="quiz-result"></div>
+        <div id="quiz-actions">
+            <button class="quiz-action-btn" id="quiz-explore-btn">🔍 このエポックを探求モードで確認する</button>
+            <button class="quiz-action-btn" id="quiz-next-btn">次の問題へ →</button>
+        </div>
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -220,10 +381,44 @@
 
     let timelineData  = [];
     let markerLayer   = L.layerGroup().addTo(map);
+    let quizLayer     = L.layerGroup().addTo(map);
     let activePattern = null;
     let currentIdx    = 0;
 
-    // ── パターンボタン生成 ─────────────────────────────────
+    // ── タブ切替 ─────────────────────────────────────────────
+    let currentTab = 'explore';
+
+    function switchTab(tab) {
+        currentTab = tab;
+        const exploreBtn  = document.getElementById('tab-explore-btn');
+        const quizBtn     = document.getElementById('tab-quiz-btn');
+        const exploreCtrl = document.getElementById('explore-controls');
+        const infoPanel   = document.getElementById('info-panel');
+        const quizPanel   = document.getElementById('quiz-panel');
+
+        if (tab === 'explore') {
+            exploreBtn.classList.add('active');
+            quizBtn.classList.remove('active');
+            exploreCtrl.style.display = 'contents';
+            infoPanel.style.display   = '';
+            quizPanel.classList.remove('active');
+            markerLayer.addTo(map);
+            quizLayer.clearLayers();
+            renderEpoch(currentIdx);
+        } else {
+            quizBtn.classList.add('active');
+            exploreBtn.classList.remove('active');
+            exploreCtrl.style.display = 'none';
+            infoPanel.style.display   = 'none';
+            quizPanel.classList.add('active');
+            markerLayer.clearLayers();
+            startQuizQuestion();
+        }
+        // マップのリサイズを通知
+        setTimeout(() => map.invalidateSize(), 50);
+    }
+
+    // ── パターンボタン生成（探求モード） ──────────────────────
     function buildPatternButtons() {
         const container = document.getElementById('pattern-filter');
         Object.entries(PATTERNS).forEach(([name, def]) => {
@@ -242,9 +437,7 @@
     function togglePattern(name, btn) {
         const allBtns = document.querySelectorAll('.pattern-btn');
         const descEl  = document.getElementById('pattern-desc');
-
         if (activePattern === name) {
-            // 解除
             activePattern = null;
             allBtns.forEach(b => b.classList.remove('active'));
             descEl.classList.remove('visible');
@@ -262,7 +455,7 @@
         renderEpoch(currentIdx);
     }
 
-    // ── 年代描画 ─────────────────────────────────────────────
+    // ── 探求モード：年代描画 ─────────────────────────────────
     function renderEpoch(idx) {
         currentIdx = idx;
         const epoch = timelineData[idx];
@@ -285,23 +478,15 @@
             const icon = L.divIcon({
                 className: '',
                 html: `<div style="
-                    background:${baseColor};
-                    border:3px solid #fff;
-                    border-radius:50%;
-                    width:${size}px;height:${size}px;
-                    opacity:${opacity};
-                    ${glow}
-                    cursor:pointer;
-                    transition:all 0.2s;
+                    background:${baseColor};border:3px solid #fff;border-radius:50%;
+                    width:${size}px;height:${size}px;opacity:${opacity};${glow}
+                    cursor:pointer;transition:all 0.2s;
                 "></div>`,
                 iconSize:   [size, size],
                 iconAnchor: [size / 2, size / 2],
             });
-
             const marker = L.marker([ev.lat, ev.lng], { icon }).addTo(markerLayer);
-            if (isHighlighted) {
-                marker.on('click', () => showInfo(ev, baseColor));
-            }
+            if (isHighlighted) marker.on('click', () => showInfo(ev, baseColor));
         });
     }
 
@@ -327,6 +512,180 @@
         panel.innerHTML = '<span>マーカーをタップすると詳細が表示されます</span>';
     }
 
+    // ── 同時代クイズ ─────────────────────────────────────────
+    let quizScore   = 0;
+    let quizTotal   = 0;
+    let quizStreak  = 0;
+    let currentQ    = null;
+
+    function generateQuestion() {
+        const valid = timelineData.filter(e => e.events.length >= 2);
+        const epoch = valid[Math.floor(Math.random() * valid.length)];
+
+        // 出題イベント（seed）
+        const seedIdx   = Math.floor(Math.random() * epoch.events.length);
+        const seedEvent = epoch.events[seedIdx];
+
+        // 正解イベント（同エポック・別地域）
+        const correctCandidates = epoch.events.filter((_, i) => i !== seedIdx);
+        const correctEvent = correctCandidates[Math.floor(Math.random() * correctCandidates.length)];
+
+        // 不正解3つ（他エポックからランダム）
+        const otherEvents = timelineData
+            .filter(e => e.year !== epoch.year)
+            .flatMap(e => e.events)
+            .sort(() => Math.random() - 0.5)
+            .slice(0, 3);
+
+        const choices = [
+            { event: correctEvent, isCorrect: true },
+            ...otherEvents.map(e => ({ event: e, isCorrect: false })),
+        ].sort(() => Math.random() - 0.5);
+
+        return { epoch, seedEvent, correctEvent, choices };
+    }
+
+    function startQuizQuestion() {
+        currentQ = generateQuestion();
+        const q  = currentQ;
+        const seedRegion    = REGION_NAMES[q.seedEvent.region]    || q.seedEvent.region;
+        const correctRegion = REGION_NAMES[q.correctEvent.region] || q.correctEvent.region;
+
+        document.getElementById('quiz-counter-text').textContent =
+            `問題 ${quizTotal + 1}　正解 ${quizScore} / ${quizTotal}`;
+        document.getElementById('quiz-streak').textContent =
+            quizStreak >= 2 ? `🔥 ${quizStreak}連続正解！` : '';
+
+        document.getElementById('quiz-question-text').innerHTML =
+            `<span class="hint">⏱ ${q.epoch.label}</span>` +
+            `<strong>${seedRegion}</strong>で<br>` +
+            `「${q.seedEvent.title}」<br>` +
+            `が起きていた頃、<strong>${correctRegion}</strong>では？`;
+
+        const choicesEl = document.getElementById('quiz-choices');
+        choicesEl.innerHTML = '';
+        q.choices.forEach(choice => {
+            const btn = document.createElement('button');
+            btn.className   = 'quiz-choice-btn';
+            btn.textContent = choice.event.title;
+            btn.onclick     = () => answerQuiz(choice, btn);
+            choicesEl.appendChild(btn);
+        });
+
+        document.getElementById('quiz-result').textContent = '';
+        document.getElementById('quiz-result').className   = '';
+        document.getElementById('quiz-actions').classList.remove('visible');
+
+        // マップ：出題イベントをピン表示
+        showQuizSeedMarker(q.seedEvent);
+    }
+
+    function answerQuiz(choice, clickedBtn) {
+        document.querySelectorAll('.quiz-choice-btn').forEach(b => b.disabled = true);
+        quizTotal++;
+
+        const resultEl = document.getElementById('quiz-result');
+        if (choice.isCorrect) {
+            quizScore++;
+            quizStreak++;
+            clickedBtn.classList.add('correct');
+            resultEl.textContent = '✅ 正解！同じ時代の出来事を結びつけられた！';
+            resultEl.className   = 'ok';
+        } else {
+            quizStreak = 0;
+            clickedBtn.classList.add('wrong');
+            document.querySelectorAll('.quiz-choice-btn').forEach(b => {
+                if (b.textContent === currentQ.correctEvent.title) b.classList.add('correct');
+            });
+            resultEl.textContent = `❌ 不正解。正解：「${currentQ.correctEvent.title}」（${currentQ.epoch.label}・${REGION_NAMES[currentQ.correctEvent.region] || ''}）`;
+            resultEl.className   = 'ng';
+        }
+
+        document.getElementById('quiz-counter-text').textContent =
+            `問題 ${quizTotal}　正解 ${quizScore} / ${quizTotal}`;
+        document.getElementById('quiz-streak').textContent =
+            quizStreak >= 2 ? `🔥 ${quizStreak}連続正解！` : '';
+
+        // マップ：エポック全体を表示
+        showQuizEpochMarkers(currentQ.epoch);
+        document.getElementById('quiz-actions').classList.add('visible');
+    }
+
+    function showQuizSeedMarker(ev) {
+        quizLayer.clearLayers();
+        const color = REGION_COLORS[ev.region] || '#4a90d9';
+        const icon  = L.divIcon({
+            className: '',
+            html: `<div style="
+                background:${color};border:3px solid #fff;border-radius:50%;
+                width:24px;height:24px;
+                animation:pulse 1.2s infinite;
+                box-shadow:0 0 12px 6px ${color}88;
+            "></div>`,
+            iconSize: [24, 24], iconAnchor: [12, 12],
+        });
+        L.marker([ev.lat, ev.lng], { icon }).addTo(quizLayer);
+        map.flyTo([ev.lat, ev.lng], 3, { duration: 0.8 });
+    }
+
+    function showQuizEpochMarkers(epoch) {
+        quizLayer.clearLayers();
+        epoch.events.forEach(ev => {
+            const color   = REGION_COLORS[ev.region] || '#4a90d9';
+            const isSeed  = ev === currentQ.seedEvent;
+            const isAns   = ev === currentQ.correctEvent;
+            const size    = (isSeed || isAns) ? 26 : 16;
+            const border  = (isSeed || isAns) ? '3px' : '2px';
+            const glow    = (isSeed || isAns) ? `box-shadow:0 0 14px 6px ${color}99;` : '';
+            const icon    = L.divIcon({
+                className: '',
+                html: `<div style="
+                    background:${color};border:${border} solid #fff;border-radius:50%;
+                    width:${size}px;height:${size}px;${glow}
+                "></div>`,
+                iconSize: [size, size], iconAnchor: [size/2, size/2],
+            });
+            L.marker([ev.lat, ev.lng], { icon }).addTo(quizLayer);
+        });
+        const bounds = epoch.events.map(ev => [ev.lat, ev.lng]);
+        if (bounds.length > 1) {
+            map.flyToBounds(bounds, { padding: [40, 40], duration: 1.2 });
+        }
+    }
+
+    // 探求モードへの導線
+    document.getElementById('quiz-explore-btn').addEventListener('click', () => {
+        if (!currentQ) return;
+        const epochIdx = timelineData.indexOf(currentQ.epoch);
+        switchTab('explore');
+        const slider = document.getElementById('year-slider');
+        slider.value = epochIdx;
+        renderEpoch(epochIdx);
+    });
+
+    document.getElementById('quiz-next-btn').addEventListener('click', startQuizQuestion);
+
+    // ── Atlasからのジャンプバナー ──────────────────────────
+    function showJumpBanner(fromText, pattern) {
+        const patternColor = pattern && PATTERNS[pattern] ? PATTERNS[pattern].color : 'var(--act)';
+        const banner = document.createElement('div');
+        banner.id = 'jump-banner';
+        banner.style.cssText = [
+            'flex-shrink:0', 'padding:7px 14px',
+            'background:rgba(0,0,0,0.35)',
+            'border-bottom:2px solid ' + patternColor,
+            'font-size:12px', 'color:var(--text)',
+            'display:flex', 'align-items:center', 'gap:8px', 'flex-wrap:wrap',
+        ].join(';');
+        banner.innerHTML = `
+            <span>🔄 Atlasからジャンプ：</span>
+            <strong style="color:#fff">${fromText}</strong>
+            ${pattern ? `<span style="color:${patternColor};font-weight:bold;">→ ${pattern}</span>` : ''}
+            <button onclick="this.parentElement.remove()" style="margin-left:auto;background:none;border:none;color:var(--text);cursor:pointer;font-size:16px;line-height:1;">✕</button>
+        `;
+        document.getElementById('wip-banner').insertAdjacentElement('afterend', banner);
+    }
+
     // ── データ読み込み ────────────────────────────────────────
     fetch('data/timeline.json')
         .then(r => r.json())
@@ -336,6 +695,17 @@
             slider.max   = data.length - 1;
             buildPatternButtons();
             renderEpoch(0);
+
+            const params       = new URLSearchParams(window.location.search);
+            const fromParam    = params.get('from');
+            const patternParam = params.get('pattern');
+
+            if (fromParam) showJumpBanner(fromParam, patternParam);
+
+            if (patternParam) {
+                const btn = document.querySelector(`.pattern-btn[data-pattern="${patternParam}"]`);
+                if (btn) togglePattern(patternParam, btn);
+            }
         })
         .catch(() => {
             document.getElementById('theme-label').textContent = 'データ読み込みに失敗しました';

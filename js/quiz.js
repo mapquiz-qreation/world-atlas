@@ -257,12 +257,38 @@ function showRetryBanner(count) {
     }
 }
 
+// ── Syncroタグ定数 ───────────────────────────────────────────
+const SYNCRO_PATTERNS = {
+    '交易で栄えた':       '#ffd54f',
+    '外圧が改革を生む':   '#80cbc4',
+    '帝国の拡大と崩壊':   '#ef9a9a',
+    '宗教が統治を支えた': '#ce93d8',
+    '知の革命':           '#4fc3f7',
+};
+
+function isTagMode() {
+    return document.getElementById('tag-mode-toggle')?.checked || false;
+}
+
+function getSyncroTagKey(q) {
+    return `syncro_tag|${state.currentRegion}|${state.currentEra}|${q.text}`;
+}
+
 // ── 解説・関連用語表示 ─────────────────────────────────────────
 function showExplanation(q) {
     const box = document.getElementById('explanation-box');
     const textEl = document.getElementById('explanation-text');
     const termsEl = document.getElementById('related-terms');
-    if (!q.explanation && (!q.relatedTerms || q.relatedTerms.length === 0)) {
+
+    // localStorage のタグオーバーライドを q に適用
+    const storedTag = localStorage.getItem(getSyncroTagKey(q));
+    if (storedTag) q.syncro = { pattern: storedTag };
+
+    // 既存の動的要素を削除
+    document.getElementById('syncro-btn')?.remove();
+    document.getElementById('syncro-tag-panel')?.remove();
+
+    if (!q.explanation && (!q.relatedTerms || q.relatedTerms.length === 0) && !q.syncro && !isTagMode()) {
         box.style.display = 'none';
         return;
     }
@@ -274,10 +300,94 @@ function showExplanation(q) {
     } else {
         termsEl.style.display = 'none';
     }
+
+    // Syncro Eras ボタン
+    if (q.syncro?.pattern) {
+        box.appendChild(buildSyncroBtn(q));
+    }
+
+    // タグモード時：タグパネルを追加
+    if (isTagMode()) {
+        box.appendChild(buildSyncroTagPanel(q));
+    }
+
     box.style.display = 'block';
+}
+
+function buildSyncroBtn(q) {
+    const btn = document.createElement('button');
+    btn.id = 'syncro-btn';
+    btn.textContent = '🔄 Syncro Erasで見る';
+    btn.style.cssText = [
+        'margin-top:10px', 'width:100%', 'padding:8px 12px',
+        'background:linear-gradient(135deg,#1a3a5c,#0d2a4a)',
+        'color:#82c4f8', 'border:2px solid #4a7ab5',
+        'border-radius:8px', 'cursor:pointer',
+        'font-size:0.85em', 'font-weight:bold', 'letter-spacing:0.5px',
+    ].join(';');
+    btn.onclick = () => {
+        const url = `timeline.html?pattern=${encodeURIComponent(q.syncro.pattern)}&from=${encodeURIComponent(q.text)}`;
+        window.open(url, '_blank');
+    };
+    return btn;
+}
+
+function buildSyncroTagPanel(q) {
+    const key     = getSyncroTagKey(q);
+    const current = localStorage.getItem(key) || q.syncro?.pattern || null;
+
+    const panel = document.createElement('div');
+    panel.id = 'syncro-tag-panel';
+    panel.className = 'syncro-tag-panel';
+
+    const label = document.createElement('div');
+    label.textContent = '🏷️ Syncroタグ';
+    label.className = 'syncro-tag-label';
+    panel.appendChild(label);
+
+    const btnsWrap = document.createElement('div');
+    btnsWrap.className = 'syncro-tag-btns';
+    panel.appendChild(btnsWrap);
+
+    Object.entries(SYNCRO_PATTERNS).forEach(([name, color]) => {
+        const btn = document.createElement('button');
+        btn.textContent = name;
+        const isActive = current === name;
+        btn.className = 'syncro-tag-btn' + (isActive ? ' active' : '');
+        btn.style.setProperty('--tag-color', color);
+        btn.onclick = () => {
+            localStorage.setItem(key, name);
+            q.syncro = { pattern: name };
+            refreshExplanationDynamic(q);
+        };
+        btnsWrap.appendChild(btn);
+    });
+
+    const clearBtn = document.createElement('button');
+    clearBtn.textContent = '🚫 なし';
+    clearBtn.className = 'syncro-tag-btn syncro-tag-clear' + (!current ? ' active' : '');
+    clearBtn.onclick = () => {
+        localStorage.removeItem(key);
+        q.syncro = null;
+        refreshExplanationDynamic(q);
+    };
+    btnsWrap.appendChild(clearBtn);
+
+    return panel;
+}
+
+function refreshExplanationDynamic(q) {
+    document.getElementById('syncro-btn')?.remove();
+    document.getElementById('syncro-tag-panel')?.remove();
+    const box = document.getElementById('explanation-box');
+    if (q.syncro?.pattern) box.appendChild(buildSyncroBtn(q));
+    if (isTagMode())       box.appendChild(buildSyncroTagPanel(q));
 }
 
 function hideExplanation() {
     const box = document.getElementById('explanation-box');
     box.style.display = 'none';
+    document.getElementById('syncro-btn')?.remove();
+    document.getElementById('syncro-tag-panel')?.remove();
 }
+

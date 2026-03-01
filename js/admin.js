@@ -64,6 +64,21 @@ export function setupAdminPanel(startQuizCallback) {
                 fullData[reg].eras[era].fixed = [...fullData[reg].eras[era].fixed, ...added];
             });
         });
+
+        // SyncroタグのlocalStorageオーバーライドを反映
+        for (let i = 0; i < localStorage.length; i++) {
+            const lsKey = localStorage.key(i);
+            if (!lsKey?.startsWith('syncro_tag|')) continue;
+            const parts   = lsKey.split('|');
+            const region  = parts[1];
+            const era     = parts[2];
+            const qText   = parts.slice(3).join('|');
+            const pattern = localStorage.getItem(lsKey);
+            if (!pattern || !fullData[region]?.eras[era]?.fixed) continue;
+            const q = fullData[region].eras[era].fixed.find(item => item.text === qText);
+            if (q) q.syncro = { pattern };
+        }
+
         document.getElementById('export-area').value = JSON.stringify(fullData, null, 2);
     });
 

@@ -507,6 +507,48 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; background: var(--bg); 
 
 #admin-panel { font-size: 11px; background: rgba(239,235,233,0.9); padding: 10px; }
 
+/* ── Syncro タグパネル ─────────────────────────────────────── */
+.syncro-tag-panel {
+    margin-top: 10px;
+    padding: 8px 10px;
+    background: rgba(0,0,0,0.28);
+    border: 1px dashed #556;
+    border-radius: 7px;
+}
+.syncro-tag-label {
+    font-size: 9px;
+    color: #888;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+}
+.syncro-tag-btns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+.syncro-tag-btn {
+    font-size: 9px;
+    padding: 2px 7px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 1.5px solid var(--tag-color, #666);
+    background: transparent;
+    color: var(--tag-color, #ccc);
+    transition: background 0.15s, color 0.15s;
+}
+.syncro-tag-btn.active {
+    background: var(--tag-color, #666);
+    color: #111;
+    font-weight: bold;
+}
+.syncro-tag-btn:hover:not(.active) { opacity: 0.75; }
+.syncro-tag-clear {
+    --tag-color: #888;
+    border-color: #555;
+    color: #aaa;
+}
+.syncro-tag-clear.active { background: #444; color: #ddd; }
+
 /* =====================================================
    モバイルレイアウト（スマホ縦持ち）
    ─────────────────────────────────────────────────────

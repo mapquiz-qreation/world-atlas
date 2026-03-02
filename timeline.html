@@ -180,8 +180,7 @@
 
         #quiz-counter {
             font-size: 10px;
-            color: var(--text);
-            opacity: 0.55;
+            color: rgba(255,255,255,0.65);
             margin-bottom: 8px;
             display: flex;
             align-items: center;
@@ -196,14 +195,14 @@
         #quiz-question-text {
             font-size: 13px;
             font-weight: bold;
-            color: var(--q);
+            color: #fff;
             margin-bottom: 10px;
-            line-height: 1.65;
+            line-height: 1.7;
         }
         #quiz-question-text .hint {
             font-size: 10px;
             font-weight: normal;
-            color: var(--act);
+            color: #7ecfff;
             display: block;
             margin-bottom: 4px;
         }
@@ -215,31 +214,46 @@
             margin-bottom: 8px;
         }
         .quiz-choice-btn {
-            padding: 8px 6px;
-            font-size: 11px;
-            border-radius: 7px;
-            border: 2px solid var(--border);
-            background: var(--bg);
-            color: var(--text);
+            padding: 10px 8px;
+            font-size: 12px;
+            border-radius: 8px;
+            border: 2px solid rgba(255,255,255,0.25);
+            background: rgba(255,255,255,0.1);
+            color: #fff;
             cursor: pointer;
             text-align: left;
-            line-height: 1.4;
+            line-height: 1.45;
             transition: border-color 0.15s, background 0.15s;
+            font-weight: 500;
         }
-        .quiz-choice-btn:hover:not(:disabled) { border-color: var(--act); }
-        .quiz-choice-btn.correct { border-color: #66bb6a !important; background: rgba(102,187,106,0.15); color: #a5d6a7; font-weight: bold; }
-        .quiz-choice-btn.wrong   { border-color: #ef5350 !important; background: rgba(239,83,80,0.12);  color: #ef9a9a; opacity: 0.7; }
+        .quiz-choice-btn:hover:not(:disabled) {
+            border-color: var(--act);
+            background: rgba(255,255,255,0.16);
+        }
+        .quiz-choice-btn.correct {
+            border-color: #66bb6a !important;
+            background: rgba(102,187,106,0.28);
+            color: #c8f0cb;
+            font-weight: bold;
+        }
+        .quiz-choice-btn.wrong {
+            border-color: #ef5350 !important;
+            background: rgba(239,83,80,0.22);
+            color: #ffb3b0;
+            opacity: 0.85;
+        }
         .quiz-choice-btn:disabled { cursor: default; }
 
         #quiz-result {
             font-size: 13px;
             text-align: center;
-            padding: 4px 0;
+            padding: 6px 4px;
             font-weight: bold;
             min-height: 22px;
+            color: rgba(255,255,255,0.9);
         }
-        #quiz-result.ok { color: #66bb6a; }
-        #quiz-result.ng { color: #ef5350; }
+        #quiz-result.ok { color: #a5d6a7; }
+        #quiz-result.ng { color: #ffb3b0; }
 
         #quiz-actions {
             display: none;
@@ -301,18 +315,17 @@
             font-size: 11px;
             padding: 4px 10px;
             border-radius: 12px;
-            border: 2px solid var(--border);
-            background: transparent;
-            color: var(--text);
+            border: 2px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.08);
+            color: rgba(255,255,255,0.75);
             cursor: pointer;
             transition: all 0.15s;
-            opacity: 0.6;
         }
         .chrono-region-btn.active {
             border-color: var(--act);
             color: var(--act);
-            background: rgba(255,255,255,0.08);
-            opacity: 1;
+            background: rgba(255,255,255,0.12);
+            font-weight: bold;
         }
 
         #chrono-cards {
@@ -325,41 +338,56 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 9px 12px;
+            padding: 10px 12px;
             border-radius: 10px;
-            border: 2px solid var(--border);
-            background: var(--bg);
+            border: 2px solid rgba(255,255,255,0.22);
+            background: rgba(255,255,255,0.1);
             cursor: pointer;
             transition: border-color 0.15s, background 0.15s, transform 0.1s;
         }
-        .chrono-card:hover { border-color: var(--act); }
+        .chrono-card:hover {
+            border-color: var(--act);
+            background: rgba(255,255,255,0.16);
+        }
         .chrono-card:active { transform: scale(0.98); }
-        .chrono-card.selected { border-color: var(--act); background: rgba(255,255,255,0.06); }
-        .chrono-card.result-correct { border-color: #66bb6a; background: rgba(102,187,106,0.12); cursor: default; }
-        .chrono-card.result-wrong   { border-color: #ef5350; background: rgba(239,83,80,0.10);  cursor: default; }
+        .chrono-card.selected {
+            border-color: var(--act);
+            background: rgba(74,144,217,0.2);
+        }
+        .chrono-card.result-correct {
+            border-color: #66bb6a;
+            background: rgba(102,187,106,0.25);
+            cursor: default;
+        }
+        .chrono-card.result-wrong {
+            border-color: #ef5350;
+            background: rgba(239,83,80,0.2);
+            cursor: default;
+        }
 
         .chrono-badge {
             flex-shrink: 0;
-            width: 26px; height: 26px;
+            width: 28px; height: 28px;
             border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
             font-size: 13px; font-weight: bold;
-            border: 2px solid var(--border);
-            background: transparent;
-            color: var(--text);
+            border: 2px solid rgba(255,255,255,0.35);
+            background: rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.5);
             transition: all 0.15s;
         }
-        .chrono-badge.filled      { background: var(--act); border-color: var(--act); color: var(--act-c); }
-        .chrono-badge.badge-ok    { background: #66bb6a; border-color: #66bb6a; color: #fff; }
-        .chrono-badge.badge-ng    { background: #ef5350; border-color: #ef5350; color: #fff; }
+        .chrono-badge.filled   { background: var(--act); border-color: var(--act); color: #fff; }
+        .chrono-badge.badge-ok { background: #66bb6a;    border-color: #66bb6a;    color: #fff; }
+        .chrono-badge.badge-ng { background: #ef5350;    border-color: #ef5350;    color: #fff; }
 
-        .chrono-card-text  { font-size: 12px; line-height: 1.45; color: var(--text); flex: 1; }
-        .chrono-year-badge { font-size: 10px; color: var(--act); font-weight: bold; margin-top: 2px; }
-        .chrono-user-pos   { font-size: 10px; color: #ef5350; white-space: nowrap; }
+        .chrono-card-text  { font-size: 12px; line-height: 1.45; color: #fff; font-weight: 500; flex: 1; }
+        .chrono-year-badge { font-size: 10px; color: #7ecfff; font-weight: bold; margin-top: 3px; }
+        .chrono-user-pos   { font-size: 10px; color: #ffb3b0; white-space: nowrap; font-weight: bold; }
 
         #chrono-hint {
-            font-size: 11px; opacity: 0.6; text-align: center;
-            margin-bottom: 8px; color: var(--text);
+            font-size: 11px; text-align: center;
+            margin-bottom: 8px;
+            color: rgba(255,255,255,0.6);
         }
         #chrono-submit-btn {
             display: none;
@@ -374,10 +402,11 @@
 
         #chrono-result {
             font-size: 13px; font-weight: bold;
-            text-align: center; padding: 6px 0; min-height: 22px;
+            text-align: center; padding: 6px 4px; min-height: 22px;
+            color: rgba(255,255,255,0.9);
         }
-        #chrono-result.ok { color: #66bb6a; }
-        #chrono-result.ng { color: #ef5350; }
+        #chrono-result.ok { color: #a5d6a7; }
+        #chrono-result.ng { color: #ffb3b0; }
 
         #chrono-actions {
             display: none;

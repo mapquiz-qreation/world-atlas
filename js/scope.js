@@ -2,6 +2,13 @@ import { state }          from './state.js';
 import { shuffle }        from './shuffle.js';
 import { showQuestion }   from './quiz.js';
 import { flyToRegion, clearQuizLayer } from './map.js';
+import { ERA_DISPLAY_NAMES } from './config.js';
+
+function eraLabel(region, era) {
+    return ERA_DISPLAY_NAMES[`${region}_${era}`]
+        || state.masterData[region]?.eras[era]?.name
+        || era;
+}
 
 // scopeStr 例: "europe_ancient,china_ancient_china,mideast_islamic_expansion"
 export function startScopeQuiz(scopeStr) {
@@ -34,7 +41,7 @@ export function startScopeQuiz(scopeStr) {
     banner.style.display = 'block';
     banner.innerHTML = '<strong>📋 試験範囲モード</strong><br>' +
         pairs.map(p =>
-            `${state.masterData[p.region].name}／${state.masterData[p.region].eras[p.era].name}`
+            `${state.masterData[p.region].name}／${eraLabel(p.region, p.era)}`
         ).join('、');
 
     document.getElementById('era-display').innerText =
@@ -54,9 +61,8 @@ export function buildScopeChecklist() {
         div.appendChild(grp);
 
         Object.keys(state.masterData[region].eras).forEach(era => {
-            const eraName = state.masterData[region].eras[era].name;
-            const label   = document.createElement('label');
-            label.innerHTML = `<input type="checkbox" value="${region}_${era}">${eraName}`;
+            const label = document.createElement('label');
+            label.innerHTML = `<input type="checkbox" value="${region}_${era}">${eraLabel(region, era)}`;
             div.appendChild(label);
         });
     });

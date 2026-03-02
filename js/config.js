@@ -4,6 +4,47 @@ export const GAS_URL = "https://script.google.com/macros/s/AKfycby-dUq_dfcitTMzp
 // ★StripeのPayment LinkのURLを貼り付けてね！（Stripeアカウント作成後に設定）
 export const STRIPE_PAYMENT_URL = "";
 
+// 試験範囲モードで表示する一般的な時代区分名（タブの文学的な名前とは別）
+export const ERA_DISPLAY_NAMES = {
+    "china_five_hu":                  "五胡十六国時代",
+    "china_ancient_china":            "中国古代（秦・漢）",
+    "china_medieval_china":           "中国中世（唐・宋・元・モンゴル）",
+    "china_early_modern_china":       "中国近世（明・清）",
+    "mideast_ancient_orient":         "オリエント・メソポタミア",
+    "mideast_islamic_expansion":      "イスラーム拡大期",
+    "mideast_turco_mongol":           "オスマン帝国時代",
+    "mideast_modern_turkey":          "近代中東・トルコ革命",
+    "africa_african_kingdoms":        "アフリカ王国時代",
+    "africa_scramble_for_africa":     "アフリカ分割",
+    "europe_germanic":                "ゲルマン民族移動・フランク王国",
+    "europe_ancient":                 "古代ギリシア・ローマ",
+    "europe_medieval":                "中世ヨーロッパ・十字軍",
+    "europe_modern":                  "絶対王政・市民革命",
+    "europe_age_of_exploration":      "大航海時代",
+    "europe_russia":                  "帝政ロシア",
+    "europe_napoleon":                "ナポレオン時代",
+    "europe_britain":                 "大英帝国（19世紀）",
+    "india_indus":                    "インダス文明",
+    "india_ancient_medieval_india":   "古代インド（マウリヤ・グプタ朝）",
+    "india_mughal_colonial":          "ムガル帝国・植民地時代",
+    "southeast_asia_ancient":         "東南アジア古代王国",
+    "southeast_asia_colonial":        "東南アジア植民地時代",
+    "southeast_asia_independence":    "東南アジア独立運動",
+    "north_america_frontier":         "アメリカ西部開拓",
+    "north_america_independence":     "アメリカ独立革命",
+    "north_america_civil_war":        "南北戦争",
+    "latin_america_sun_empire":       "古代メソアメリカ・アンデス文明",
+    "latin_america_colonial_era":     "ラテンアメリカ植民地時代",
+    "latin_america_liberation_era":   "ラテンアメリカ独立運動",
+    "world_wars_ww1":                 "第一次世界大戦",
+    "world_wars_interwar":            "戦間期（ファシズム台頭）",
+    "world_wars_ww2_europe":          "第二次世界大戦（ヨーロッパ戦線）",
+    "world_wars_ww2_pacific":         "第二次世界大戦（太平洋戦線）",
+    "cold_war_cold_war_early":        "冷戦初期",
+    "cold_war_cold_war_proxy":        "冷戦・代理戦争期",
+    "cold_war_cold_war_end":          "冷戦終結",
+};
+
 // 地域・時代タグごとの第1位称号
 export const TAG_TITLES = {
     "china_five_hu":               "⚔️ 単于",

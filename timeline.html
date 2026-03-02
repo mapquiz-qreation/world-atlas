@@ -279,6 +279,154 @@
             100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); }
         }
 
+        /* ─── 年号並べ替えパネル ───────────────────────── */
+        #chrono-panel {
+            display: none;
+            flex-shrink: 0;
+            background: var(--panel);
+            border-top: 4px double var(--border);
+            padding: 10px 14px 14px;
+            overflow-y: auto;
+            max-height: 55vh;
+        }
+        #chrono-panel.active { display: block; }
+
+        #chrono-region-btns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        .chrono-region-btn {
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            border: 2px solid var(--border);
+            background: transparent;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.15s;
+            opacity: 0.6;
+        }
+        .chrono-region-btn.active {
+            border-color: var(--act);
+            color: var(--act);
+            background: rgba(255,255,255,0.08);
+            opacity: 1;
+        }
+
+        #chrono-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            margin-bottom: 10px;
+        }
+        .chrono-card {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 12px;
+            border-radius: 10px;
+            border: 2px solid var(--border);
+            background: var(--bg);
+            cursor: pointer;
+            transition: border-color 0.15s, background 0.15s, transform 0.1s;
+        }
+        .chrono-card:hover { border-color: var(--act); }
+        .chrono-card:active { transform: scale(0.98); }
+        .chrono-card.selected { border-color: var(--act); background: rgba(255,255,255,0.06); }
+        .chrono-card.result-correct { border-color: #66bb6a; background: rgba(102,187,106,0.12); cursor: default; }
+        .chrono-card.result-wrong   { border-color: #ef5350; background: rgba(239,83,80,0.10);  cursor: default; }
+
+        .chrono-badge {
+            flex-shrink: 0;
+            width: 26px; height: 26px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px; font-weight: bold;
+            border: 2px solid var(--border);
+            background: transparent;
+            color: var(--text);
+            transition: all 0.15s;
+        }
+        .chrono-badge.filled      { background: var(--act); border-color: var(--act); color: var(--act-c); }
+        .chrono-badge.badge-ok    { background: #66bb6a; border-color: #66bb6a; color: #fff; }
+        .chrono-badge.badge-ng    { background: #ef5350; border-color: #ef5350; color: #fff; }
+
+        .chrono-card-text  { font-size: 12px; line-height: 1.45; color: var(--text); flex: 1; }
+        .chrono-year-badge { font-size: 10px; color: var(--act); font-weight: bold; margin-top: 2px; }
+        .chrono-user-pos   { font-size: 10px; color: #ef5350; white-space: nowrap; }
+
+        #chrono-hint {
+            font-size: 11px; opacity: 0.6; text-align: center;
+            margin-bottom: 8px; color: var(--text);
+        }
+        #chrono-submit-btn {
+            display: none;
+            width: 100%; padding: 10px;
+            background: var(--act); color: var(--act-c);
+            font-size: 13px; font-weight: bold;
+            border: none; border-radius: 8px; cursor: pointer;
+            margin-bottom: 8px;
+            transition: opacity 0.15s;
+        }
+        #chrono-submit-btn:hover { opacity: 0.85; }
+
+        #chrono-result {
+            font-size: 13px; font-weight: bold;
+            text-align: center; padding: 6px 0; min-height: 22px;
+        }
+        #chrono-result.ok { color: #66bb6a; }
+        #chrono-result.ng { color: #ef5350; }
+
+        #chrono-actions {
+            display: none;
+            flex-direction: column;
+            gap: 6px; margin-top: 8px;
+        }
+        #chrono-actions.visible { display: flex; }
+        .chrono-action-btn {
+            width: 100%; padding: 9px;
+            font-size: 12px; font-weight: bold;
+            border-radius: 8px; border: 2px solid;
+            cursor: pointer; transition: opacity 0.2s;
+        }
+        .chrono-action-btn:hover { opacity: 0.8; }
+        #chrono-next-btn    { background: var(--act); color: var(--act-c); border-color: var(--act); }
+        #chrono-explore-btn { background: transparent; color: var(--act); border-color: var(--act); }
+
+        #chrono-syncro {
+            display: none;
+            margin-top: 10px;
+            border-top: 1px solid var(--border);
+            padding-top: 10px;
+        }
+        .chrono-syncro-title {
+            font-size: 11px; font-weight: bold; color: var(--act);
+            margin-bottom: 8px; letter-spacing: 0.5px;
+        }
+        .chrono-syncro-item {
+            margin-bottom: 10px;
+            padding: 8px 10px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.05);
+            border-left: 3px solid var(--act);
+        }
+        .chrono-syncro-year  { font-size: 10px; color: var(--act); font-weight: bold; margin-bottom: 2px; }
+        .chrono-syncro-main  { font-size: 11px; font-weight: bold; color: var(--text); margin-bottom: 4px; }
+        .chrono-syncro-world { font-size: 11px; line-height: 1.6; color: var(--text); opacity: 0.85; }
+
+        #chrono-lock {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 28px 16px;
+            text-align: center;
+            gap: 8px;
+        }
+        #chrono-lock.visible { display: flex; }
+
         /* ─── レスポンシブ ─────────────────────────────── */
         @media (max-width: 768px) {
             #wip-banner  { font-size: 11px; padding: 4px 8px; }
@@ -290,6 +438,7 @@
             .pattern-btn { font-size: 10px; padding: 2px 8px; }
             #quiz-panel  { max-height: 50vh; }
             #quiz-question-text { font-size: 12px; }
+            #chrono-panel { max-height: 55vh; }
         }
     </style>
 </head>
@@ -310,7 +459,8 @@
     <!-- Syncro サブタブ -->
     <div id="syncro-sub-tabs">
         <button class="syncro-sub-tab active" id="tab-explore-btn" onclick="switchTab('explore')">🔍 探求モード</button>
-        <button class="syncro-sub-tab"        id="tab-quiz-btn"    onclick="switchTab('quiz')">❓ 同時代クイズ</button>
+        <button class="syncro-sub-tab"        id="tab-quiz-btn"    onclick="switchTab('quiz')">⚡ 同時代クイズ</button>
+        <button class="syncro-sub-tab"        id="tab-chrono-btn"  onclick="switchTab('chrono')">🗓️ 並べ替え</button>
     </div>
 
     <!-- ── 探求モード専用コントロール ─────────────── -->
@@ -332,6 +482,41 @@
     <!-- ── 探求モード：情報パネル ─────────────────── -->
     <div id="info-panel" class="empty">
         <span>マーカーをタップすると詳細が表示されます</span>
+    </div>
+
+    <!-- ── 年号並べ替えパネル ─────────────────────── -->
+    <div id="chrono-panel">
+        <!-- ログイン未確認時のロック表示 -->
+        <div id="chrono-lock">
+            <div style="font-size:2em;">🔒</div>
+            <div style="font-weight:bold; font-size:14px;">受験生登録で解放</div>
+            <div style="font-size:12px; opacity:0.7;">
+                <a href="index.html" style="color:var(--act);">ホームでログイン</a>してからご利用ください
+            </div>
+        </div>
+        <!-- 本体 -->
+        <div id="chrono-inner">
+            <div id="chrono-region-btns">
+                <button class="chrono-region-btn active" data-region="all">🌍 おまかせ</button>
+                <button class="chrono-region-btn" data-region="europe">欧州</button>
+                <button class="chrono-region-btn" data-region="mideast">中東</button>
+                <button class="chrono-region-btn" data-region="africa">アフリカ</button>
+                <button class="chrono-region-btn" data-region="india">インド</button>
+                <button class="chrono-region-btn" data-region="china">中国</button>
+                <button class="chrono-region-btn" data-region="southeast_asia">東南アジア</button>
+                <button class="chrono-region-btn" data-region="latin_america">南米</button>
+                <button class="chrono-region-btn" data-region="world_wars">大戦期</button>
+            </div>
+            <div id="chrono-hint">古い順（1→4）にタップしよう</div>
+            <div id="chrono-cards"></div>
+            <button id="chrono-submit-btn">✅ 答え合わせ</button>
+            <div id="chrono-result"></div>
+            <div id="chrono-actions">
+                <button class="chrono-action-btn" id="chrono-explore-btn">🔍 このエポックをSyncro Erasで確認</button>
+                <button class="chrono-action-btn" id="chrono-next-btn">次の問題へ →</button>
+            </div>
+            <div id="chrono-syncro"></div>
+        </div>
     </div>
 
     <!-- ── 同時代クイズパネル ─────────────────────── -->
@@ -392,29 +577,40 @@
         currentTab = tab;
         const exploreBtn  = document.getElementById('tab-explore-btn');
         const quizBtn     = document.getElementById('tab-quiz-btn');
+        const chronoBtn   = document.getElementById('tab-chrono-btn');
         const exploreCtrl = document.getElementById('explore-controls');
         const infoPanel   = document.getElementById('info-panel');
         const quizPanel   = document.getElementById('quiz-panel');
+        const chronoPanel = document.getElementById('chrono-panel');
+
+        [exploreBtn, quizBtn, chronoBtn].forEach(b => b.classList.remove('active'));
 
         if (tab === 'explore') {
             exploreBtn.classList.add('active');
-            quizBtn.classList.remove('active');
             exploreCtrl.style.display = 'contents';
             infoPanel.style.display   = '';
             quizPanel.classList.remove('active');
+            chronoPanel.classList.remove('active');
             markerLayer.addTo(map);
             quizLayer.clearLayers();
             renderEpoch(currentIdx);
-        } else {
+        } else if (tab === 'quiz') {
             quizBtn.classList.add('active');
-            exploreBtn.classList.remove('active');
             exploreCtrl.style.display = 'none';
             infoPanel.style.display   = 'none';
             quizPanel.classList.add('active');
+            chronoPanel.classList.remove('active');
             markerLayer.clearLayers();
             startQuizQuestion();
+        } else {
+            chronoBtn.classList.add('active');
+            exploreCtrl.style.display = 'none';
+            infoPanel.style.display   = 'none';
+            quizPanel.classList.remove('active');
+            chronoPanel.classList.add('active');
+            markerLayer.clearLayers();
+            initChronoPanel();
         }
-        // マップのリサイズを通知
         setTimeout(() => map.invalidateSize(), 50);
     }
 
@@ -652,6 +848,271 @@
             map.flyToBounds(bounds, { padding: [40, 40], duration: 1.2 });
         }
     }
+
+    // ── 年号並べ替えクイズ ───────────────────────────────────
+    let chronoData    = {};   // region key → [{text, year, lat, lng, _region}, ...]
+    let chronoLoaded  = false;
+    let chronoCards   = [];   // 現在の4問（シャッフル済み表示順）
+    let chronoOrder   = [];   // ユーザーがタップした順のインデックス配列
+    let selectedRegion = 'all';
+    let chronoCorrectCards = null; // 正解順
+
+    async function loadChronoData() {
+        if (chronoLoaded) return;
+        const regions = ['europe','mideast','africa','india','china','southeast_asia',
+                         'north_america','latin_america','world_wars','cold_war'];
+        const results = await Promise.all(
+            regions.map(r => fetch(`data/${r}.json`).then(res => res.json()))
+        );
+        regions.forEach((r, i) => {
+            const qs = [];
+            Object.values(results[i].eras).forEach(era => {
+                (era.fixed || []).forEach(q => {
+                    if (q.year !== undefined && q.text && q.lat !== undefined) {
+                        qs.push({ text: q.text, year: q.year, lat: q.lat, lng: q.lng, _region: r });
+                    }
+                });
+            });
+            chronoData[r] = qs;
+        });
+        chronoLoaded = true;
+    }
+
+    function pickChronoQuestions(region) {
+        let pool = region === 'all'
+            ? Object.values(chronoData).flat()
+            : (chronoData[region] || []);
+        if (pool.length < 4) return null;
+
+        // 100回試行して年代差が十分な4問を選ぶ
+        for (let i = 0; i < 150; i++) {
+            const shuffled = [...pool].sort(() => Math.random() - 0.5).slice(0, 4);
+            shuffled.sort((a, b) => a.year - b.year);
+            const span  = shuffled[3].year - shuffled[0].year;
+            const minGap = Math.min(
+                shuffled[1].year - shuffled[0].year,
+                shuffled[2].year - shuffled[1].year,
+                shuffled[3].year - shuffled[2].year
+            );
+            if (span >= 300 && minGap >= 50) return shuffled;
+        }
+        // フォールバック：均等サンプリング
+        const sorted = [...pool].sort((a, b) => a.year - b.year);
+        const n = sorted.length;
+        return [sorted[0], sorted[Math.floor(n/3)], sorted[Math.floor(n*2/3)], sorted[n-1]];
+    }
+
+    function yearText(y) {
+        return y < 0 ? `BC${Math.abs(y)}年` : `${y}年`;
+    }
+
+    async function initChronoPanel() {
+        const isLoggedIn = !!localStorage.getItem('quiz_current_user');
+        const lockEl     = document.getElementById('chrono-lock');
+        const innerEl    = document.getElementById('chrono-inner');
+        if (!isLoggedIn) {
+            lockEl.classList.add('visible');
+            innerEl.style.display = 'none';
+            return;
+        }
+        lockEl.classList.remove('visible');
+        innerEl.style.display = '';
+        await loadChronoData();
+        startChronoQuiz();
+    }
+
+    function startChronoQuiz() {
+        const questions = pickChronoQuestions(selectedRegion);
+        if (!questions) {
+            document.getElementById('chrono-cards').innerHTML =
+                '<p style="color:var(--act);text-align:center">この地域の問題が不足しています。「おまかせ」を選んでください。</p>';
+            return;
+        }
+        // 正解順を保存しておく（year昇順）
+        chronoCorrectCards = questions; // already sorted by year
+        // 表示順はシャッフル
+        chronoCards = [...questions].sort(() => Math.random() - 0.5);
+        chronoOrder = [];
+
+        document.getElementById('chrono-result').textContent    = '';
+        document.getElementById('chrono-result').className      = '';
+        document.getElementById('chrono-actions').classList.remove('visible');
+        document.getElementById('chrono-syncro').style.display  = 'none';
+        document.getElementById('chrono-submit-btn').style.display = 'none';
+        document.getElementById('chrono-hint').textContent = '古い順（1→4）にタップしよう';
+
+        renderChronoCards(false);
+        quizLayer.clearLayers();
+    }
+
+    function renderChronoCards(showResult) {
+        const container = document.getElementById('chrono-cards');
+        container.innerHTML = '';
+
+        if (showResult) {
+            // 正解順（year昇順）で並べて表示
+            chronoCorrectCards.forEach((q, pos) => {
+                const userPos   = chronoOrder.findIndex(idx => chronoCards[idx] === q);
+                const isCorrect = userPos === pos;
+
+                const card = document.createElement('div');
+                card.className = `chrono-card ${isCorrect ? 'result-correct' : 'result-wrong'}`;
+
+                const badge = document.createElement('div');
+                badge.className = `chrono-badge ${isCorrect ? 'badge-ok' : 'badge-ng'}`;
+                badge.textContent = pos + 1;
+
+                const textDiv = document.createElement('div');
+                textDiv.className = 'chrono-card-text';
+                textDiv.innerHTML = `${q.text}<br><span class="chrono-year-badge">${yearText(q.year)}</span>`;
+
+                card.appendChild(badge);
+                card.appendChild(textDiv);
+
+                if (!isCorrect) {
+                    const userSpan = document.createElement('div');
+                    userSpan.className   = 'chrono-user-pos';
+                    userSpan.textContent = `あなた: ${userPos + 1}番`;
+                    card.appendChild(userSpan);
+                }
+                container.appendChild(card);
+            });
+        } else {
+            chronoCards.forEach((q, i) => {
+                const orderPos   = chronoOrder.indexOf(i);
+                const isSelected = orderPos >= 0;
+
+                const card = document.createElement('div');
+                card.className = `chrono-card${isSelected ? ' selected' : ''}`;
+                card.addEventListener('click', () => toggleChronoCard(i));
+
+                const badge = document.createElement('div');
+                badge.className  = `chrono-badge${isSelected ? ' filled' : ''}`;
+                badge.textContent = isSelected ? orderPos + 1 : '';
+
+                const textDiv = document.createElement('div');
+                textDiv.className   = 'chrono-card-text';
+                textDiv.textContent = q.text;
+
+                card.appendChild(badge);
+                card.appendChild(textDiv);
+                container.appendChild(card);
+            });
+        }
+    }
+
+    function toggleChronoCard(idx) {
+        const pos = chronoOrder.indexOf(idx);
+        if (pos >= 0) {
+            chronoOrder.splice(pos, 1);
+        } else if (chronoOrder.length < 4) {
+            chronoOrder.push(idx);
+        }
+        renderChronoCards(false);
+        const submitBtn = document.getElementById('chrono-submit-btn');
+        submitBtn.style.display = chronoOrder.length === 4 ? 'block' : 'none';
+    }
+
+    function checkChronoAnswer() {
+        // chronoOrder[pos] = chronoCards のインデックス → そのyearで検証
+        const correctOrder = chronoCorrectCards; // year昇順
+        let correctCount = 0;
+        chronoOrder.forEach((cardIdx, userPos) => {
+            if (chronoCards[cardIdx] === correctOrder[userPos]) correctCount++;
+        });
+
+        renderChronoCards(true);
+
+        const resultEl = document.getElementById('chrono-result');
+        const isAllCorrect = correctCount === 4;
+        if (isAllCorrect) {
+            resultEl.textContent = '✅ 完全正解！時代の流れを完璧に掴んでいます！';
+            resultEl.className   = 'ok';
+        } else {
+            resultEl.textContent = `${correctCount}/4問正しい位置でした。年号を確認しよう！`;
+            resultEl.className   = 'ng';
+        }
+
+        document.getElementById('chrono-submit-btn').style.display = 'none';
+        document.getElementById('chrono-actions').classList.add('visible');
+
+        showChronoSyncro(correctOrder);
+        showChronoMapMarkers(correctOrder);
+    }
+
+    function showChronoSyncro(orderedQuestions) {
+        const el = document.getElementById('chrono-syncro');
+        el.style.display = 'block';
+
+        const html = orderedQuestions.map(q => {
+            if (!timelineData.length) return '';
+            const epoch = timelineData.reduce((best, e) =>
+                Math.abs(e.year - q.year) < Math.abs(best.year - q.year) ? e : best
+            );
+            const others = epoch.events.filter(ev => ev.region !== q._region).slice(0, 2);
+            if (!others.length) return '';
+            const othersHtml = others.map(ev => {
+                const c = REGION_COLORS[ev.region] || '#aaa';
+                return `<span style="color:${c}">${REGION_NAMES[ev.region] || ev.region}：${ev.title}</span>`;
+            }).join(' ・ ');
+            return `<div class="chrono-syncro-item">
+                <div class="chrono-syncro-year">${yearText(q.year)}ごろ ／ ${epoch.label}</div>
+                <div class="chrono-syncro-main">${q.text.split('(')[0].trim()}</div>
+                <div class="chrono-syncro-world">🔄 同じ頃 → ${othersHtml}</div>
+            </div>`;
+        }).filter(Boolean).join('');
+
+        el.innerHTML = `<div class="chrono-syncro-title">🌐 Syncro — この時代の世界では</div>${html || '<p style="opacity:0.5;font-size:11px">接続情報なし</p>'}`;
+    }
+
+    function showChronoMapMarkers(orderedQuestions) {
+        quizLayer.clearLayers();
+        const bounds = [];
+        orderedQuestions.forEach((q, pos) => {
+            if (q.lat === undefined) return;
+            const color = REGION_COLORS[q._region] || '#4a90d9';
+            const icon  = L.divIcon({
+                className: '',
+                html: `<div style="
+                    background:${color};border:2px solid #fff;border-radius:50%;
+                    width:28px;height:28px;
+                    display:flex;align-items:center;justify-content:center;
+                    font-size:12px;font-weight:bold;color:#000;
+                    box-shadow:0 2px 8px rgba(0,0,0,0.45);
+                ">${pos + 1}</div>`,
+                iconSize: [28, 28], iconAnchor: [14, 14],
+            });
+            L.marker([q.lat, q.lng], { icon }).addTo(quizLayer);
+            bounds.push([q.lat, q.lng]);
+        });
+        if (bounds.length > 1) map.flyToBounds(bounds, { padding: [50, 50], duration: 1.0 });
+    }
+
+    // 地域ボタンのクリック処理
+    document.getElementById('chrono-region-btns').addEventListener('click', async e => {
+        const btn = e.target.closest('.chrono-region-btn');
+        if (!btn) return;
+        document.querySelectorAll('.chrono-region-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedRegion = btn.dataset.region;
+        await loadChronoData();
+        startChronoQuiz();
+    });
+
+    document.getElementById('chrono-submit-btn').addEventListener('click', checkChronoAnswer);
+    document.getElementById('chrono-next-btn').addEventListener('click', startChronoQuiz);
+    document.getElementById('chrono-explore-btn').addEventListener('click', () => {
+        if (!chronoCorrectCards) return;
+        // 一番古いイベントに近いエポックへジャンプ
+        const targetYear = chronoCorrectCards[0].year;
+        const epochIdx   = timelineData.reduce((bestIdx, e, i) =>
+            Math.abs(e.year - targetYear) < Math.abs(timelineData[bestIdx].year - targetYear) ? i : bestIdx
+        , 0);
+        switchTab('explore');
+        const slider = document.getElementById('year-slider');
+        slider.value = epochIdx;
+        renderEpoch(epochIdx);
+    });
 
     // 探求モードへの導線
     document.getElementById('quiz-explore-btn').addEventListener('click', () => {

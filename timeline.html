@@ -898,7 +898,7 @@
             Object.values(results[i].eras).forEach(era => {
                 (era.fixed || []).forEach(q => {
                     if (q.year !== undefined && q.text && q.lat !== undefined) {
-                        qs.push({ text: q.text, year: q.year, lat: q.lat, lng: q.lng, _region: r });
+                        qs.push({ text: q.text, sortLabel: q.sortLabel, year: q.year, lat: q.lat, lng: q.lng, _region: r });
                     }
                 });
             });
@@ -993,7 +993,7 @@
 
                 const textDiv = document.createElement('div');
                 textDiv.className = 'chrono-card-text';
-                textDiv.innerHTML = `${q.text}<br><span class="chrono-year-badge">${yearText(q.year)}</span>`;
+                textDiv.innerHTML = `${q.sortLabel || q.text}<br><span class="chrono-year-badge">${yearText(q.year)}</span>`;
 
                 card.appendChild(badge);
                 card.appendChild(textDiv);
@@ -1021,7 +1021,7 @@
 
                 const textDiv = document.createElement('div');
                 textDiv.className   = 'chrono-card-text';
-                textDiv.textContent = q.text;
+                textDiv.textContent = q.sortLabel || q.text;
 
                 card.appendChild(badge);
                 card.appendChild(textDiv);

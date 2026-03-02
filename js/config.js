@@ -29,6 +29,7 @@ export const TAG_TITLES = {
     "india_mughal_colonial":       "🕉️ パードシャー",
     "southeast_asia_ancient":      "🌿 アンコールの覇者",
     "southeast_asia_colonial":     "🌺 香料諸島の王",
+    "southeast_asia_independence": "🕊️ 独立の父",
     "north_america_frontier":      "🤠 開拓王",
     "north_america_independence":  "🦅 建国の父",
     "north_america_civil_war":     "⚔️ 将軍",

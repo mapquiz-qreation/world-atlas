@@ -863,6 +863,174 @@ body:not([data-region]):not([data-era]) #legal-footer span {
 }
 
 /* =====================================================
+   タイムアタック
+   ===================================================== */
+#ta-bar {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(135deg, #1a237e, #283593);
+    color: #fff;
+    border-radius: 8px;
+    padding: 7px 12px;
+    margin-bottom: 8px;
+    font-weight: bold;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+}
+
+#ta-timer-display {
+    font-size: 1.35em;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 1px;
+}
+
+#ta-timer-display.ta-timer-urgent {
+    color: #ff5252;
+    animation: ta-pulse 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes ta-pulse {
+    from { opacity: 1; }
+    to   { opacity: 0.45; }
+}
+
+#ta-score-display {
+    font-size: 0.88em;
+    opacity: 0.88;
+}
+
+#ta-time-btns {
+    display: flex;
+    gap: 6px;
+    padding: 4px 0 2px;
+}
+
+.ta-time-btn {
+    flex: 1;
+    padding: 9px 0;
+    font-size: 13px;
+    font-weight: bold;
+    border: 2px solid var(--act);
+    background: var(--act);
+    color: var(--act-c);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: opacity 0.15s, transform 0.1s;
+}
+
+.ta-time-btn:hover  { opacity: 0.85; }
+.ta-time-btn:active { transform: scale(0.96); }
+
+/* ── ログインゲート ─────────────────────── */
+.login-gate-section {
+    position: relative;
+    padding: 4px 0 6px;
+}
+
+.login-gate-overlay {
+    position: absolute;
+    inset: -2px;
+    background: rgba(0, 0, 0, 0.58);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #fff;
+    cursor: pointer;
+    z-index: 5;
+    backdrop-filter: blur(3px);
+    user-select: none;
+    letter-spacing: 0.5px;
+}
+
+/* ログイン後は自動でオーバーレイを非表示 */
+body.logged-in .login-gate-overlay {
+    display: none;
+}
+
+/* ── TA 結果モーダル ─────────────────────── */
+#ta-result-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.72);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+}
+
+#ta-result-inner {
+    background: var(--bg);
+    border-radius: 18px;
+    padding: 28px 32px 24px;
+    text-align: center;
+    min-width: 270px;
+    max-width: 360px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+}
+
+#ta-result-stats {
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+    margin: 16px 0;
+    flex-wrap: wrap;
+}
+
+.ta-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 56px;
+}
+
+.ta-stat-val {
+    font-size: 2em;
+    font-weight: bold;
+    color: var(--act);
+    line-height: 1.1;
+}
+
+.ta-stat-lbl {
+    font-size: 10px;
+    color: #888;
+    margin-top: 3px;
+}
+
+#ta-result-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 18px;
+}
+
+#ta-retry-btn,
+#ta-end-btn {
+    padding: 10px 22px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+    border: 2px solid var(--act);
+    transition: opacity 0.15s;
+}
+
+#ta-retry-btn {
+    background: var(--act);
+    color: var(--act-c);
+}
+
+#ta-end-btn {
+    background: transparent;
+    color: var(--act);
+}
+
+#ta-retry-btn:hover,
+#ta-end-btn:hover { opacity: 0.8; }
+
+/* =====================================================
    横向き（landscape）最適化
    高さが極端に減るので各要素をコンパクトに調整
    ===================================================== */

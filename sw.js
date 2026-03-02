@@ -3,7 +3,7 @@
  * キャッシュファーストで動作し、オフラインでも地図クイズの基本UIが動く
  */
 
-const CACHE_NAME = 'worldatlas-v4';
+const CACHE_NAME = 'worldatlas-v5';
 
 // アプリシェル（優先キャッシュ対象）
 const SHELL_ASSETS = [
@@ -26,6 +26,7 @@ const SHELL_ASSETS = [
     './js/shuffle.js',
     './js/mobile.js',
     './js/admin.js',
+    './js/timeattack.js',
     './data/europe.json',
     './data/mideast.json',
     './data/africa.json',

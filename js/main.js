@@ -8,6 +8,7 @@ import { startScopeQuiz, buildScopeChecklist, copyScopeUrl, startKeywordQuiz } f
 import { setupAdminPanel }                                from './admin.js';
 import { initMobile, closeMobileSheet }                   from './mobile.js';
 import { loadSRSData, getDueReviewQuestions, getSRSStats } from './srs.js';
+import { startTimeAttack, abortTimeAttack, endTimeAttack } from './timeattack.js';
 
 async function fetchQuestions() {
     const regions = ['europe', 'mideast', 'africa', 'india', 'china', 'southeast_asia', 'north_america', 'latin_america', 'world_wars', 'cold_war'];
@@ -96,6 +97,9 @@ export function startQuiz(regionKey, eraKey) {
 }
 
 function goHome() {
+    if (state.timeAttack.active) abortTimeAttack();
+    document.getElementById('ta-result-modal').style.display = 'none';
+
     state.questions     = [];
     state.currentIdx    = 0;
     state.currentRegion = '';
@@ -168,7 +172,7 @@ function updateReviewBtn() {
         : `📚 復習スタート`;
 }
 
-document.addEventListener('DOMContentLoaded', async function() {
+    document.addEventListener('DOMContentLoaded', async function() {
     await initMap();
     setupAdminPanel(startQuiz);
     document.getElementById('login-btn').addEventListener('click', loginUser);
@@ -178,6 +182,26 @@ document.addEventListener('DOMContentLoaded', async function() {
     document.getElementById('keyword-start-btn').addEventListener('click', startKeywordQuiz);
     document.getElementById('home-btn').addEventListener('click', goHome);
     document.getElementById('review-btn').addEventListener('click', startReviewMode);
+
+    // タイムアタック：時間ボタン
+    document.querySelectorAll('.ta-time-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const minutes = parseInt(btn.dataset.min, 10);
+            closeMobileSheet();
+            startTimeAttack(minutes);
+        });
+    });
+
+    // タイムアタック：結果モーダルのボタン
+    document.getElementById('ta-retry-btn').addEventListener('click', () => {
+        document.getElementById('ta-result-modal').style.display = 'none';
+        const minutes = state.timeAttack.minutes || 3;
+        startTimeAttack(minutes);
+    });
+    document.getElementById('ta-end-btn').addEventListener('click', () => {
+        document.getElementById('ta-result-modal').style.display = 'none';
+        goHome();
+    });
 
     // Stripe 購入ボタンに URL をセット
     const buyBtn = document.getElementById('buy-btn');

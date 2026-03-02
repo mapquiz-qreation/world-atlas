@@ -20,6 +20,17 @@ export const state = {
     // 有料プラン
     isPaid:         false,
 
+    // タイムアタック
+    timeAttack: {
+        active:     false,
+        score:      0,
+        total:      0,
+        streak:     0,
+        bestStreak: 0,
+        minutes:    0,
+        onAnswer:   null,
+    },
+
     // Leaflet インスタンス（map.js が設定）
     map:        null,
     quizLayer:  null,

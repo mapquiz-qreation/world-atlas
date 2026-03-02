@@ -45,6 +45,11 @@
             <div id="sidebar-content">
                 <!-- クイズ -->
                 <div id="question-box">
+                    <!-- タイムアタックタイマーバー（TA中のみ表示） -->
+                    <div id="ta-bar">
+                        <div id="ta-timer-display">0:00</div>
+                        <div id="ta-score-display">0問正解</div>
+                    </div>
                     <div id="scope-banner"></div>
                     <div id="era-display" style="font-size:10px; color:#8d6e63; margin-bottom:5px;">-</div>
                     <span id="q-text">Ready?</span>
@@ -75,6 +80,18 @@
                         <div id="ranking-list">時代を選択してね</div>
                         <button id="logout-btn" style="font-size:10px; margin-top:10px; color:#d32f2f; cursor:pointer; background:none; border:1px solid #d32f2f; border-radius:3px; padding:2px 5px;">ログアウト / ユーザー変更</button>
                     </div>
+                </div>
+
+                <!-- タイムアタック（ログインゲート） -->
+                <div class="section-label">⚡ タイムアタック</div>
+                <div class="login-gate-section" id="ta-gate-section">
+                    <div class="login-gate-overlay">🔒 受験生登録で解放</div>
+                    <div id="ta-time-btns">
+                        <button class="ta-time-btn" data-min="1">1分</button>
+                        <button class="ta-time-btn" data-min="3">3分</button>
+                        <button class="ta-time-btn" data-min="5">5分</button>
+                    </div>
+                    <div style="font-size:10px; color:#888; margin-top:5px; text-align:center;">全地域ランダム・自動進行・ハイスコアに挑め！</div>
                 </div>
 
                 <!-- 試験範囲設定 -->
@@ -125,6 +142,18 @@
 
         <!-- マップ -->
         <div id="map"></div>
+    </div>
+
+    <!-- タイムアタック結果モーダル -->
+    <div id="ta-result-modal">
+        <div id="ta-result-inner">
+            <div style="font-size:1.6em; font-weight:bold; margin-bottom:4px;">⚡ タイム終了！</div>
+            <div id="ta-result-stats"></div>
+            <div id="ta-result-actions">
+                <button id="ta-retry-btn">もう一度</button>
+                <button id="ta-end-btn">終了</button>
+            </div>
+        </div>
     </div>
 
     <!-- モバイル：問題パネル（画面下部に固定） -->

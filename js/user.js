@@ -93,6 +93,7 @@ export function logoutUser() {
         localStorage.removeItem('quiz_current_user');
         state.currentUser = null;
         state.isPaid      = false;
+        document.body.classList.remove('logged-in');
         document.getElementById('login-form').style.display      = 'block';
         document.getElementById('user-info-area').style.display  = 'none';
         document.getElementById('user-name-input').value         = '';
@@ -149,6 +150,7 @@ export function showUserInfo() {
     document.getElementById('login-form').style.display     = 'none';
     document.getElementById('user-info-area').style.display = 'block';
     document.getElementById('display-name').innerText       = state.currentUser;
+    document.body.classList.add('logged-in');
     updateScoreUI();
     loadSRSData().then(() => {
         const btn = document.getElementById('review-btn');

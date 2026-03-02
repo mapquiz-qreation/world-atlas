@@ -85,7 +85,11 @@ function showPointQuestion(q) {
                 document.getElementById('result').innerText = '⭕ 正解！';
                 addPoint();
                 recordAnswer(q, true);
-                showExplanation(q);
+                if (state.timeAttack.active) {
+                    state.timeAttack.onAnswer?.(true);
+                } else {
+                    showExplanation(q);
+                }
             } else {
                 marker.setStyle({ fillColor: '#9e9e9e', fillOpacity: 0.4 });
                 document.getElementById('result').innerText = '❌ 不正解';
@@ -95,8 +99,12 @@ function showPointQuestion(q) {
                 if (!state.missedQuestions.some(m => m.text === q.text)) {
                     state.missedQuestions.push(q);
                 }
+                if (state.timeAttack.active) {
+                    state.timeAttack.onAnswer?.(false);
+                }
             }
-            document.getElementById('next-btn').style.display = 'block';
+            document.getElementById('next-btn').style.display =
+                state.timeAttack.active ? 'none' : 'block';
         });
 
         // 答え確認用にマーカーに情報を付与
@@ -154,8 +162,12 @@ function showAreaQuestion(q) {
                 document.getElementById('result').innerText = '⭕ 正解！';
                 addPoint();
                 recordAnswer(q, true);
-                showExplanation(q);
                 polygon._labelTooltip?.setOpacity(1);
+                if (state.timeAttack.active) {
+                    state.timeAttack.onAnswer?.(true);
+                } else {
+                    showExplanation(q);
+                }
             } else {
                 polygon.setStyle({ fillOpacity: 0.1, weight: 0.5 });
                 document.getElementById('result').innerText = '❌ 不正解';
@@ -166,8 +178,12 @@ function showAreaQuestion(q) {
                 if (!state.missedQuestions.some(m => m.text === q.text)) {
                     state.missedQuestions.push(q);
                 }
+                if (state.timeAttack.active) {
+                    state.timeAttack.onAnswer?.(false);
+                }
             }
-            document.getElementById('next-btn').style.display = 'block';
+            document.getElementById('next-btn').style.display =
+                state.timeAttack.active ? 'none' : 'block';
         });
     });
 }

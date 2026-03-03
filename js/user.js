@@ -43,7 +43,7 @@ export async function checkPaidStatus(username) {
 
 function showPurchasePrompt() {
     const msg = '👑 この機能は有料プランが必要です。\n\n'
-              + '【WorldAtlas】980円（買い切り）\n'
+              + '【WorldAtlas】100円（買い切り）\n'
               + '塾生の方は専用クーポンで無料！\n\n'
               + '購入ページに進みますか？';
     if (STRIPE_PAYMENT_URL && confirm(msg)) {

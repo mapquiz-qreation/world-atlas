@@ -114,15 +114,48 @@ export function startKeywordQuiz() {
     showQuestion();
 }
 
-// チェックした時代からURLを生成してクリップボードにコピー
+// チェックした時代からURLを生成してモーダル表示
 export function copyScopeUrl() {
     const checked = [...document.querySelectorAll('#scope-checklist input:checked')]
         .map(i => i.value).join(',');
     if (!checked) { alert('時代を1つ以上チェックしてください'); return; }
     const url = location.origin + location.pathname + '?scope=' + checked;
-    navigator.clipboard.writeText(url).then(() => {
-        alert('URLをコピーしました！\n生徒にこのURLを共有してください。\n\n' + url);
-    }).catch(() => {
-        prompt('以下のURLをコピーしてください:', url);
+    showScopeUrlModal(url);
+}
+
+function showScopeUrlModal(url) {
+    // 既存モーダルがあれば削除
+    document.getElementById('scope-url-modal')?.remove();
+
+    const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=8&data=${encodeURIComponent(url)}`;
+
+    const modal = document.createElement('div');
+    modal.id = 'scope-url-modal';
+    modal.innerHTML = `
+        <div id="scope-url-inner">
+            <div id="scope-url-title">🔗 試験範囲URL</div>
+            <img id="scope-url-qr" src="${qrSrc}" alt="QRコード" />
+            <div id="scope-url-hint">カメラで読み取るか、下のリンクをタップ</div>
+            <a id="scope-url-link" href="${url}" target="_blank" rel="noopener">${url}</a>
+            <div id="scope-url-actions">
+                <button id="scope-url-copy-btn">📋 URLをコピー</button>
+                <button id="scope-url-close-btn">閉じる</button>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    const close = () => modal.remove();
+    modal.addEventListener('click', e => { if (e.target === modal) close(); });
+    document.getElementById('scope-url-close-btn').addEventListener('click', close);
+    document.getElementById('scope-url-copy-btn').addEventListener('click', () => {
+        navigator.clipboard.writeText(url).then(() => {
+            const btn = document.getElementById('scope-url-copy-btn');
+            btn.textContent = '✅ コピーしました！';
+            setTimeout(() => { btn.textContent = '📋 URLをコピー'; }, 2000);
+        }).catch(() => {
+            prompt('以下のURLをコピーしてください:', url);
+        });
     });
 }

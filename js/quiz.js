@@ -208,6 +208,11 @@ export function getLatLngCenter(latlngs) {
 }
 
 export function nextQuestion() {
+    // 連鎖問題の後は元の地域・時代に戻す
+    if (state._chainRestore) {
+        state._chainRestore();
+    }
+
     const nextIdx = state.currentIdx + 1;
 
     if (nextIdx >= state.questions.length) {
@@ -311,7 +316,7 @@ function showExplanation(q) {
     textEl.textContent = q.explanation || '';
     textEl.style.display = q.explanation ? 'block' : 'none';
     if (q.relatedTerms && q.relatedTerms.length > 0) {
-        termsEl.innerHTML = '<strong>関連用語：</strong> ' + q.relatedTerms.join('　・　');
+        buildRelatedTermsBadges(q, termsEl);
         termsEl.style.display = 'block';
     } else {
         termsEl.style.display = 'none';
@@ -328,6 +333,115 @@ function showExplanation(q) {
     }
 
     box.style.display = 'block';
+}
+
+// ── 連鎖学習：関連用語バッジ ──────────────────────────────────
+function buildRelatedTermsBadges(q, container) {
+    const isLoggedIn = !!localStorage.getItem('quiz_current_user');
+    container.innerHTML = '';
+
+    const label = document.createElement('strong');
+    label.textContent = '関連用語：';
+    container.appendChild(label);
+
+    q.relatedTerms.forEach(term => {
+        const badge = document.createElement('span');
+        badge.className = 'related-term-badge';
+        badge.textContent = term;
+
+        if (!isLoggedIn) {
+            badge.classList.add('locked');
+            badge.title = 'ログインで関連問題へジャンプできます';
+        } else {
+            const matches = findRelatedQuestions(term);
+            if (matches.length === 0) {
+                badge.classList.add('no-match');
+                badge.title = '関連問題なし';
+            } else {
+                badge.title = `関連問題 ${matches.length}件`;
+                badge.addEventListener('click', () => startChainedQuestion(term, matches));
+            }
+        }
+        container.appendChild(badge);
+    });
+}
+
+function findRelatedQuestions(term) {
+    const results = [];
+    Object.entries(state.masterData).forEach(([region, regionData]) => {
+        Object.entries(regionData.eras || {}).forEach(([eraId, eraData]) => {
+            (eraData.fixed || []).forEach(q => {
+                const inTerms = q.relatedTerms?.some(t =>
+                    t.includes(term) || term.includes(t)
+                );
+                const inExplanation = q.explanation?.includes(term);
+                if (inTerms || inExplanation) {
+                    results.push({ q, region, era: eraId });
+                }
+            });
+        });
+    });
+    return results;
+}
+
+function startChainedQuestion(term, matches) {
+    // ランダムに1問選ぶ
+    const { q, region, era } = matches[Math.floor(Math.random() * matches.length)];
+
+    // 元のコンテキストを保存
+    const savedRegion    = state.currentRegion;
+    const savedEra       = state.currentEra;
+    const savedQuestions = state.questions;
+    const savedIdx       = state.currentIdx;
+
+    state._chainRestore = () => {
+        state.currentRegion = savedRegion;
+        state.currentEra    = savedEra;
+        state.questions     = savedQuestions;
+        state.currentIdx    = savedIdx;
+        state._chainRestore = null;
+        const eraDisplay = document.getElementById('era-display');
+        eraDisplay.style.color = '';
+    };
+
+    // 連鎖先のコンテキストに切り替え
+    state.currentRegion = region;
+    state.currentEra    = era;
+    state.isAnswered    = false;
+    // 連鎖先の地域問題をデコイ候補にする
+    const eraData = state.masterData[region]?.eras[era];
+    const pool = (eraData?.fixed || []).map(item => ({
+        ...item,
+        type: item.area ? 'area' : 'point',
+    }));
+    state.questions = pool.length >= 4 ? pool : savedQuestions;
+    state.currentIdx = state.questions.findIndex(item => item.text === q.text);
+    if (state.currentIdx < 0) state.currentIdx = 0;
+
+    // UI リセット
+    clearQuizLayer();
+    hideExplanation();
+    document.getElementById('result').innerText       = '';
+    document.getElementById('next-btn').style.display = 'none';
+    document.getElementById('q-text').innerText       = q.text;
+
+    // 連鎖バナー
+    const regionName = state.masterData[region]?.name || region;
+    const eraDisplay = document.getElementById('era-display');
+    eraDisplay.innerText    = `🔗 連鎖: 「${term}」→ ${regionName}`;
+    eraDisplay.style.color  = '#f0a832';
+
+    // 連鎖先地域に地図を移動
+    if (state.masterData[region]?.bounds) {
+        flyToRegion(state.masterData[region].bounds);
+    }
+
+    // 問題表示
+    if (q.type === 'area' || q.area) {
+        showAreaQuestion(q);
+    } else {
+        showPointQuestion(q);
+    }
 }
 
 function buildSyncroBtn(q) {

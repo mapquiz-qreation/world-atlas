@@ -438,7 +438,46 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; background: var(--bg); 
 #q-text { display: block; font-size: 22px; font-weight: bold; color: var(--q); margin: 10px 0; }
 #result { font-size: 18px; font-weight: bold; min-height: 25px; margin: 5px 0; }
 #explanation-box { display: none; text-align: left; font-size: 12px; margin-top: 10px; padding: 10px; background: rgba(0,0,0,0.05); border-radius: 6px; border-left: 4px solid var(--act); line-height: 1.6; }
-#explanation-box #related-terms { margin-top: 8px; }
+#explanation-box #related-terms { margin-top: 8px; line-height: 2.1; }
+
+/* ── 連鎖学習：関連用語バッジ ─────────────────────── */
+.related-term-badge {
+    display: inline-block;
+    padding: 2px 9px;
+    margin: 2px 3px 2px 0;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    background: var(--act);
+    color: #fff;
+    cursor: pointer;
+    transition: opacity 0.15s, transform 0.12s;
+    vertical-align: middle;
+}
+.related-term-badge:hover:not(.no-match):not(.locked) {
+    opacity: 0.82;
+    transform: translateY(-1px);
+}
+/* マッチなし：文字色・枠だけで視認性を確保しつつ非活性に見せる */
+.related-term-badge.no-match {
+    background: transparent;
+    color: #999;
+    border: 1.5px solid #ccc;
+    cursor: default;
+    font-weight: 500;
+}
+/* 未ログイン：少し薄くして鍵マーク付き */
+.related-term-badge.locked {
+    background: transparent;
+    color: var(--text);
+    border: 1.5px dashed #bbb;
+    cursor: default;
+    font-weight: 500;
+}
+.related-term-badge.locked::after {
+    content: ' 🔒';
+    font-size: 9px;
+}
 #next-btn { width: 100%; padding: 10px; background: var(--act); color: var(--act-c); border: none; border-radius: 6px; cursor: pointer; display: none; font-weight: bold; font-size: 14px; }
 
 /* =====================================================

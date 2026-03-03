@@ -485,7 +485,8 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; background: var(--bg); 
    ===================================================== */
 #map {
     flex: 1;
-    height: calc(100vh - 40px);
+    height: 100%;
+    min-height: 0;
     border: 4px double var(--border);
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.12);
@@ -1091,7 +1092,7 @@ body.logged-in .login-gate-overlay {
     #explanation-box { font-size: 11px; padding: 6px; margin-top: 6px; }
     #next-btn { padding: 6px; font-size: 12px; }
 
-    #map { height: calc(96vh - 8px); }
+    #map { height: 100%; min-height: 0; }
 }
 
 /* ── 試験範囲URL モーダル ──────────────────────────── */

@@ -46,6 +46,13 @@ window.receiveRanking = function(scores) {
         return;
     }
 
+    // スプレッドシートの数式エラー行（#NUM! 等）や不正データを除去
+    scores = scores.filter(s =>
+        typeof s.name  === 'string'  && s.name.trim()  !== '' && !s.name.startsWith('#') &&
+        typeof s.score === 'number'  && isFinite(s.score) && s.score >= 0 &&
+        typeof s.tag   === 'string'  && s.tag.trim()   !== '' && !s.tag.startsWith('#')
+    );
+
     // ホーム画面（時代未選択）→ 総合ランキング
     if (!state.currentRegion || !state.currentEra) {
         showOverallRanking(scores, list);

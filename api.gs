@@ -151,7 +151,11 @@ function doGet(e) {
   if (lastRow >= 2) {
     var data = sheet.getRange(2, 1, lastRow - 1, 4).getValues();
     scores = data.map(function(row) {
-      return { name: row[0], score: row[1], tag: row[3] };
+      return { name: String(row[0] || ''), score: Number(row[1]), tag: String(row[3] || '') };
+    }).filter(function(s) {
+      return s.name.trim() !== '' && !s.name.startsWith('#') &&
+             isFinite(s.score)   && s.score >= 0 &&
+             s.tag.trim()  !== '' && !s.tag.startsWith('#');
     });
   }
   return ContentService.createTextOutput(

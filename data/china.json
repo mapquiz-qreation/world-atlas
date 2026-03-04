@@ -527,7 +527,8 @@
             "漢化"
           ],
           "year": 400,
-          "sortLabel": "羯の石勒による後趙建国"
+          "sortLabel": "羯の石勒による後趙建国",
+          "quizExclude": true
         },
         {
           "type": "area",
@@ -702,7 +703,8 @@
             "五胡十六国"
           ],
           "year": 400,
-          "sortLabel": "氐の前秦建国（苻堅）"
+          "sortLabel": "氐の前秦建国（苻堅）",
+          "quizExclude": true
         },
         {
           "type": "area",
@@ -877,7 +879,8 @@
             "甘粛"
           ],
           "year": 400,
-          "sortLabel": "羌の後秦建国"
+          "sortLabel": "羌の後秦建国",
+          "quizExclude": true
         }
       ]
     },

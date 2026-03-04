@@ -79,7 +79,7 @@ export function startQuiz(regionKey, eraKey) {
     try {
         added = JSON.parse(localStorage.getItem(`quiz_added_${regionKey}_${eraKey}`) || '[]');
     } catch (_) { /* 不正なJSONは無視 */ }
-    state.questions      = [...(eraData.fixed || []), ...added];
+    state.questions      = [...(eraData.fixed || []).filter(q => !q.quizExclude), ...added];
     state.currentIdx     = 0;
     state.missedQuestions = [];
 

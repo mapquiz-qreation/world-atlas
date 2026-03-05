@@ -54,32 +54,81 @@
         #explore-controls { display: contents; }
         #explore-controls.hidden > * { display: none !important; }
 
-        #slider-area {
+        /* ── エポックナビゲーター ── */
+        #epoch-nav {
             flex-shrink: 0;
-            padding: 8px 16px 6px;
             background: var(--panel);
             border-bottom: 2px solid var(--border);
         }
-        #year-label {
+        #epoch-nav-top {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 10px 4px;
+        }
+        .epoch-arrow {
+            flex-shrink: 0;
+            width: 30px; height: 30px;
+            border-radius: 50%;
+            border: 1.5px solid var(--border);
+            background: rgba(255,255,255,0.06);
+            color: var(--text);
+            font-size: 16px;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: background 0.15s;
+            line-height: 1;
+        }
+        .epoch-arrow:hover { background: rgba(255,255,255,0.14); }
+        .epoch-arrow:disabled { opacity: 0.25; cursor: default; }
+        #epoch-center {
+            flex: 1;
             text-align: center;
+        }
+        #year-label {
             font-size: 17px;
             font-weight: bold;
             color: var(--text);
-            margin-bottom: 5px;
             letter-spacing: 1px;
-        }
-        #year-slider {
-            width: 100%;
-            accent-color: var(--act);
-            cursor: pointer;
+            line-height: 1.2;
         }
         #theme-label {
-            text-align: center;
-            font-size: 11px;
+            font-size: 10px;
             color: var(--act);
             font-weight: bold;
-            margin-top: 4px;
-            min-height: 16px;
+            min-height: 14px;
+            margin-top: 2px;
+        }
+        #epoch-chips {
+            display: flex;
+            overflow-x: auto;
+            gap: 5px;
+            padding: 5px 10px 7px;
+            scrollbar-width: none;
+        }
+        #epoch-chips::-webkit-scrollbar { display: none; }
+        .epoch-chip {
+            flex-shrink: 0;
+            padding: 3px 10px;
+            border-radius: 14px;
+            border: 1.5px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.06);
+            color: rgba(255,255,255,0.65);
+            font-size: 11px;
+            font-weight: bold;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.15s;
+        }
+        .epoch-chip:hover {
+            background: rgba(255,255,255,0.12);
+            color: rgba(255,255,255,0.9);
+        }
+        .epoch-chip.active {
+            background: var(--act);
+            border-color: var(--act);
+            color: #fff;
+            box-shadow: 0 0 8px rgba(74,144,217,0.5);
         }
         #pattern-filter {
             flex-shrink: 0;
@@ -546,10 +595,16 @@
 
     <!-- ── 探求モード専用コントロール ─────────────── -->
     <div id="explore-controls">
-        <div id="slider-area">
-            <div id="year-label">読み込み中...</div>
-            <input type="range" id="year-slider" min="0" max="4" step="1" value="0">
-            <div id="theme-label"></div>
+        <div id="epoch-nav">
+            <div id="epoch-nav-top">
+                <button class="epoch-arrow" id="epoch-prev" onclick="stepEpoch(-1)" disabled>&#8249;</button>
+                <div id="epoch-center">
+                    <div id="year-label">読み込み中...</div>
+                    <div id="theme-label"></div>
+                </div>
+                <button class="epoch-arrow" id="epoch-next" onclick="stepEpoch(1)">&#8250;</button>
+            </div>
+            <div id="epoch-chips"></div>
         </div>
         <div id="pattern-filter">
             <span id="pattern-filter-label">🔍 パターン:</span>
@@ -745,6 +800,7 @@
         document.getElementById('theme-label').textContent = epoch.theme;
         markerLayer.clearLayers();
         resetInfoPanel();
+        updateEpochNav(idx);
 
         // ── 版図レイヤー ────────────────────────────────────────
         territoryLayer.clearLayers();
@@ -1266,8 +1322,6 @@
             Math.abs(e.year - targetYear) < Math.abs(timelineData[bestIdx].year - targetYear) ? i : bestIdx
         , 0);
         switchTab('explore');
-        const slider = document.getElementById('year-slider');
-        slider.value = epochIdx;
         renderEpoch(epochIdx);
     });
 
@@ -1276,8 +1330,6 @@
         if (!currentQ) return;
         const epochIdx = timelineData.indexOf(currentQ.epoch);
         switchTab('explore');
-        const slider = document.getElementById('year-slider');
-        slider.value = epochIdx;
         renderEpoch(epochIdx);
     });
 
@@ -1304,13 +1356,39 @@
         document.getElementById('wip-banner').insertAdjacentElement('afterend', banner);
     }
 
+    // ── エポックチップ更新 ───────────────────────────────────
+    function updateEpochNav(idx) {
+        // チップ
+        document.querySelectorAll('.epoch-chip').forEach((c, i) => {
+            c.classList.toggle('active', i === idx);
+            if (i === idx) c.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        });
+        // 矢印ボタン
+        document.getElementById('epoch-prev').disabled = idx <= 0;
+        document.getElementById('epoch-next').disabled = idx >= timelineData.length - 1;
+    }
+
+    function stepEpoch(delta) {
+        const next = Math.max(0, Math.min(timelineData.length - 1, currentIdx + delta));
+        renderEpoch(next);
+    }
+
     // ── データ読み込み ────────────────────────────────────────
     fetch('data/timeline.json')
         .then(r => r.json())
         .then(data => {
             timelineData = data;
-            const slider = document.getElementById('year-slider');
-            slider.max   = data.length - 1;
+
+            // チップを生成
+            const chipsEl = document.getElementById('epoch-chips');
+            data.forEach((epoch, i) => {
+                const chip = document.createElement('button');
+                chip.className = 'epoch-chip';
+                chip.textContent = epoch.label;
+                chip.addEventListener('click', () => renderEpoch(i));
+                chipsEl.appendChild(chip);
+            });
+
             buildPatternButtons();
             renderEpoch(0);
 
@@ -1328,10 +1406,6 @@
         .catch(() => {
             document.getElementById('theme-label').textContent = 'データ読み込みに失敗しました';
         });
-
-    document.getElementById('year-slider').addEventListener('input', e => {
-        renderEpoch(Number(e.target.value));
-    });
     </script>
 </body>
 </html>

@@ -490,6 +490,24 @@
             flex-shrink: 0;
             opacity: 0.85;
         }
+
+        /* ── 版図の常時表示ラベル ── */
+        .leaflet-tooltip.territory-label {
+            background: rgba(0, 0, 0, 0.62);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: #fff;
+            font-size: 10.5px;
+            font-weight: bold;
+            padding: 2px 7px;
+            border-radius: 4px;
+            white-space: nowrap;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
+            letter-spacing: 0.3px;
+            pointer-events: none;
+        }
+        .leaflet-tooltip.territory-label::before {
+            display: none;
+        }
         #chrono-submit-btn {
             display: none;
             width: 100%; padding: 10px;
@@ -860,7 +878,15 @@
                 onEachFeature(feature, layer) {
                     const name  = feature.properties?.name || '';
                     const entry = colorMap.find(c => name.includes(c.match));
-                    if (entry) layer.bindTooltip(entry.label, { sticky: true, opacity: 0.85 });
+                    if (!entry) return;
+                    // 括弧の前だけを短縮ラベルとして常時表示
+                    const shortLabel = entry.label.split('（')[0].split('(')[0].trim();
+                    layer.bindTooltip(shortLabel, {
+                        permanent:  true,
+                        direction:  'center',
+                        className:  'territory-label',
+                        opacity:    1,
+                    });
                 },
             }).addTo(territoryLayer);
 

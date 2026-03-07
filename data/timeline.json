@@ -139,6 +139,40 @@
           "宗教が統治を支えた"
         ]
       }
+    ],
+    "territoriesFile": "alexander_300bc",
+    "territoriesYear": "前323年頃",
+    "colorMap": [
+      {
+        "match": "マケドニア",
+        "color": "#f4d03f",
+        "label": "マケドニア（アレクサンドロス本国）"
+      },
+      {
+        "match": "エジプト",
+        "color": "#e67e22",
+        "label": "エジプト（プトレマイオス朝）"
+      },
+      {
+        "match": "アナトリア",
+        "color": "#2ecc71",
+        "label": "アナトリア（セレウコス朝）"
+      },
+      {
+        "match": "レヴァント",
+        "color": "#2ecc71",
+        "label": "レヴァント・メソポタミア（セレウコス朝）"
+      },
+      {
+        "match": "ペルシア",
+        "color": "#27ae60",
+        "label": "ペルシア（セレウコス朝）"
+      },
+      {
+        "match": "中央アジア",
+        "color": "#16a085",
+        "label": "中央アジア（東征域）"
+      }
     ]
   },
   {
@@ -283,6 +317,40 @@
           "交易で栄えた",
           "宗教が統治を支えた"
         ]
+      }
+    ],
+    "territoriesFile": "roman_empire_117ad",
+    "territoriesYear": "117年頃（最大版図）",
+    "colorMap": [
+      {
+        "match": "西ヨーロッパ",
+        "color": "#9b59b6",
+        "label": "ローマ帝国（西ヨーロッパ）"
+      },
+      {
+        "match": "ブリタニア",
+        "color": "#8e44ad",
+        "label": "ブリタニア"
+      },
+      {
+        "match": "バルカン",
+        "color": "#8e44ad",
+        "label": "バルカン・ダキア"
+      },
+      {
+        "match": "東方属州",
+        "color": "#7d3c98",
+        "label": "東方属州"
+      },
+      {
+        "match": "メソポタミア",
+        "color": "#6c3483",
+        "label": "メソポタミア（トラヤヌス征服）"
+      },
+      {
+        "match": "北アフリカ",
+        "color": "#7d3c98",
+        "label": "北アフリカ"
       }
     ]
   },
@@ -540,6 +608,35 @@
           "宗教が統治を支えた"
         ]
       }
+    ],
+    "territoriesFile": "umayyad_750ad",
+    "territoriesYear": "750年頃（最大版図）",
+    "colorMap": [
+      {
+        "match": "アラビア半島",
+        "color": "#e74c3c",
+        "label": "アラビア半島（発祥地）"
+      },
+      {
+        "match": "レヴァント",
+        "color": "#c0392b",
+        "label": "レヴァント・メソポタミア"
+      },
+      {
+        "match": "北アフリカ",
+        "color": "#e74c3c",
+        "label": "北アフリカ"
+      },
+      {
+        "match": "イベリア",
+        "color": "#a93226",
+        "label": "イベリア半島（アンダルス）"
+      },
+      {
+        "match": "ペルシア",
+        "color": "#c0392b",
+        "label": "ペルシア・中央アジア"
+      }
     ]
   },
   {
@@ -760,6 +857,30 @@
           "交易で栄えた"
         ]
       }
+    ],
+    "territoriesFile": "mongol_empire_1280ad",
+    "territoriesYear": "1280年頃（4ハーン国）",
+    "colorMap": [
+      {
+        "match": "元（大ハーン",
+        "color": "#e67e22",
+        "label": "元（大ハーン国）"
+      },
+      {
+        "match": "チャガタイ",
+        "color": "#f39c12",
+        "label": "チャガタイ・ハーン国"
+      },
+      {
+        "match": "イルハン",
+        "color": "#d35400",
+        "label": "イルハン国"
+      },
+      {
+        "match": "キプチャク",
+        "color": "#e74c3c",
+        "label": "キプチャク・ハーン国（金帳汗国）"
+      }
     ]
   },
   {
@@ -924,6 +1045,35 @@
           "交易で栄えた",
           "外圧が改革を生む"
         ]
+      }
+    ],
+    "territoriesFile": "ottoman_1566ad",
+    "territoriesYear": "1566年頃（スレイマン大帝）",
+    "colorMap": [
+      {
+        "match": "アナトリア",
+        "color": "#3498db",
+        "label": "アナトリア・バルカン（核心部）"
+      },
+      {
+        "match": "コーカサス",
+        "color": "#2980b9",
+        "label": "コーカサス・クリミア"
+      },
+      {
+        "match": "レヴァント",
+        "color": "#2471a3",
+        "label": "レヴァント・アラビア"
+      },
+      {
+        "match": "エジプト",
+        "color": "#1a5276",
+        "label": "エジプト・北アフリカ"
+      },
+      {
+        "match": "ハンガリー",
+        "color": "#21618c",
+        "label": "ハンガリー（スレイマンの征服）"
       }
     ]
   },

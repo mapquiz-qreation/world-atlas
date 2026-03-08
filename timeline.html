@@ -175,7 +175,7 @@
         #pattern-desc.visible { display: block; }
 
         /* ─── 共有マップ ───────────────────────────────── */
-        #tl-map { flex: 1; min-height: 0; }
+        #tl-map { flex: 1; min-height: 0; position: relative; }
 
         /* ─── 探求モード・情報パネル ───────────────────── */
         #info-panel {
@@ -575,6 +575,280 @@
         }
         #chrono-lock.visible { display: flex; }
 
+        /* ─── 帝国詳細パネル ──────────────────────────── */
+        #empire-panel {
+            display: none;
+            flex-shrink: 0;
+            max-height: 60vh;
+            overflow-y: auto;
+            background: var(--panel);
+            border-top: 3px solid var(--act);
+            padding: 0 0 12px;
+            flex-direction: column;
+        }
+        #empire-panel.open { display: flex; }
+
+        #empire-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 11px 14px 9px;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+        #empire-dot {
+            width: 14px; height: 14px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            margin-top: 3px;
+        }
+        #empire-header-text { flex: 1; }
+        #empire-name {
+            font-size: 15px;
+            font-weight: bold;
+            color: var(--text);
+            line-height: 1.3;
+        }
+        #empire-meta {
+            font-size: 11px;
+            color: rgba(255,255,255,0.55);
+            margin-top: 2px;
+        }
+        #empire-close-btn {
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.55);
+            font-size: 18px;
+            cursor: pointer;
+            line-height: 1;
+            padding: 0 2px;
+            flex-shrink: 0;
+        }
+        #empire-overview {
+            font-size: 12px;
+            line-height: 1.7;
+            color: rgba(255,255,255,0.8);
+            padding: 8px 14px 6px;
+        }
+        #empire-cat-tabs {
+            display: flex;
+            gap: 5px;
+            padding: 4px 12px 6px;
+            flex-wrap: wrap;
+        }
+        .empire-cat-tab {
+            font-size: 11px;
+            font-weight: bold;
+            padding: 4px 12px;
+            border-radius: 12px;
+            border: 1.5px solid rgba(255,255,255,0.25);
+            background: rgba(255,255,255,0.07);
+            color: rgba(255,255,255,0.7);
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .empire-cat-tab.active {
+            background: var(--act);
+            border-color: var(--act);
+            color: #fff;
+        }
+        #empire-policies {
+            padding: 4px 14px 8px;
+        }
+        .policy-card {
+            background: rgba(255,255,255,0.06);
+            border-radius: 10px;
+            border-left: 3px solid var(--act);
+            padding: 9px 12px;
+            margin-bottom: 8px;
+        }
+        .policy-label {
+            font-size: 13px;
+            font-weight: bold;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+        .policy-detail {
+            font-size: 11.5px;
+            line-height: 1.65;
+            color: rgba(255,255,255,0.78);
+            margin-bottom: 7px;
+        }
+        .policy-keywords {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+        .policy-kw-badge {
+            font-size: 10px;
+            font-weight: bold;
+            padding: 2px 8px;
+            border-radius: 10px;
+            background: rgba(74,144,217,0.22);
+            border: 1px solid rgba(74,144,217,0.55);
+            color: #7ecfff;
+            cursor: default;
+        }
+        #empire-quiz-btn {
+            margin: 0 14px;
+            padding: 11px;
+            width: calc(100% - 28px);
+            background: var(--act);
+            color: var(--act-c);
+            font-size: 13px;
+            font-weight: bold;
+            border: none;
+            border-radius: 9px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            letter-spacing: 0.3px;
+        }
+        #empire-quiz-btn:hover { opacity: 0.85; }
+
+        /* ─── 政策比較クイズパネル ─────────────────── */
+        #policy-quiz-panel {
+            display: none;
+            flex-shrink: 0;
+            max-height: 60vh;
+            overflow-y: auto;
+            background: var(--panel);
+            border-top: 3px solid var(--act);
+            padding: 0 0 14px;
+            flex-direction: column;
+        }
+        #policy-quiz-panel.open { display: flex; }
+
+        #pq-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 11px 14px 9px;
+            border-bottom: 2px solid var(--border);
+            flex-shrink: 0;
+        }
+        #pq-empire-name {
+            font-size: 13px;
+            font-weight: bold;
+            color: var(--act);
+        }
+        #pq-close-btn {
+            background: none;
+            border: 1.5px solid rgba(255,255,255,0.3);
+            border-radius: 20px;
+            padding: 3px 10px;
+            font-size: 11px;
+            font-weight: bold;
+            color: rgba(255,255,255,0.7);
+            cursor: pointer;
+        }
+        #pq-counter {
+            font-size: 10px;
+            color: rgba(255,255,255,0.55);
+            padding: 7px 14px 3px;
+        }
+        #pq-question {
+            font-size: 13px;
+            font-weight: bold;
+            color: #fff;
+            padding: 6px 14px 10px;
+            line-height: 1.6;
+        }
+        #pq-question .pq-target {
+            font-size: 10px;
+            font-weight: normal;
+            color: #7ecfff;
+            display: block;
+            margin-bottom: 4px;
+        }
+        #pq-choices {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 7px;
+            padding: 0 14px 8px;
+        }
+        .pq-choice-btn {
+            padding: 10px 8px;
+            font-size: 11.5px;
+            border-radius: 8px;
+            border: 2px solid rgba(255,255,255,0.22);
+            background: rgba(255,255,255,0.08);
+            color: #fff;
+            cursor: pointer;
+            text-align: left;
+            line-height: 1.45;
+            transition: border-color 0.15s, background 0.15s;
+            font-weight: 500;
+        }
+        .pq-choice-btn:hover:not(:disabled) {
+            border-color: var(--act);
+            background: rgba(255,255,255,0.14);
+        }
+        .pq-choice-btn.correct {
+            border-color: #66bb6a !important;
+            background: rgba(102,187,106,0.25);
+            color: #c8f0cb;
+            font-weight: bold;
+        }
+        .pq-choice-btn.wrong {
+            border-color: #ef5350 !important;
+            background: rgba(239,83,80,0.2);
+            color: #ffb3b0;
+            opacity: 0.8;
+        }
+        .pq-choice-btn:disabled { cursor: default; }
+        #pq-result {
+            font-size: 13px;
+            font-weight: bold;
+            text-align: center;
+            padding: 5px 14px;
+            min-height: 20px;
+        }
+        #pq-result.ok { color: #a5d6a7; }
+        #pq-result.ng { color: #ffb3b0; }
+        #pq-explanation {
+            display: none;
+            font-size: 11.5px;
+            line-height: 1.7;
+            color: rgba(255,255,255,0.8);
+            padding: 6px 14px 4px;
+            background: rgba(0,0,0,0.18);
+            margin: 0 14px;
+            border-radius: 8px;
+            border-left: 3px solid var(--act);
+        }
+        #pq-explanation.visible { display: block; }
+        #pq-actions {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            padding: 10px 14px 0;
+        }
+        #pq-actions.visible { display: flex; }
+        #pq-next-btn {
+            padding: 10px;
+            background: var(--act);
+            color: var(--act-c);
+            font-size: 12px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        #pq-next-btn:hover { opacity: 0.85; }
+        #pq-back-btn {
+            padding: 9px;
+            background: transparent;
+            color: var(--act);
+            font-size: 12px;
+            font-weight: bold;
+            border: 2px solid var(--act);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        #pq-back-btn:hover { opacity: 0.8; }
+
         /* ─── レスポンシブ ─────────────────────────────── */
         @media (max-width: 768px) {
             #wip-banner  { font-size: 11px; padding: 4px 8px; }
@@ -637,6 +911,39 @@
     <!-- ── 探求モード：情報パネル ─────────────────── -->
     <div id="info-panel" class="empty">
         <span>マーカーをタップすると詳細が表示されます</span>
+    </div>
+
+    <!-- ── 帝国詳細パネル（版図クリック時） ─────── -->
+    <div id="empire-panel">
+        <div id="empire-header">
+            <span id="empire-dot"></span>
+            <div id="empire-header-text">
+                <div id="empire-name"></div>
+                <div id="empire-meta"></div>
+            </div>
+            <button id="empire-close-btn" onclick="closeEmpirePanel()">✕</button>
+        </div>
+        <div id="empire-overview"></div>
+        <div id="empire-cat-tabs"></div>
+        <div id="empire-policies"></div>
+        <button id="empire-quiz-btn" onclick="startPolicyQuiz()">📝 政策比較クイズへ</button>
+    </div>
+
+    <!-- ── 政策比較クイズパネル（帝国詳細内モーダル） -->
+    <div id="policy-quiz-panel">
+        <div id="pq-header">
+            <span id="pq-empire-name"></span>
+            <button id="pq-close-btn" onclick="closePolicyQuiz()">✕ 終了</button>
+        </div>
+        <div id="pq-counter"></div>
+        <div id="pq-question"></div>
+        <div id="pq-choices"></div>
+        <div id="pq-result"></div>
+        <div id="pq-explanation"></div>
+        <div id="pq-actions">
+            <button id="pq-next-btn" onclick="nextPolicyQuestion()">次の問題へ →</button>
+            <button id="pq-back-btn" onclick="closePolicyQuiz()">← 帝国詳細に戻る</button>
+        </div>
     </div>
 
     <!-- ── 年号並べ替えパネル ─────────────────────── -->
@@ -819,6 +1126,10 @@
         markerLayer.clearLayers();
         resetInfoPanel();
         updateEpochNav(idx);
+        // エポック変更時は帝国パネルを閉じる
+        document.getElementById('empire-panel')?.classList.remove('open');
+        document.getElementById('policy-quiz-panel')?.classList.remove('open');
+        document.getElementById('info-panel').style.display = '';
 
         // ── 版図レイヤー ────────────────────────────────────────
         territoryLayer.clearLayers();
@@ -887,6 +1198,13 @@
                         className:  'territory-label',
                         opacity:    1,
                     });
+                    // 帝国詳細パネルを開く
+                    const empires = epoch.empires || [];
+                    const empire  = empires.find(em => name.includes(em.match));
+                    if (empire) {
+                        layer.on('click', () => showEmpireDetail(empire, entry.color, epoch));
+                        layer.getElement?.()?.style?.setProperty('cursor', 'pointer');
+                    }
                 },
             }).addTo(territoryLayer);
 
@@ -923,6 +1241,203 @@
                 </div>`).join('')}
         `;
         document.getElementById('tl-map').appendChild(div);
+    }
+
+    // ════════════════════════════════════════════════════════
+    // 帝国詳細パネル
+    // ════════════════════════════════════════════════════════
+    let currentEmpire = null;
+    let currentEpochForQuiz = null;
+    let activeCat = null;
+
+    function showEmpireDetail(empire, color, epoch) {
+        currentEmpire       = empire;
+        currentEpochForQuiz = epoch;
+
+        // ヘッダー
+        const dot = document.getElementById('empire-dot');
+        dot.style.background = color;
+        dot.style.boxShadow  = `0 0 8px ${color}99`;
+        document.getElementById('empire-name').textContent =
+            empire.name + (empire.period ? `  (${empire.period})` : '');
+        const meta = [];
+        if (empire.founder) meta.push('創始者：' + empire.founder);
+        if (empire.capital) meta.push('首都：' + empire.capital);
+        document.getElementById('empire-meta').textContent = meta.join(' ／ ');
+        document.getElementById('empire-overview').textContent = empire.overview || '';
+
+        // カテゴリータブを生成（重複排除）
+        const cats = [...new Set((empire.policies || []).map(p => p.category))];
+        activeCat  = cats[0] || null;
+        const tabsEl = document.getElementById('empire-cat-tabs');
+        tabsEl.innerHTML = '';
+        cats.forEach(cat => {
+            const btn = document.createElement('button');
+            btn.className   = `empire-cat-tab${cat === activeCat ? ' active' : ''}`;
+            btn.textContent = cat;
+            btn.dataset.cat = cat;
+            btn.addEventListener('click', () => {
+                activeCat = cat;
+                tabsEl.querySelectorAll('.empire-cat-tab').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                renderPolicyCards(empire, cat, color);
+            });
+            tabsEl.appendChild(btn);
+        });
+
+        renderPolicyCards(empire, activeCat, color);
+
+        // クイズボタンの表示制御
+        const hasQuiz = (empire.quizStatements || []).filter(s => s.correct).length > 0;
+        document.getElementById('empire-quiz-btn').style.display = hasQuiz ? 'block' : 'none';
+
+        // パネルを開く
+        document.getElementById('info-panel').style.display = 'none';
+        document.getElementById('policy-quiz-panel').classList.remove('open');
+        document.getElementById('empire-panel').classList.add('open');
+    }
+
+    function renderPolicyCards(empire, cat, color) {
+        const container = document.getElementById('empire-policies');
+        const policies  = (empire.policies || []).filter(p => !cat || p.category === cat);
+        container.innerHTML = '';
+        policies.forEach(policy => {
+            const card = document.createElement('div');
+            card.className = 'policy-card';
+            card.style.borderLeftColor = color;
+            card.innerHTML = `
+                <div class="policy-label">${policy.label}</div>
+                <div class="policy-detail">${policy.detail}</div>
+                <div class="policy-keywords">
+                    ${(policy.keywords || []).map(k =>
+                        `<span class="policy-kw-badge">${k}</span>`
+                    ).join('')}
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function closeEmpirePanel() {
+        document.getElementById('empire-panel').classList.remove('open');
+        document.getElementById('info-panel').style.display = '';
+        closePolicyQuiz();
+    }
+
+    // ════════════════════════════════════════════════════════
+    // 政策比較クイズ
+    // ════════════════════════════════════════════════════════
+    let pqScore = 0;
+    let pqTotal = 0;
+    let pqCurrent = null;
+
+    function startPolicyQuiz() {
+        if (!currentEmpire || !currentEpochForQuiz) return;
+        pqScore = 0;
+        pqTotal = 0;
+        document.getElementById('pq-empire-name').textContent =
+            '📝 ' + (currentEmpire.name || currentEmpire.match) + ' 政策比較クイズ';
+        document.getElementById('empire-panel').classList.remove('open');
+        document.getElementById('policy-quiz-panel').classList.add('open');
+        nextPolicyQuestion();
+    }
+
+    function nextPolicyQuestion() {
+        pqCurrent = generatePolicyQuizQuestion(currentEpochForQuiz, currentEmpire);
+        if (!pqCurrent) {
+            document.getElementById('pq-question').textContent = '出題可能な問題がありません。';
+            return;
+        }
+
+        document.getElementById('pq-counter').textContent =
+            `問題 ${pqTotal + 1}　正解 ${pqScore} / ${pqTotal}`;
+        document.getElementById('pq-result').textContent = '';
+        document.getElementById('pq-result').className   = '';
+        document.getElementById('pq-explanation').classList.remove('visible');
+        document.getElementById('pq-explanation').textContent = '';
+        document.getElementById('pq-actions').classList.remove('visible');
+
+        const q = pqCurrent;
+        document.getElementById('pq-question').innerHTML =
+            `<span class="pq-target">次のうち「${q.targetName}」について正しいものを選べ</span>`;
+
+        const choicesEl = document.getElementById('pq-choices');
+        choicesEl.innerHTML = '';
+        q.choices.forEach((c, i) => {
+            const btn = document.createElement('button');
+            btn.className   = 'pq-choice-btn';
+            btn.textContent = c.statement;
+            btn.addEventListener('click', () => answerPolicyQuiz(c, btn));
+            choicesEl.appendChild(btn);
+        });
+    }
+
+    function generatePolicyQuizQuestion(epoch, empire) {
+        // 正解選択肢：クリックした帝国の correct: true のステートメント
+        const correctPool = (empire.quizStatements || []).filter(s => s.correct);
+        if (!correctPool.length) return null;
+        const correctStmt = correctPool[Math.floor(Math.random() * correctPool.length)];
+
+        // 誤り選択肢：同エポック内の他帝国の correct: true ステートメント
+        const otherEmpires = (epoch.empires || []).filter(em => em.match !== empire.match);
+        const decoyPool = otherEmpires.flatMap(em =>
+            (em.quizStatements || [])
+                .filter(s => s.correct)
+                .map(s => ({ ...s, _fromEmpire: em.name || em.match }))
+        );
+
+        // 3問分の誤り選択肢をシャッフルして選ぶ。足りない場合は全問使用
+        const shuffledDecoys = [...decoyPool].sort(() => Math.random() - 0.5);
+        const decoys = shuffledDecoys.slice(0, 3);
+
+        if (decoys.length === 0) return null;
+
+        const choices = [
+            { statement: correctStmt.statement, isCorrect: true, explanation: correctStmt.explanation },
+            ...decoys.map(d => ({ statement: d.statement, isCorrect: false, explanation: `これは「${d._fromEmpire}」の説明です。` })),
+        ].sort(() => Math.random() - 0.5);
+
+        return {
+            targetName: empire.name || empire.match,
+            choices,
+        };
+    }
+
+    function answerPolicyQuiz(choice, clickedBtn) {
+        document.querySelectorAll('.pq-choice-btn').forEach(b => b.disabled = true);
+        pqTotal++;
+
+        const resultEl = document.getElementById('pq-result');
+        const expEl    = document.getElementById('pq-explanation');
+
+        if (choice.isCorrect) {
+            pqScore++;
+            clickedBtn.classList.add('correct');
+            resultEl.textContent = '✅ 正解！';
+            resultEl.className   = 'ok';
+        } else {
+            clickedBtn.classList.add('wrong');
+            document.querySelectorAll('.pq-choice-btn').forEach(b => {
+                const bData = pqCurrent.choices.find(c => c.statement === b.textContent);
+                if (bData?.isCorrect) b.classList.add('correct');
+            });
+            resultEl.textContent = '❌ 不正解。';
+            resultEl.className   = 'ng';
+        }
+
+        expEl.textContent = choice.explanation || '';
+        expEl.classList.add('visible');
+
+        document.getElementById('pq-counter').textContent =
+            `問題 ${pqTotal}　正解 ${pqScore} / ${pqTotal}`;
+        document.getElementById('pq-actions').classList.add('visible');
+    }
+
+    function closePolicyQuiz() {
+        document.getElementById('policy-quiz-panel').classList.remove('open');
+        if (currentEmpire) {
+            document.getElementById('empire-panel').classList.add('open');
+        }
     }
 
     function showInfo(ev, color) {

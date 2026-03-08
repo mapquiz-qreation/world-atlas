@@ -68,6 +68,20 @@
           "宗教が統治を支えた"
         ]
       }
+    ],
+    "territoriesFile": "achaemenid_500bc",
+    "territoriesYear": "前525年頃（最大版図）",
+    "colorMap": [
+      {
+        "match": "アケメネス朝",
+        "color": "#e67e22",
+        "label": "アケメネス朝ペルシア"
+      },
+      {
+        "match": "ギリシャ",
+        "color": "#3498db",
+        "label": "ギリシャ諸ポリス圏"
+      }
     ]
   },
   {
@@ -244,6 +258,20 @@
           "帝国の拡大と崩壊",
           "宗教が統治を支えた"
         ]
+      }
+    ],
+    "territoriesFile": "roman_republic_han_200bc",
+    "territoriesYear": "前200年頃",
+    "colorMap": [
+      {
+        "match": "ローマ共和国",
+        "color": "#9b59b6",
+        "label": "ローマ共和国"
+      },
+      {
+        "match": "前漢帝国",
+        "color": "#e74c3c",
+        "label": "前漢帝国"
       }
     ]
   },
@@ -443,6 +471,25 @@
           "外圧が改革を生む"
         ]
       }
+    ],
+    "territoriesFile": "rome_sassanid_300ad",
+    "territoriesYear": "300年頃",
+    "colorMap": [
+      {
+        "match": "西ローマ帝国",
+        "color": "#8e44ad",
+        "label": "西ローマ帝国"
+      },
+      {
+        "match": "東ローマ帝国",
+        "color": "#7d3c98",
+        "label": "東ローマ帝国"
+      },
+      {
+        "match": "ササン朝",
+        "color": "#f39c12",
+        "label": "ササン朝ペルシア"
+      }
     ]
   },
   {
@@ -535,6 +582,35 @@
           "外圧が改革を生む",
           "宗教が統治を支えた"
         ]
+      }
+    ],
+    "territoriesFile": "germanic_byzantine_500ad",
+    "territoriesYear": "500年頃",
+    "colorMap": [
+      {
+        "match": "フランク王国",
+        "color": "#1565C0",
+        "label": "フランク王国"
+      },
+      {
+        "match": "西ゴート王国",
+        "color": "#AD1457",
+        "label": "西ゴート王国"
+      },
+      {
+        "match": "東ゴート",
+        "color": "#6A1B9A",
+        "label": "東ゴート→ランゴバルド王国"
+      },
+      {
+        "match": "アングロサクソン",
+        "color": "#2E7D32",
+        "label": "アングロサクソン七王国"
+      },
+      {
+        "match": "東ローマ（ビザンツ）帝国（ユスティニアヌス",
+        "color": "#F9A825",
+        "label": "ビザンツ帝国（ユスティニアヌス期）"
       }
     ]
   },
@@ -711,6 +787,25 @@
           "交易で栄えた"
         ]
       }
+    ],
+    "territoriesFile": "frankish_abbasid_800ad",
+    "territoriesYear": "800年頃（カール大帝）",
+    "colorMap": [
+      {
+        "match": "フランク王国（カール",
+        "color": "#1565C0",
+        "label": "フランク王国（カール大帝）"
+      },
+      {
+        "match": "アッバース朝",
+        "color": "#e74c3c",
+        "label": "アッバース朝"
+      },
+      {
+        "match": "東ローマ（ビザンツ）帝国（8",
+        "color": "#F9A825",
+        "label": "ビザンツ帝国"
+      }
     ]
   },
   {
@@ -786,6 +881,25 @@
           "交易で栄えた",
           "宗教が統治を支えた"
         ]
+      }
+    ],
+    "territoriesFile": "seljuk_song_1000ad",
+    "territoriesYear": "1071年頃",
+    "colorMap": [
+      {
+        "match": "セルジューク朝",
+        "color": "#27ae60",
+        "label": "セルジューク朝"
+      },
+      {
+        "match": "宋朝",
+        "color": "#e74c3c",
+        "label": "宋朝"
+      },
+      {
+        "match": "東ローマ（ビザンツ）帝国（10",
+        "color": "#F9A825",
+        "label": "ビザンツ帝国"
       }
     ]
   },
@@ -972,6 +1086,25 @@
           "外圧が改革を生む"
         ]
       }
+    ],
+    "territoriesFile": "ming_ottoman_timurid_1400ad",
+    "territoriesYear": "1400年頃",
+    "colorMap": [
+      {
+        "match": "明朝",
+        "color": "#e74c3c",
+        "label": "明朝"
+      },
+      {
+        "match": "オスマン帝国（拡大",
+        "color": "#3498db",
+        "label": "オスマン帝国（拡大期）"
+      },
+      {
+        "match": "ティムール朝",
+        "color": "#f39c12",
+        "label": "ティムール朝"
+      }
     ]
   },
   {
@@ -1148,6 +1281,25 @@
         "patterns": [
           "外圧が改革を生む"
         ]
+      }
+    ],
+    "territoriesFile": "qing_mughal_ottoman_1700ad",
+    "territoriesYear": "1700年頃",
+    "colorMap": [
+      {
+        "match": "清帝国",
+        "color": "#e74c3c",
+        "label": "清帝国"
+      },
+      {
+        "match": "ムガル帝国",
+        "color": "#f39c12",
+        "label": "ムガル帝国"
+      },
+      {
+        "match": "オスマン帝国（17",
+        "color": "#3498db",
+        "label": "オスマン帝国"
       }
     ]
   },
@@ -1358,6 +1510,25 @@
         "patterns": [
           "外圧が改革を生む"
         ]
+      }
+    ],
+    "territoriesFile": "japan_nazi_1942ad",
+    "territoriesYear": "1942年頃（最大版図）",
+    "colorMap": [
+      {
+        "match": "大日本帝国",
+        "color": "#e74c3c",
+        "label": "大日本帝国"
+      },
+      {
+        "match": "ナチスドイツ",
+        "color": "#2c3e50",
+        "label": "ナチスドイツ支配圏"
+      },
+      {
+        "match": "イタリア帝国",
+        "color": "#27ae60",
+        "label": "イタリア帝国（ファシスト）"
       }
     ]
   }

@@ -1488,6 +1488,13 @@
         activeCat  = cats[0] || null;
         const tabsEl = document.getElementById('empire-cat-tabs');
         tabsEl.innerHTML = '';
+        const updateQuizBtn = (cat) => {
+            const hasQuiz = (empire.quizStatements || []).filter(s => s.correct).length > 0;
+            const quizBtn = document.getElementById('empire-quiz-btn');
+            quizBtn.style.display = hasQuiz ? 'block' : 'none';
+            quizBtn.textContent = cat ? `📝 ${cat}政策 比較クイズへ` : '📝 政策比較クイズへ';
+        };
+
         cats.forEach(cat => {
             const btn = document.createElement('button');
             btn.className   = `empire-cat-tab${cat === activeCat ? ' active' : ''}`;
@@ -1498,6 +1505,7 @@
                 tabsEl.querySelectorAll('.empire-cat-tab').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 renderPolicyCards(empire, cat, color);
+                updateQuizBtn(cat);
             });
             tabsEl.appendChild(btn);
         });
@@ -1505,8 +1513,7 @@
         renderPolicyCards(empire, activeCat, color);
 
         // クイズボタンの表示制御
-        const hasQuiz = (empire.quizStatements || []).filter(s => s.correct).length > 0;
-        document.getElementById('empire-quiz-btn').style.display = hasQuiz ? 'block' : 'none';
+        updateQuizBtn(activeCat);
 
         // パネルを開く
         document.getElementById('info-panel').style.display = 'none';
@@ -1551,23 +1558,26 @@
     // ════════════════════════════════════════════════════════
     // 政策比較クイズ
     // ════════════════════════════════════════════════════════
-    let pqScore = 0;
-    let pqTotal = 0;
-    let pqCurrent = null;
+    let pqScore    = 0;
+    let pqTotal    = 0;
+    let pqCurrent  = null;
+    let pqCategory = null; // 開いていたタブのカテゴリ（null = 全カテゴリ）
 
     function startPolicyQuiz() {
         if (!currentEmpire || !currentEpochForQuiz) return;
-        pqScore = 0;
-        pqTotal = 0;
+        pqScore    = 0;
+        pqTotal    = 0;
+        pqCategory = activeCat; // 現在アクティブなカテゴリタブを記憶
+        const catLabel = pqCategory ? pqCategory + '政策 ' : '';
         document.getElementById('pq-empire-name').textContent =
-            '📝 ' + (currentEmpire.name || currentEmpire.match) + ' 政策比較クイズ';
+            '📝 ' + (currentEmpire.name || currentEmpire.match) + ' ' + catLabel + '比較クイズ';
         document.getElementById('empire-panel').classList.remove('open');
         document.getElementById('policy-quiz-panel').classList.add('open');
         nextPolicyQuestion();
     }
 
     function nextPolicyQuestion() {
-        pqCurrent = generatePolicyQuizQuestion(currentEpochForQuiz, currentEmpire);
+        pqCurrent = generatePolicyQuizQuestion(currentEpochForQuiz, currentEmpire, pqCategory);
         if (!pqCurrent) {
             document.getElementById('pq-question').textContent = '出題可能な問題がありません。';
             return;
@@ -1582,12 +1592,13 @@
         document.getElementById('pq-actions').classList.remove('visible');
 
         const q = pqCurrent;
+        const catHint = pqCategory ? `（${pqCategory}政策）` : '';
         document.getElementById('pq-question').innerHTML =
-            `<span class="pq-target">次のうち「${q.targetName}」について正しいものを選べ</span>`;
+            `<span class="pq-target">次のうち「${q.targetName}」${catHint}について正しいものを選べ</span>`;
 
         const choicesEl = document.getElementById('pq-choices');
         choicesEl.innerHTML = '';
-        q.choices.forEach((c, i) => {
+        q.choices.forEach(c => {
             const btn = document.createElement('button');
             btn.className   = 'pq-choice-btn';
             btn.textContent = c.statement;
@@ -1596,29 +1607,70 @@
         });
     }
 
-    function generatePolicyQuizQuestion(epoch, empire) {
-        // 正解選択肢：クリックした帝国の correct: true のステートメント
-        const correctPool = (empire.quizStatements || []).filter(s => s.correct);
+    function generatePolicyQuizQuestion(epoch, empire, category) {
+        // ── 正解プール：対象帝国の correct: true ────────────────
+        // カテゴリ指定あり → そのカテゴリ優先、なければ汎用(null)も含める
+        let correctPool = (empire.quizStatements || []).filter(s => s.correct);
+        if (category) {
+            const catPool = correctPool.filter(s => s.category === category);
+            if (catPool.length) correctPool = catPool;
+            // catPool が空なら category: null の汎用ステートメントにフォールバック
+        }
         if (!correctPool.length) return null;
         const correctStmt = correctPool[Math.floor(Math.random() * correctPool.length)];
 
-        // 誤り選択肢：同エポック内の他帝国の correct: true ステートメント
-        const otherEmpires = (epoch.empires || []).filter(em => em.match !== empire.match);
-        const decoyPool = otherEmpires.flatMap(em =>
-            (em.quizStatements || [])
-                .filter(s => s.correct)
-                .map(s => ({ ...s, _fromEmpire: em.name || em.match }))
-        );
+        // ── ダミープール構築（帝国名を付けない）───────────────
+        // 優先度1: 同エポック・他帝国・同カテゴリ correct:true
+        // 優先度2: 同エポック・他帝国・汎用(null) correct:true
+        // 優先度3: 全エポック・他帝国・同カテゴリ correct:true（allTimelineData から）
+        const otherSameEpoch = (epoch.empires || []).filter(em => em.match !== empire.match);
 
-        // 3問分の誤り選択肢をシャッフルして選ぶ。足りない場合は全問使用
-        const shuffledDecoys = [...decoyPool].sort(() => Math.random() - 0.5);
-        const decoys = shuffledDecoys.slice(0, 3);
+        const pickFromEmpires = (empires, catFilter) =>
+            empires.flatMap(em =>
+                (em.quizStatements || [])
+                    .filter(s => s.correct && (catFilter === undefined || s.category === catFilter))
+                    .map(s => ({ statement: s.statement, explanation: s.explanation || '' }))
+            );
+
+        const shuffle = arr => [...arr].sort(() => Math.random() - 0.5);
+
+        let decoys = [];
+
+        if (category) {
+            // P1: 同エポック・同カテゴリ
+            decoys = shuffle(pickFromEmpires(otherSameEpoch, category));
+            // P2: 同エポック・汎用(null)で補充
+            if (decoys.length < 3) {
+                const extra = shuffle(pickFromEmpires(otherSameEpoch, null))
+                    .filter(d => !decoys.some(e => e.statement === d.statement));
+                decoys = [...decoys, ...extra].slice(0, 3);
+            }
+            // P3: 全エポック・同カテゴリで補充
+            if (decoys.length < 3 && typeof timelineData !== 'undefined') {
+                const allOthers = timelineData
+                    .flatMap(ep => (ep.empires || []))
+                    .filter(em => em.match !== empire.match);
+                const extra = shuffle(pickFromEmpires(allOthers, category))
+                    .filter(d => !decoys.some(e => e.statement === d.statement));
+                decoys = [...decoys, ...extra].slice(0, 3);
+            }
+        } else {
+            // カテゴリ指定なし → 同エポック・他帝国の correct:true を全部使う
+            decoys = shuffle(pickFromEmpires(otherSameEpoch, undefined)).slice(0, 3);
+        }
 
         if (decoys.length === 0) return null;
 
         const choices = [
-            { statement: correctStmt.statement, isCorrect: true, explanation: correctStmt.explanation },
-            ...decoys.map(d => ({ statement: d.statement, isCorrect: false, explanation: `これは「${d._fromEmpire}」の説明です。` })),
+            { statement: correctStmt.statement, isCorrect: true, explanation: correctStmt.explanation || '' },
+            ...decoys.map(d => ({
+                statement: d.statement,
+                isCorrect: false,
+                // 帝国名は出さない
+                explanation: d.explanation
+                    ? `これは別の帝国の政策です。正しい説明：${d.explanation}`
+                    : 'これは別の帝国の政策です。',
+            })),
         ].sort(() => Math.random() - 0.5);
 
         return {

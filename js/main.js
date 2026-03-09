@@ -173,6 +173,15 @@ function updateReviewBtn() {
 }
 
     document.addEventListener('DOMContentLoaded', async function() {
+    // 初期状態：未ログインなら試験範囲設定をロック
+    const _isLoggedIn = !!localStorage.getItem('quiz_current_user');
+    const _scopeLock  = document.getElementById('scope-lock');
+    const _scopeInner = document.getElementById('scope-inner');
+    if (_scopeLock && _scopeInner) {
+        _scopeLock.style.display  = _isLoggedIn ? 'none' : 'flex';
+        _scopeInner.style.display = _isLoggedIn ? ''     : 'none';
+    }
+
     await initMap();
     setupAdminPanel(startQuiz);
     document.getElementById('login-btn').addEventListener('click', loginUser);

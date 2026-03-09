@@ -97,11 +97,20 @@
                 <!-- 試験範囲設定 -->
                 <div class="section-label">📋 試験範囲設定</div>
                 <div id="scope-panel">
-                    <div id="scope-checklist"></div>
-                    <button id="copy-scope-url-btn">🔗 試験範囲URLをコピー</button>
-                    <div class="scope-divider">または キーワードで検索</div>
-                    <textarea id="keyword-input" placeholder="例：アッバース朝　バグダード　マリ帝国&#10;スペース・改行区切りでOK"></textarea>
-                    <button id="keyword-start-btn">🔍 この内容でスタート</button>
+                    <!-- ログインゲート -->
+                    <div id="scope-lock" style="display:none; flex-direction:column; align-items:center; padding:16px 8px; text-align:center; gap:6px;">
+                        <div style="font-size:1.8em;">🔒</div>
+                        <div style="font-weight:bold; font-size:13px;">受験生登録で解放</div>
+                        <div style="font-size:11px; opacity:0.7;">上のログインフォームからご利用ください</div>
+                    </div>
+                    <!-- 本体 -->
+                    <div id="scope-inner">
+                        <div id="scope-checklist"></div>
+                        <button id="copy-scope-url-btn">🔗 試験範囲URLをコピー</button>
+                        <div class="scope-divider">または キーワードで検索</div>
+                        <textarea id="keyword-input" placeholder="例：アッバース朝　バグダード　マリ帝国&#10;スペース・改行区切りでOK"></textarea>
+                        <button id="keyword-start-btn">🔍 この内容でスタート</button>
+                    </div>
                 </div>
 
                 <!-- 管理モード -->

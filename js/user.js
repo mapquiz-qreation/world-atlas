@@ -99,6 +99,7 @@ export function logoutUser() {
         document.getElementById('user-name-input').value         = '';
         document.getElementById('ranking-list').innerHTML        = 'ログインしてね';
         updateScoreUI();
+        setScopePanelLock(true);
     }
 }
 
@@ -156,6 +157,15 @@ export function showUserInfo() {
         const btn = document.getElementById('review-btn');
         if (btn) btn.style.display = 'block';
     });
+    setScopePanelLock(false);
+}
+
+function setScopePanelLock(locked) {
+    const lockEl  = document.getElementById('scope-lock');
+    const innerEl = document.getElementById('scope-inner');
+    if (!lockEl || !innerEl) return;
+    lockEl.style.display  = locked ? 'flex' : 'none';
+    innerEl.style.display = locked ? 'none' : '';
 }
 
 export function updateScoreUI() {

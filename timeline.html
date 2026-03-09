@@ -575,6 +575,17 @@
         }
         #chrono-lock.visible { display: flex; }
 
+        #quiz-lock {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 28px 16px;
+            text-align: center;
+            gap: 8px;
+        }
+        #quiz-lock.visible { display: flex; }
+
         /* ─── 帝国詳細パネル ──────────────────────────── */
         #empire-panel {
             display: none;
@@ -1039,6 +1050,16 @@
 
     <!-- ── 同時代クイズパネル ─────────────────────── -->
     <div id="quiz-panel">
+        <!-- ログイン未確認時のロック表示 -->
+        <div id="quiz-lock">
+            <div style="font-size:2em;">🔒</div>
+            <div style="font-weight:bold; font-size:14px;">受験生登録で解放</div>
+            <div style="font-size:12px; opacity:0.7;">
+                <a href="index.html" style="color:var(--act);">ホームでログイン</a>してからご利用ください
+            </div>
+        </div>
+        <!-- 本体 -->
+        <div id="quiz-inner">
         <div id="quiz-counter">
             <span id="quiz-counter-text">問題 1</span>
             <span id="quiz-streak"></span>
@@ -1050,6 +1071,7 @@
             <button class="quiz-action-btn" id="quiz-explore-btn">🔍 このエポックを探求モードで確認する</button>
             <button class="quiz-action-btn" id="quiz-next-btn">次の問題へ →</button>
         </div>
+        </div><!-- /#quiz-inner -->
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -1121,7 +1143,18 @@
             quizPanel.classList.add('active');
             chronoPanel.classList.remove('active');
             markerLayer.clearLayers();
-            startQuizQuestion();
+            // ログインゲート
+            const isLoggedInQ = !!localStorage.getItem('quiz_current_user');
+            const quizLockEl  = document.getElementById('quiz-lock');
+            const quizInnerEl = document.getElementById('quiz-inner');
+            if (!isLoggedInQ) {
+                quizLockEl.classList.add('visible');
+                quizInnerEl.style.display = 'none';
+            } else {
+                quizLockEl.classList.remove('visible');
+                quizInnerEl.style.display = '';
+                startQuizQuestion();
+            }
         } else {
             chronoBtn.classList.add('active');
             exploreCtrl.style.display = 'none';

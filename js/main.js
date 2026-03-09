@@ -4,7 +4,7 @@ import { initMap, flyToRegion, resetMapView, clearQuizLayer } from './map.js';
 import { syncRanking }                                    from './ranking.js';
 import { checkLocalLogin, updateScoreUI, loginUser, logoutUser } from './user.js';
 import { showQuestion, nextQuestion }                     from './quiz.js';
-import { startScopeQuiz, buildScopeChecklist, copyScopeUrl, startKeywordQuiz } from './scope.js';
+import { startScopeQuiz, buildScopeChecklist, copyScopeUrl, startKeywordQuiz, startIchimondaiQuiz } from './scope.js';
 import { setupAdminPanel }                                from './admin.js';
 import { initMobile, closeMobileSheet }                   from './mobile.js';
 import { loadSRSData, getDueReviewQuestions, getSRSStats } from './srs.js';
@@ -173,14 +173,18 @@ function updateReviewBtn() {
 }
 
     document.addEventListener('DOMContentLoaded', async function() {
-    // 初期状態：未ログインなら試験範囲設定をロック
+    // 初期状態：未ログインなら試験範囲設定・一問一答をロック
     const _isLoggedIn = !!localStorage.getItem('quiz_current_user');
-    const _scopeLock  = document.getElementById('scope-lock');
-    const _scopeInner = document.getElementById('scope-inner');
-    if (_scopeLock && _scopeInner) {
-        _scopeLock.style.display  = _isLoggedIn ? 'none' : 'flex';
-        _scopeInner.style.display = _isLoggedIn ? ''     : 'none';
-    }
+    [
+        { lock: 'scope-lock',       inner: 'scope-inner' },
+        { lock: 'ichimondai-lock',  inner: 'ichimondai-inner' },
+    ].forEach(({ lock, inner }) => {
+        const lockEl  = document.getElementById(lock);
+        const innerEl = document.getElementById(inner);
+        if (!lockEl || !innerEl) return;
+        lockEl.style.display  = _isLoggedIn ? 'none' : 'flex';
+        innerEl.style.display = _isLoggedIn ? ''     : 'none';
+    });
 
     await initMap();
     setupAdminPanel(startQuiz);
@@ -189,6 +193,7 @@ function updateReviewBtn() {
     document.getElementById('next-btn').addEventListener('click', nextQuestion);
     document.getElementById('copy-scope-url-btn').addEventListener('click', copyScopeUrl);
     document.getElementById('keyword-start-btn').addEventListener('click', startKeywordQuiz);
+    document.getElementById('ichimondai-start-btn').addEventListener('click', startIchimondaiQuiz);
     document.getElementById('home-btn').addEventListener('click', goHome);
     document.getElementById('review-btn').addEventListener('click', startReviewMode);
 

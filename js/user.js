@@ -166,6 +166,12 @@ function setScopePanelLock(locked) {
     if (!lockEl || !innerEl) return;
     lockEl.style.display  = locked ? 'flex' : 'none';
     innerEl.style.display = locked ? 'none' : '';
+
+    const ichiLock  = document.getElementById('ichimondai-lock');
+    const ichiInner = document.getElementById('ichimondai-inner');
+    if (!ichiLock || !ichiInner) return;
+    ichiLock.style.display  = locked ? 'flex' : 'none';
+    ichiInner.style.display = locked ? 'none' : '';
 }
 
 export function updateScoreUI() {

@@ -2,7 +2,7 @@ import { state }          from './state.js';
 import { shuffle }        from './shuffle.js';
 import { showQuestion }   from './quiz.js';
 import { flyToRegion, clearQuizLayer } from './map.js';
-import { ERA_DISPLAY_NAMES } from './config.js';
+import { ERA_DISPLAY_NAMES, GAS_URL } from './config.js';
 
 function eraLabel(region, era) {
     return ERA_DISPLAY_NAMES[`${region}_${era}`]
@@ -158,4 +158,80 @@ function showScopeUrlModal(url) {
             prompt('以下のURLをコピーしてください:', url);
         });
     });
+}
+
+// ── 一問一答から問題を探す ───────────────────────────────
+export async function startIchimondaiQuiz() {
+    const input    = document.getElementById('ichimondai-input').value.trim();
+    const statusEl = document.getElementById('ichimondai-status');
+    const btn      = document.getElementById('ichimondai-start-btn');
+
+    if (!input) { alert('問題文を貼り付けてください'); return; }
+
+    btn.disabled      = true;
+    btn.textContent   = '⏳ 解析中...';
+    statusEl.textContent = 'AIがキーワードを抽出しています...';
+
+    try {
+        // GAS経由でClaudeにキーワード抽出を依頼
+        const res = await fetch(GAS_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ type: 'extractKeywords', text: input })
+        });
+        const data = await res.json();
+        const raw  = data.keywords || '';
+
+        // カンマ・読点・スペースで分割して2文字以上のみ使用
+        const keywords = raw.split(/[,、，\s]+/).map(k => k.trim()).filter(k => k.length >= 2);
+
+        if (!keywords.length) {
+            statusEl.textContent = 'キーワードを抽出できませんでした';
+            return;
+        }
+
+        statusEl.textContent = `抽出キーワード：${keywords.join('・')}`;
+
+        // 既存のキーワード検索で問題を絞り込む
+        const matched = [];
+        Object.keys(state.masterData).forEach(region => {
+            Object.keys(state.masterData[region].eras).forEach(era => {
+                (state.masterData[region].eras[era].fixed || []).forEach(q => {
+                    if (keywords.some(kw => q.text.includes(kw))) matched.push(q);
+                });
+            });
+        });
+
+        if (!matched.length) {
+            statusEl.textContent = `「${keywords.join('・')}」に一致する問題が見つかりませんでした`;
+            return;
+        }
+
+        clearQuizLayer();
+        state.questions     = shuffle(matched);
+        state.currentIdx    = 0;
+        state.currentRegion = null;
+        state.currentEra    = null;
+
+        document.querySelectorAll('.mode-btn, .era-btn').forEach(b => b.classList.remove('active'));
+        document.body.removeAttribute('data-era');
+        document.body.removeAttribute('data-region');
+
+        const banner = document.getElementById('scope-banner');
+        banner.style.display = 'block';
+        banner.innerHTML =
+            `<strong>📖 一問一答連動モード</strong><br>` +
+            `「${keywords.join('・')}」関連 ${matched.length}問`;
+
+        document.getElementById('era-display').innerText =
+            `📖 一問一答連動（${matched.length}問）`;
+
+        showQuestion();
+
+    } catch (err) {
+        statusEl.textContent = 'エラーが発生しました: ' + err.message;
+    } finally {
+        btn.disabled    = false;
+        btn.textContent = '🔍 対応問題を探す';
+    }
 }

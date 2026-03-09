@@ -19,6 +19,14 @@ function doPost(e) {
     var payload = JSON.parse(e.postData.contents);
     var type    = payload.type;
 
+    // ── キーワード抽出 ──
+    if (type === 'extractKeywords') {
+      var keywords = extractKeywordsWithClaude_(payload.text || '');
+      return ContentService.createTextOutput(
+        JSON.stringify({ keywords: keywords })
+      ).setMimeType(ContentService.MimeType.JSON);
+    }
+
     // ── Stripe Webhook ──
     if (type === 'checkout.session.completed') {
       var session  = payload.data && payload.data.object ? payload.data.object : {};
@@ -161,4 +169,26 @@ function doGet(e) {
   return ContentService.createTextOutput(
     callback + '(' + JSON.stringify(scores) + ')'
   ).setMimeType(ContentService.MimeType.JAVASCRIPT);
+}
+// ── 一問一答キーワード抽出 ──────────────────────────────
+function extractKeywordsWithClaude_(text) {
+  var apiKey = PropertiesService.getScriptProperties().getProperty('CLAUDE_API_KEY');
+  var prompt = 'あなたは世界史の専門家です。以下の一問一答問題文から、地名・人名・王朝名・事件名などの歴史的固有名詞だけをカンマ区切りで抽出してください。説明文や動詞は含めないでください。\n\n' + text;
+
+  var response = UrlFetchApp.fetch('https://api.anthropic.com/v1/messages', {
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01'
+    },
+    payload: JSON.stringify({
+      model: 'claude-haiku-4-5',
+      max_tokens: 256,
+      messages: [{ role: 'user', content: prompt }]
+    })
+  });
+
+  var data = JSON.parse(response.getContentText());
+  return data.content && data.content[0] ? data.content[0].text : '';
 }

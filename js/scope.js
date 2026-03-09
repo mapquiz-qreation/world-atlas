@@ -68,9 +68,9 @@ export function buildScopeChecklist() {
     });
 }
 
-// キーワードで問題を全文検索してクイズ開始
-export function startKeywordQuiz() {
-    const input    = document.getElementById('keyword-input').value.trim();
+// キーワードで問題を全文検索してクイズ開始（URLパラメータからも呼べる）
+export function startKeywordQuiz(overrideInput) {
+    const input    = overrideInput || document.getElementById('keyword-input').value.trim();
     if (!input) { alert('キーワードを入力してください'); return; }
 
     // スペース・読点・改行・カンマで分割、2文字以上のみ有効
@@ -123,7 +123,7 @@ export function copyScopeUrl() {
     showScopeUrlModal(url);
 }
 
-function showScopeUrlModal(url) {
+function showScopeUrlModal(url, title) {
     // 既存モーダルがあれば削除
     document.getElementById('scope-url-modal')?.remove();
 
@@ -133,7 +133,7 @@ function showScopeUrlModal(url) {
     modal.id = 'scope-url-modal';
     modal.innerHTML = `
         <div id="scope-url-inner">
-            <div id="scope-url-title">🔗 試験範囲URL</div>
+            <div id="scope-url-title">🔗 ${title || '試験範囲URL'}</div>
             <img id="scope-url-qr" src="${qrSrc}" alt="QRコード" />
             <div id="scope-url-hint">カメラで読み取るか、下のリンクをタップ</div>
             <a id="scope-url-link" href="${url}" target="_blank" rel="noopener">${url}</a>
@@ -206,6 +206,16 @@ export async function startIchimondaiQuiz() {
             statusEl.textContent = `「${keywords.join('・')}」に一致する問題が見つかりませんでした`;
             return;
         }
+
+        // QRコードボタンを表示
+        const kwParam = encodeURIComponent(keywords.join(','));
+        const kwUrl   = location.origin + location.pathname + '?kw=' + kwParam;
+        statusEl.innerHTML =
+            `抽出キーワード：${keywords.join('・')}<br>` +
+            `<button id="ichimondai-qr-btn" style="margin-top:6px; width:100%; padding:6px; background:#333; color:#fff; border:none; border-radius:6px; cursor:pointer; font-size:12px;">📋 QRコードを生成（${matched.length}問）</button>`;
+        document.getElementById('ichimondai-qr-btn').addEventListener('click', () => {
+            showScopeUrlModal(kwUrl, `📖 一問一答連動 ${matched.length}問`);
+        });
 
         clearQuizLayer();
         state.questions     = shuffle(matched);

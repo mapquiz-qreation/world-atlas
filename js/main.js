@@ -27,8 +27,11 @@ async function fetchQuestions() {
     setupRegionButtons();
     buildScopeChecklist();
     checkLocalLogin();
-    const scopeParam = new URLSearchParams(window.location.search).get('scope');
+    const params     = new URLSearchParams(window.location.search);
+    const scopeParam = params.get('scope');
+    const kwParam    = params.get('kw');
     if (scopeParam) startScopeQuiz(scopeParam);
+    if (kwParam)    startKeywordQuiz(decodeURIComponent(kwParam));
 }
 
 function setupRegionButtons() {

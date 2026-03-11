@@ -48,6 +48,13 @@ function setupRegionButtons() {
 }
 
 function selectRegion(key) {
+    // ウェルカムオーバーレイを非表示
+    const overlay = document.getElementById('welcome-overlay');
+    if (overlay) {
+        overlay.classList.add('hidden');
+        setTimeout(() => overlay.style.display = 'none', 400);
+    }
+
     state.currentRegion = key;
     const data = state.masterData[key];
 

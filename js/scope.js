@@ -174,10 +174,13 @@ export async function startIchimondaiQuiz() {
 
     try {
         // GAS経由でClaudeにキーワード抽出を依頼
+        // GASのCORS制約のためno-corsでフォームデータとして送信
+        const formData = new FormData();
+        formData.append('payload', JSON.stringify({ type: 'extractKeywords', text: input }));
         const res = await fetch(GAS_URL, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ type: 'extractKeywords', text: input })
+            body: formData,
+            redirect: 'follow',
         });
         const data = await res.json();
         const raw  = data.keywords || '';

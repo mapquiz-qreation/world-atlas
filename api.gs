@@ -16,7 +16,16 @@ function getSheet_(name) {
 // ── POST ──────────────────────────────────────────────
 function doPost(e) {
   try {
-    var payload = JSON.parse(e.postData.contents);
+    var raw     = (e.postData.contents || '');
+    // FormData経由（CORSバイパス）またはJSON直送どちらも対応
+    var payload;
+    try {
+      payload = JSON.parse(raw);
+    } catch (_) {
+      // FormDataのpayloadフィールドとして送られてきた場合
+      var params = e.parameter || {};
+      payload = JSON.parse(params.payload || '{}');
+    }
     var type    = payload.type;
 
     // ── キーワード抽出 ──

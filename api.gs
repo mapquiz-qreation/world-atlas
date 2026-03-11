@@ -211,7 +211,7 @@ function extractKeywordsWithClaude_(text) {
       'anthropic-version': '2023-06-01'
     },
     payload: JSON.stringify({
-      model: 'claude-3-haiku-20240307',
+      model: 'claude-sonnet-4-6',
       max_tokens: 256,
       messages: [{ role: 'user', content: prompt }]
     })

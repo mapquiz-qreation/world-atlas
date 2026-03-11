@@ -405,7 +405,7 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; background: var(--bg); 
 }
 #home-btn { position: absolute; right: 0; font-size: 12px; padding: 4px 10px; border-radius: 6px; border: 2px solid var(--border); background: var(--panel); color: var(--text); cursor: pointer; transition: background 0.2s, color 0.2s; }
 #home-btn:hover { background: var(--act); color: var(--act-c); }
-#main-layout { display: flex; gap: 15px; flex: 1; min-height: 0; align-items: stretch; justify-content: center; position: relative; }
+#main-layout { display: flex; gap: 15px; flex: 1; min-height: 0; align-items: stretch; justify-content: center; }
 
 #sidebar { width: 300px; display: flex; flex-direction: column; height: 100%; border: 4px double var(--border); border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.12); overflow: hidden; }
 /* 上部固定ゾーン：地域・時代選択（スクロールしない） */
@@ -489,11 +489,12 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; background: var(--bg); 
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(10, 10, 26, 0.72);
-    backdrop-filter: blur(4px);
+    background: rgba(10, 10, 26, 0.55);
+    backdrop-filter: blur(2px);
     z-index: 800;
     pointer-events: none;
     transition: opacity 0.4s ease;
+    border-radius: 8px;
 }
 #welcome-overlay.hidden {
     opacity: 0;
@@ -561,6 +562,7 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; background: var(--bg); 
     border: 4px double var(--border);
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    position: relative;
     background: linear-gradient(135deg, #0d1b2a 0%, #1a3a5c 50%, #16213e 100%);
     background-size: 400% 400%;
     animation: mapSpaceGradient 10s ease infinite;

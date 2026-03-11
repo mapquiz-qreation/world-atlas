@@ -173,18 +173,25 @@ export async function startIchimondaiQuiz() {
     statusEl.textContent = 'AIがキーワードを抽出しています...';
 
     try {
-        // GAS経由でClaudeにキーワード抽出を依頼
-        // GASのCORS制約のためno-corsでフォームデータとして送信
-        const formData = new FormData();
-        formData.append('payload', JSON.stringify({ type: 'extractKeywords', text: input }));
-        const res = await fetch(GAS_URL, {
-            method: 'POST',
-            body: formData,
-            redirect: 'follow',
+        // GAS経由でClaudeにキーワード抽出を依頼（JSONP方式でCORS回避）
+        const raw = await new Promise((resolve, reject) => {
+            const cbName = '_kw_cb_' + Date.now();
+            const params = new URLSearchParams({
+                action: 'extractKeywords',
+                text: input,
+                callback: cbName,
+            });
+            const script = document.createElement('script');
+            script.src = GAS_URL + '?' + params.toString();
+            window[cbName] = (data) => {
+                delete window[cbName];
+                document.head.removeChild(script);
+                if (data.error) reject(new Error(data.error));
+                else resolve(data.keywords || '');
+            };
+            script.onerror = () => reject(new Error('通信エラー'));
+            document.head.appendChild(script);
         });
-        const data = await res.json();
-        if (data.error) throw new Error(data.error);
-        const raw  = data.keywords || '';
 
         // カンマ・読点・スペースで分割して2文字以上のみ使用
         const keywords = raw.split(/[,、，\s]+/).map(k => k.trim()).filter(k => k.length >= 2);

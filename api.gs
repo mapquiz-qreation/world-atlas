@@ -125,6 +125,15 @@ function doGet(e) {
   var action   = e.parameter.action;
   var callback = e.parameter.callback;
 
+  // ── キーワード抽出（JSONP） ──
+  if (action === 'extractKeywords') {
+    var text     = e.parameter.text || '';
+    var keywords = extractKeywordsWithClaude_(text);
+    return ContentService.createTextOutput(
+      callback + '(' + JSON.stringify({ keywords: keywords }) + ')'
+    ).setMimeType(ContentService.MimeType.JAVASCRIPT);
+  }
+
   // ── 有料チェック ──
   if (action === 'isPaid') {
     var username = e.parameter.user;

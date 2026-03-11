@@ -177,6 +177,11 @@
         /* ─── 共有マップ ───────────────────────────────── */
         #tl-map { flex: 1; min-height: 0; position: relative; }
 
+        /* クイズ・並べ替えモード時：タイルを暗くしてマーカーを目立たせる */
+        #tl-map.quiz-map-mode .leaflet-tile-pane {
+            filter: brightness(0.45) saturate(0.6);
+        }
+
         /* ─── 探求モード・情報パネル ───────────────────── */
         #info-panel {
             flex-shrink: 0;
@@ -1127,15 +1132,18 @@
 
         [exploreBtn, quizBtn, chronoBtn].forEach(b => b.classList.remove('active'));
 
+        const tlMap = document.getElementById('tl-map');
+
         if (tab === 'explore') {
             exploreBtn.classList.add('active');
             exploreCtrl.style.display = 'contents';
             infoPanel.style.display   = '';
             quizPanel.classList.remove('active');
             chronoPanel.classList.remove('active');
+            tlMap.classList.remove('quiz-map-mode');
             markerLayer.addTo(map);
             quizLayer.clearLayers();
-            renderEpoch(currentIdx);
+            renderEpoch(currentIdx);   // 版図も含めて再描画
         } else if (tab === 'quiz') {
             quizBtn.classList.add('active');
             exploreCtrl.style.display = 'none';
@@ -1143,6 +1151,9 @@
             quizPanel.classList.add('active');
             chronoPanel.classList.remove('active');
             markerLayer.clearLayers();
+            territoryLayer.clearLayers();   // 版図を非表示
+            document.getElementById('territory-legend')?.remove();
+            tlMap.classList.add('quiz-map-mode');
             // ログインゲート
             const isLoggedInQ = !!localStorage.getItem('quiz_current_user');
             const quizLockEl  = document.getElementById('quiz-lock');
@@ -1162,6 +1173,9 @@
             quizPanel.classList.remove('active');
             chronoPanel.classList.add('active');
             markerLayer.clearLayers();
+            territoryLayer.clearLayers();   // 版図を非表示
+            document.getElementById('territory-legend')?.remove();
+            tlMap.classList.add('quiz-map-mode');
             initChronoPanel();
         }
         setTimeout(() => map.invalidateSize(), 50);

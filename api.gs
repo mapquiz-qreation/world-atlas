@@ -182,10 +182,13 @@ function doGet(e) {
 // ── 一問一答キーワード抽出 ──────────────────────────────
 function extractKeywordsWithClaude_(text) {
   var apiKey = PropertiesService.getScriptProperties().getProperty('CLAUDE_API_KEY');
+  if (!apiKey) throw new Error('CLAUDE_API_KEY が設定されていません');
+
   var prompt = 'あなたは世界史の専門家です。以下の一問一答問題文から、地名・人名・王朝名・事件名などの歴史的固有名詞だけをカンマ区切りで抽出してください。説明文や動詞は含めないでください。\n\n' + text;
 
   var response = UrlFetchApp.fetch('https://api.anthropic.com/v1/messages', {
     method: 'post',
+    muteHttpExceptions: true,
     headers: {
       'Content-Type': 'application/json',
       'x-api-key': apiKey,
@@ -198,6 +201,10 @@ function extractKeywordsWithClaude_(text) {
     })
   });
 
-  var data = JSON.parse(response.getContentText());
+  var code = response.getResponseCode();
+  var body = response.getContentText();
+  if (code !== 200) throw new Error('Claude API ' + code + ': ' + body);
+
+  var data = JSON.parse(body);
   return data.content && data.content[0] ? data.content[0].text : '';
 }

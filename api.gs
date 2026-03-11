@@ -114,8 +114,8 @@ function doPost(e) {
     return ContentService.createTextOutput('ok').setMimeType(ContentService.MimeType.TEXT);
 
   } catch (err) {
-    return ContentService.createTextOutput('error: ' + err.message)
-             .setMimeType(ContentService.MimeType.TEXT);
+    return ContentService.createTextOutput(JSON.stringify({ error: err.message }))
+             .setMimeType(ContentService.MimeType.JSON);
   }
 }
 
@@ -192,7 +192,7 @@ function extractKeywordsWithClaude_(text) {
       'anthropic-version': '2023-06-01'
     },
     payload: JSON.stringify({
-      model: 'claude-haiku-4-5',
+      model: 'claude-3-5-haiku-20241022',
       max_tokens: 256,
       messages: [{ role: 'user', content: prompt }]
     })

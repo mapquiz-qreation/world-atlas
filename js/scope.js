@@ -183,6 +183,7 @@ export async function startIchimondaiQuiz() {
             redirect: 'follow',
         });
         const data = await res.json();
+        if (data.error) throw new Error(data.error);
         const raw  = data.keywords || '';
 
         // カンマ・読点・スペースで分割して2文字以上のみ使用

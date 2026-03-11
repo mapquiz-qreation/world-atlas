@@ -16,15 +16,16 @@ function getSheet_(name) {
 // ── POST ──────────────────────────────────────────────
 function doPost(e) {
   try {
-    var raw     = (e.postData.contents || '');
-    // FormData経由（CORSバイパス）またはJSON直送どちらも対応
+    // FormData経由（GETにリダイレクト）またはJSON直送どちらも対応
     var payload;
-    try {
+    var params = e.parameter || {};
+    if (params.payload) {
+      // FormData経由: e.parameterにpayloadフィールドが入る
+      payload = JSON.parse(params.payload);
+    } else {
+      // JSON直送: e.postData.contentsにJSONが入る
+      var raw = (e.postData && e.postData.contents) ? e.postData.contents : '{}';
       payload = JSON.parse(raw);
-    } catch (_) {
-      // FormDataのpayloadフィールドとして送られてきた場合
-      var params = e.parameter || {};
-      payload = JSON.parse(params.payload || '{}');
     }
     var type    = payload.type;
 

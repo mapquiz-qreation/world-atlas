@@ -127,11 +127,17 @@ function doGet(e) {
 
   // ── キーワード抽出（JSONP） ──
   if (action === 'extractKeywords') {
-    var text     = e.parameter.text || '';
-    var keywords = extractKeywordsWithClaude_(text);
-    return ContentService.createTextOutput(
-      callback + '(' + JSON.stringify({ keywords: keywords }) + ')'
-    ).setMimeType(ContentService.MimeType.JAVASCRIPT);
+    try {
+      var text     = e.parameter.text || '';
+      var keywords = extractKeywordsWithClaude_(text);
+      return ContentService.createTextOutput(
+        callback + '(' + JSON.stringify({ keywords: keywords }) + ')'
+      ).setMimeType(ContentService.MimeType.JAVASCRIPT);
+    } catch (kwErr) {
+      return ContentService.createTextOutput(
+        callback + '(' + JSON.stringify({ error: kwErr.message }) + ')'
+      ).setMimeType(ContentService.MimeType.JAVASCRIPT);
+    }
   }
 
   // ── 有料チェック ──

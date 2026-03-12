@@ -30,8 +30,8 @@ async function fetchQuestions() {
     const params     = new URLSearchParams(window.location.search);
     const scopeParam = params.get('scope');
     const kwParam    = params.get('kw');
-    if (scopeParam) startScopeQuiz(scopeParam);
-    if (kwParam)    startKeywordQuiz(decodeURIComponent(kwParam));
+    if (scopeParam) { dismissWelcomeOverlay(); startScopeQuiz(scopeParam); }
+    if (kwParam)    { dismissWelcomeOverlay(); startKeywordQuiz(decodeURIComponent(kwParam)); }
 }
 
 function setupRegionButtons() {
@@ -47,13 +47,16 @@ function setupRegionButtons() {
     });
 }
 
-function selectRegion(key) {
-    // ウェルカムオーバーレイを非表示
+function dismissWelcomeOverlay() {
     const overlay = document.getElementById('welcome-overlay');
-    if (overlay) {
+    if (overlay && overlay.style.display !== 'none') {
         overlay.classList.add('hidden');
         setTimeout(() => overlay.style.display = 'none', 400);
     }
+}
+
+function selectRegion(key) {
+    dismissWelcomeOverlay();
 
     state.currentRegion = key;
     const data = state.masterData[key];
@@ -202,8 +205,8 @@ function updateReviewBtn() {
     document.getElementById('logout-btn').addEventListener('click', logoutUser);
     document.getElementById('next-btn').addEventListener('click', nextQuestion);
     document.getElementById('copy-scope-url-btn').addEventListener('click', copyScopeUrl);
-    document.getElementById('keyword-start-btn').addEventListener('click', startKeywordQuiz);
-    document.getElementById('ichimondai-start-btn').addEventListener('click', startIchimondaiQuiz);
+    document.getElementById('keyword-start-btn').addEventListener('click', () => { dismissWelcomeOverlay(); startKeywordQuiz(); });
+    document.getElementById('ichimondai-start-btn').addEventListener('click', () => { dismissWelcomeOverlay(); startIchimondaiQuiz(); });
     document.getElementById('home-btn').addEventListener('click', goHome);
     document.getElementById('review-btn').addEventListener('click', startReviewMode);
 

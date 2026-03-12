@@ -10,8 +10,17 @@ function eraLabel(region, era) {
         || era;
 }
 
+function dismissWelcome() {
+    const el = document.getElementById('welcome-overlay');
+    if (el && el.style.display !== 'none') {
+        el.classList.add('hidden');
+        setTimeout(() => el.style.display = 'none', 400);
+    }
+}
+
 // scopeStr 例: "europe_ancient,china_ancient_china,mideast_islamic_expansion"
 export function startScopeQuiz(scopeStr) {
+    dismissWelcome();
     const pairs = scopeStr.split(',').map(s => {
         // region キーに "_" が含まれる (north_america 等) ケースを正確に分割
         const region = Object.keys(state.masterData).find(r => s.startsWith(r + '_'));

@@ -129,23 +129,25 @@
                     </div>
                 </div>
 
-                <!-- 管理モード -->
+                <!-- 問題追加ツール -->
+                <div class="section-label">✏️ 問題を自分で追加する</div>
                 <div id="admin-panel">
                     <details>
-                        <summary>🛠️ 座標調整ツール</summary>
-                        座標: <strong id="selected-coord" style="color:red;">未選択</strong>
-                        <input type="text" id="new-q-text" placeholder="地点名" style="width:90%; margin:5px 0; padding:3px;">
-                        <button id="add-question-btn" style="width:100%;">一時保存</button>
-                        <button id="export-btn" style="width:100%; margin:5px 0;">JSON抽出</button>
-                        <textarea id="export-area" readonly style="width:95%; height:60px; font-size:9px;"></textarea>
+                        <summary>📍 ピン問題を追加する</summary>
+                        <div style="font-size:10px; color:#aaa; margin-bottom:6px;">地図をクリックして場所を選び、地点名を入力して追加できます。</div>
+                        選択中の座標: <strong id="selected-coord" style="color:#ef9a9a;">未選択</strong>
+                        <input type="text" id="new-q-text" placeholder="地点名（例：バグダード）" style="width:90%; margin:5px 0; padding:3px;">
+                        <button id="add-question-btn" style="width:100%;">📌 追加する</button>
+                        <button id="export-btn" style="display:none;">JSON抽出</button>
+                        <textarea id="export-area" readonly style="display:none;"></textarea>
                         <label id="tag-mode-label" style="display:flex; align-items:center; gap:5px; margin-top:6px; cursor:pointer; font-size:10px; color:#888;">
                             <input type="checkbox" id="tag-mode-toggle">
                             🏷️ 解説にSyncroタグパネルを表示
                         </label>
                     </details>
                     <details id="area-tool">
-                        <summary>🗺️ エリア問題作成ツール</summary>
-                        <div style="font-size:10px; color:#888; margin:4px 0;">地図をクリックして頂点を打ち、エリアを定義します。</div>
+                        <summary>🗺️ エリア問題を追加する</summary>
+                        <div style="font-size:10px; color:#aaa; margin:4px 0;">地図をクリックして境界線の頂点を打ち、エリアを定義します。</div>
                         <div style="margin:4px 0; font-size:10px;">
                             ラベル: <input type="text" id="area-label-input" placeholder="例: 斉" style="width:55px; padding:2px;">
                             正解: <input type="checkbox" id="area-correct-check">

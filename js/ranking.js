@@ -76,6 +76,22 @@ window.receiveRanking = function(scores) {
                 : '';
             return `<div class="rank-row">${i + 1}位: ${escapeHtml(s.name)}${badge} (${s.score}点)</div>`;
         }).join('');
+
+        // 防衛バナー・奪還ハードル表示
+        if (state.currentUser && filtered.length > 0) {
+            const top1Score  = filtered[0].score;
+            const threshold  = Math.ceil(top1Score * 1.2);
+            const isChampion = filtered[0].name === state.currentUser;
+            const myEntry    = filtered.find(s => s.name === state.currentUser);
+            const myScore    = myEntry ? myEntry.score : 0;
+
+            if (isChampion) {
+                list.innerHTML += `<div class="defense-banner champion">👑 称号防衛中！<br><span class="defense-sub">奪還ハードル: ${threshold}点（あなたのスコアの1.2倍）</span></div>`;
+            } else {
+                const gap = threshold - myScore;
+                list.innerHTML += `<div class="defense-banner challenger">⚔️ 奪還ハードル: <strong>${threshold}点</strong><br><span class="defense-sub">あと ${gap > 0 ? gap + '点' : '0点（もう少し！）'}</span></div>`;
+            }
+        }
     }
 
     if (state.currentUser) {

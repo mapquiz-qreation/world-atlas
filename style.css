@@ -424,6 +424,12 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; background: var(--bg); 
 .rank-row { margin: 2px 0; }
 .rank-title-badge { display: inline-block; margin-left: 4px; padding: 1px 6px; font-size: 10px; font-weight: bold; background: linear-gradient(135deg, #ffd54f, #ff8f00); color: #3e2723; border-radius: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
 
+.defense-banner { margin-top: 8px; padding: 7px 10px; border-radius: 7px; font-size: 11px; line-height: 1.5; text-align: center; }
+.defense-banner.champion { background: linear-gradient(135deg, #3e2723cc, #5d4037cc); border: 1px solid #ffd54f; color: #ffd54f; }
+.defense-banner.challenger { background: rgba(80,80,120,0.25); border: 1px dashed #9e9e9e; color: var(--rank-c); }
+.defense-banner strong { font-size: 13px; }
+.defense-sub { font-size: 10px; opacity: 0.8; }
+
 .section-label {
     font-size: 11px; font-weight: bold; margin-bottom: 2px; padding: 4px 8px; border-radius: 6px;
     background: linear-gradient(to right, var(--lbl-a), var(--lbl-b)); color: var(--lbl-text);

@@ -96,21 +96,48 @@ function doPost(e) {
     var tag        = payload.tag;
     var lastRow    = scoreSheet.getLastRow();
 
-    if (lastRow < 2) {
-      scoreSheet.appendRow([name, newScore, new Date(), tag]);
+    var data = [];
+    if (lastRow >= 2) {
+      data = scoreSheet.getRange(2, 1, lastRow - 1, 4).getValues();
+    }
+
+    // 自分の現在スコアと現在のTOP1（全員）を確認
+    var myCurrentScore = 0;
+    var myIdx          = -1;
+    var top1ScoreAll   = 0;
+    var top1NameAll    = '';
+    for (var i = 0; i < data.length; i++) {
+      if (String(data[i][3]) !== tag) continue;
+      var s = Number(data[i][1]);
+      if (String(data[i][0]) === name) { myCurrentScore = s; myIdx = i; }
+      if (s > top1ScoreAll) { top1ScoreAll = s; top1NameAll = String(data[i][0]); }
+    }
+
+    // 自分がTOP1かどうか
+    var iAmTop1 = (top1NameAll === name);
+
+    // 自分以外のTOP1スコア（称号奪還ハードルの基準）
+    var top1OtherScore = 0;
+    for (var i = 0; i < data.length; i++) {
+      if (String(data[i][3]) === tag && String(data[i][0]) !== name) {
+        var s = Number(data[i][1]);
+        if (s > top1OtherScore) top1OtherScore = s;
+      }
+    }
+
+    // 奪還ハードル: 自分がTOP1でなく、かつ他のTOP1を超えようとしているが1.2倍未満なら阻止
+    var effectiveScore = newScore;
+    var threshold      = Math.ceil(top1OtherScore * 1.2);
+    if (!iAmTop1 && top1OtherScore > 0 && newScore > top1OtherScore && newScore < threshold) {
+      effectiveScore = top1OtherScore - 1; // 閾値未達: 暫定的にTOP1の1点下に留める
+    }
+
+    if (myIdx !== -1) {
+      if (effectiveScore > myCurrentScore) {
+        scoreSheet.getRange(myIdx + 2, 2, 1, 2).setValues([[effectiveScore, new Date()]]);
+      }
     } else {
-      var data      = scoreSheet.getRange(2, 1, lastRow - 1, 4).getValues();
-      var foundIdx  = -1;
-      for (var i = 0; i < data.length; i++) {
-        if (data[i][0] === name && data[i][3] === tag) { foundIdx = i; break; }
-      }
-      if (foundIdx !== -1) {
-        if (newScore > Number(data[foundIdx][1])) {
-          scoreSheet.getRange(foundIdx + 2, 2, 1, 2).setValues([[newScore, new Date()]]);
-        }
-      } else {
-        scoreSheet.appendRow([name, newScore, new Date(), tag]);
-      }
+      scoreSheet.appendRow([name, effectiveScore, new Date(), tag]);
     }
     return ContentService.createTextOutput('ok').setMimeType(ContentService.MimeType.TEXT);
 

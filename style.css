@@ -624,7 +624,49 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; background: var(--bg); 
 #keyword-start-btn { width: 100%; margin-top: 6px; padding: 8px; font-size: 13px; font-weight: bold; border-radius: 6px; border: 2px solid var(--border); background: var(--btn-on); color: var(--btn-on-c); cursor: pointer; transition: opacity 0.2s; }
 #keyword-start-btn:hover { opacity: 0.85; }
 
-#admin-panel { font-size: 11px; background: rgba(239,235,233,0.9); padding: 10px; }
+#admin-panel {
+    font-size: 11px;
+    background: #1e1e2e;
+    color: #e0e0f0;
+    padding: 10px;
+    border-color: #3a3a5c !important;
+}
+#admin-panel summary {
+    color: #c8d0f0;
+    font-weight: bold;
+    cursor: pointer;
+}
+#admin-panel summary:hover { color: #ffffff; }
+#admin-panel input[type="text"],
+#admin-panel textarea {
+    background: #2a2a40;
+    color: #e0e0f0;
+    border: 1px solid #4a4a70;
+    border-radius: 4px;
+}
+#admin-panel input[type="text"]::placeholder,
+#admin-panel textarea::placeholder { color: #7070a0; }
+#admin-panel button:not(#area-reset-all-btn) {
+    background: #4a90d9;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 5px 8px;
+}
+#admin-panel button:not(#area-reset-all-btn):hover { background: #357abd; }
+#admin-panel #area-reset-all-btn {
+    color: #ff6b6b;
+    border-color: #ff6b6b;
+    background: none;
+}
+#admin-panel label, #admin-panel div { color: #c0c8e8; }
+#admin-panel strong#selected-coord { color: #ff9999; }
+#admin-panel #area-list {
+    background: #2a2a40;
+    border-color: #4a4a70;
+    color: #e0e0f0;
+}
 
 /* ── Syncro タグパネル ─────────────────────────────────────── */
 .syncro-tag-panel {

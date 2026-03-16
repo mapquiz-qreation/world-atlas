@@ -1080,14 +1080,14 @@ body.logged-in .login-gate-overlay {
     justify-content: center;
 }
 #update-modal-inner {
-    background: var(--bg);
+    background: #1e1e2e;
     border-radius: 16px;
     padding: 24px 28px 20px;
     min-width: 280px;
     max-width: 380px;
     width: 90%;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
-    border: 1px solid var(--border);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+    border: 1px solid #3a3a5c;
 }
 #update-modal-header {
     display: flex;
@@ -1099,32 +1099,32 @@ body.logged-in .login-gate-overlay {
 #update-modal-title {
     font-weight: bold;
     font-size: 14px;
-    color: var(--fg);
+    color: #ffffff;
 }
 #update-modal-version {
     font-size: 11px;
-    color: #aaa;
+    color: #a0a0c0;
     margin-top: 2px;
 }
 #update-modal-list {
     margin: 0 0 16px 0;
     padding-left: 20px;
-    font-size: 12px;
-    line-height: 1.8;
-    color: var(--fg);
+    font-size: 13px;
+    line-height: 2;
+    color: #e0e0f0;
 }
 #update-modal-close {
     width: 100%;
     padding: 10px;
-    background: var(--act);
-    color: var(--act-c);
+    background: #4a90d9;
+    color: #ffffff;
     border: none;
     border-radius: 8px;
     font-size: 14px;
     font-weight: bold;
     cursor: pointer;
 }
-#update-modal-close:hover { opacity: 0.85; }
+#update-modal-close:hover { background: #357abd; }
 
 #ta-result-modal {
     display: none;

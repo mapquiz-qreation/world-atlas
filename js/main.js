@@ -244,6 +244,15 @@ function updateReviewBtn() {
     fetchQuestions();
     initMobile();
     checkVersion();
+
+    // details を開いたとき、内容が見切れないようスクロール
+    document.querySelectorAll('#admin-panel details').forEach(details => {
+        details.addEventListener('toggle', () => {
+            if (details.open) {
+                setTimeout(() => details.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+            }
+        });
+    });
 });
 
 // ── バージョン更新通知 ────────────────────────────────────────

@@ -1,3 +1,19 @@
+// ── バージョン管理 ────────────────────────────────────────────
+// 更新時はここを書き換えるだけ！形式: "YYYY.MM.DD" または "YYYY.MM.DD-2" など
+export const VERSION = "2026.03.13";
+
+// 更新履歴（新しい順に追加していく）
+export const CHANGELOG = [
+    {
+        version: "2026.03.13",
+        date: "2026年3月13日",
+        items: [
+            "⚔️ 称号防衛システムを追加！称号奪還には1位スコアの1.2倍が必要になりました",
+            "✏️ 問題追加ツールの名前をわかりやすくリニューアル",
+        ]
+    },
+];
+
 // ★君のGASのURLを貼り付けてね！
 export const GAS_URL = "https://script.google.com/macros/s/AKfycby-dUq_dfcitTMzpl8GPbyoQZUB9DGYEJyd7tZfxb9ToAs3XwMkgLRc7V64VlrsUrwo/exec";
 

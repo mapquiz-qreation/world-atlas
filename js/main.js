@@ -1,5 +1,5 @@
 import { state }                                         from './state.js';
-import { GAS_URL, STRIPE_PAYMENT_URL }                   from './config.js';
+import { GAS_URL, STRIPE_PAYMENT_URL, VERSION, CHANGELOG } from './config.js';
 import { initMap, flyToRegion, resetMapView, clearQuizLayer } from './map.js';
 import { syncRanking }                                    from './ranking.js';
 import { checkLocalLogin, updateScoreUI, loginUser, logoutUser } from './user.js';
@@ -243,4 +243,39 @@ function updateReviewBtn() {
 
     fetchQuestions();
     initMobile();
+    checkVersion();
 });
+
+// ── バージョン更新通知 ────────────────────────────────────────
+function checkVersion() {
+    const lastSeen = localStorage.getItem('atlas_version');
+    if (lastSeen === VERSION) return;
+
+    // 未表示のエントリだけ抽出（初回は最新1件のみ）
+    const newEntries = lastSeen
+        ? CHANGELOG.filter(c => c.version > lastSeen)
+        : CHANGELOG.slice(0, 1);
+
+    if (newEntries.length === 0) {
+        localStorage.setItem('atlas_version', VERSION);
+        return;
+    }
+
+    const modal   = document.getElementById('update-modal');
+    const verEl   = document.getElementById('update-modal-version');
+    const listEl  = document.getElementById('update-modal-list');
+    const closeBtn = document.getElementById('update-modal-close');
+
+    verEl.textContent = newEntries.map(e => e.date).join(' / ');
+    listEl.innerHTML  = newEntries
+        .flatMap(e => e.items)
+        .map(item => `<li>${item}</li>`)
+        .join('');
+
+    modal.style.display = 'flex';
+
+    closeBtn.onclick = () => {
+        modal.style.display = 'none';
+        localStorage.setItem('atlas_version', VERSION);
+    };
+}

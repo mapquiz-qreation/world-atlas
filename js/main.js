@@ -210,6 +210,14 @@ function updateReviewBtn() {
     document.getElementById('home-btn').addEventListener('click', goHome);
     document.getElementById('review-btn').addEventListener('click', startReviewMode);
 
+    // 上級モードトグル
+    const advToggle = document.getElementById('advanced-mode-toggle');
+    advToggle.addEventListener('change', () => {
+        state.isAdvancedMode = advToggle.checked;
+        document.getElementById('advanced-mode-bar').classList.toggle('active', advToggle.checked);
+        if (state.questions.length) showQuestion();
+    });
+
     // タイムアタック：時間ボタン
     document.querySelectorAll('.ta-time-btn').forEach(btn => {
         btn.addEventListener('click', () => {

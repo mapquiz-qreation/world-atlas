@@ -25,7 +25,7 @@ export function showQuestion() {
         document.body.dataset.era    = q._eraKey;
     }
 
-    document.getElementById('q-text').innerText       = q.text;
+    document.getElementById('q-text').innerText       = (state.isAdvancedMode && q.advancedText) ? q.advancedText : q.text;
     document.getElementById('result').innerText       = '';
     document.getElementById('next-btn').style.display = 'none';
     hideExplanation();

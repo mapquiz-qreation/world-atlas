@@ -20,6 +20,9 @@ export const state = {
     // 有料プラン
     isPaid:         false,
 
+    // 上級モード（advancedText を使う）
+    isAdvancedMode: false,
+
     // タイムアタック
     timeAttack: {
         active:     false,

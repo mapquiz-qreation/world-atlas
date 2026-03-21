@@ -440,6 +440,24 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; background: var(--bg); 
 .mode-btn, .era-btn { flex: 1; min-width: 70px; padding: 8px 5px; font-size: 11px; cursor: pointer; border-radius: 8px; border: 4px double var(--btn-bd); background: var(--btn); color: var(--btn-c); font-weight: bold; transition: 0.2s; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
 .mode-btn.active, .era-btn.active { background: var(--btn-on); color: var(--btn-on-c); border-color: var(--btn-on-bd); transform: translateY(-2px); box-shadow: 0 0 10px rgba(255,215,0,0.35); }
 
+/* 上級モードトグル */
+#advanced-mode-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 5px 8px; border-radius: 6px;
+    background: var(--panel); border: 1px solid var(--border);
+    font-size: 11px; gap: 6px; transition: background 0.2s, border-color 0.2s;
+}
+#advanced-mode-bar.active {
+    background: rgba(74,144,217,0.15); border-color: #4a90d9;
+}
+#advanced-mode-label {
+    display: flex; align-items: center; gap: 5px; cursor: pointer; font-weight: bold;
+}
+#advanced-mode-label input[type="checkbox"] { cursor: pointer; accent-color: #4a90d9; width: 14px; height: 14px; }
+#advanced-mode-text { color: var(--text); }
+#advanced-mode-bar.active #advanced-mode-text { color: #4a90d9; }
+#advanced-mode-hint { font-size: 9px; color: #888; text-align: right; }
+
 #question-box { background: var(--panel); padding: 15px; text-align: center; position: relative; }
 #q-text { display: block; font-size: 22px; font-weight: bold; color: var(--q); margin: 10px 0; }
 #result { font-size: 18px; font-weight: bold; min-height: 25px; margin: 5px 0; }

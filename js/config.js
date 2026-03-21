@@ -60,6 +60,8 @@ export const ERA_DISPLAY_NAMES = {
     "cold_war_cold_war_early":        "冷戦初期",
     "cold_war_cold_war_proxy":        "冷戦・代理戦争期",
     "cold_war_cold_war_end":          "冷戦終結",
+    // 地形・地名モード
+    "europe_geo":                     "ヨーロッパの地形・地名",
 };
 
 // 地域・時代タグごとの第1位称号
@@ -101,5 +103,7 @@ export const TAG_TITLES = {
     "world_wars_ww2_pacific":      "☢️ マンハッタン",
     "cold_war_cold_war_early":     "☭ 赤と青の世界",
     "cold_war_cold_war_proxy":     "🔴 革命か自由か",
-    "cold_war_cold_war_end":       "💰 市場の勝利"
+    "cold_war_cold_war_end":       "💰 市場の勝利",
+    // 地形・地名モード
+    "europe_geo":                  "🌍 地理王",
 };

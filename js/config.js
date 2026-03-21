@@ -62,6 +62,13 @@ export const ERA_DISPLAY_NAMES = {
     "cold_war_cold_war_end":          "冷戦終結",
     // 地形・地名モード
     "europe_geo":                     "ヨーロッパの地形・地名",
+    "mideast_geo":                    "中東の地形・地名",
+    "africa_geo":                     "アフリカの地形・地名",
+    "india_geo":                      "インドの地形・地名",
+    "china_geo":                      "中国の地形・地名",
+    "southeast_asia_geo":             "東南アジアの地形・地名",
+    "north_america_geo":              "北米の地形・地名",
+    "latin_america_geo":              "中南米の地形・地名",
 };
 
 // 地域・時代タグごとの第1位称号
@@ -106,4 +113,11 @@ export const TAG_TITLES = {
     "cold_war_cold_war_end":       "💰 市場の勝利",
     // 地形・地名モード
     "europe_geo":                  "🌍 地理王",
+    "mideast_geo":                 "🌍 地理王",
+    "africa_geo":                  "🌍 地理王",
+    "india_geo":                   "🌍 地理王",
+    "china_geo":                   "🌍 地理王",
+    "southeast_asia_geo":          "🌍 地理王",
+    "north_america_geo":           "🌍 地理王",
+    "latin_america_geo":           "🌍 地理王",
 };

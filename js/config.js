@@ -18,7 +18,7 @@ export const CHANGELOG = [
 export const GAS_URL = "https://script.google.com/macros/s/AKfycby-dUq_dfcitTMzpl8GPbyoQZUB9DGYEJyd7tZfxb9ToAs3XwMkgLRc7V64VlrsUrwo/exec";
 
 // ★StripeのPayment LinkのURLを貼り付けてね！（Stripeアカウント作成後に設定）
-export const STRIPE_PAYMENT_URL = "https://buy.stripe.com/aFa14g8Hzdsbc0s7em67S00";
+export const STRIPE_PAYMENT_URL = "";
 
 // 試験範囲モードで表示する一般的な時代区分名（タブの文学的な名前とは別）
 export const ERA_DISPLAY_NAMES = {

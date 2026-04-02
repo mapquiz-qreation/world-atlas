@@ -878,6 +878,82 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; background: var(--bg); 
         flex-shrink: 0;
     }
 
+    /* ── ドラッグハンドル（問題パネル上部） ── */
+    #panel-drag-handle {
+        width: 100%;
+        padding: 8px 0 4px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: ns-resize;
+        touch-action: none;
+        flex-shrink: 0;
+    }
+    .handle-bar {
+        width: 36px;
+        height: 4px;
+        background: var(--border);
+        border-radius: 3px;
+        opacity: 0.7;
+    }
+
+    /* ── 問題パネル：ドラッグ中はトランジション無効 ── */
+    #mobile-question-panel {
+        transition: height 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    /* ── タップターゲット最低44px保証 ── */
+    #next-btn {
+        min-height: 44px;
+        font-size: 14px;
+        font-weight: bold;
+        letter-spacing: 0.3px;
+    }
+    .mob-tab {
+        min-height: 48px;
+    }
+    #mobile-sheet-inner .mode-btn,
+    #mobile-sheet-inner .era-btn {
+        min-height: 44px;
+        padding: 11px 6px;
+    }
+
+    /* ── 解説の読みやすさ改善 ── */
+    #mobile-question-panel #explanation-box {
+        line-height: 1.7;
+    }
+    #mobile-question-panel #explanation-text {
+        font-size: 12px;
+        line-height: 1.7;
+    }
+    #mobile-question-panel #related-terms {
+        font-size: 11.5px;
+        line-height: 2.1;
+        margin-top: 8px;
+        padding-top: 6px;
+        border-top: 1px solid rgba(0,0,0,0.08);
+    }
+
+    /* ── 上級モードバー：シート内表示調整 ── */
+    #mobile-sheet-inner #advanced-mode-bar {
+        display: flex;
+        padding: 10px 12px;
+        font-size: 13px;
+        border-radius: 8px;
+        margin-bottom: 4px;
+    }
+    #mobile-sheet-inner #advanced-mode-label {
+        font-size: 13px;
+        gap: 8px;
+    }
+    #mobile-sheet-inner #advanced-mode-label input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+    }
+    #mobile-sheet-inner #advanced-mode-hint {
+        font-size: 10px;
+    }
+
     /* ── ボトムシート（地域・時代・ランク選択） ── */
     #mobile-sheet {
         display: block;
@@ -1041,6 +1117,22 @@ body:not([data-region]):not([data-era]) #legal-footer span {
         padding-bottom: max(6px, env(safe-area-inset-bottom));
     }
 }
+
+/* =====================================================
+   正解 / 不正解 フラッシュアニメーション
+   ===================================================== */
+@keyframes panel-flash-correct {
+    0%   { box-shadow: inset 0 0 0 0 rgba(67,160,71,0); }
+    20%  { box-shadow: inset 0 0 0 10px rgba(67,160,71,0.5); }
+    100% { box-shadow: inset 0 0 0 0 rgba(67,160,71,0); }
+}
+@keyframes panel-flash-wrong {
+    0%   { box-shadow: inset 0 0 0 0 rgba(229,57,53,0); }
+    20%  { box-shadow: inset 0 0 0 10px rgba(229,57,53,0.45); }
+    100% { box-shadow: inset 0 0 0 0 rgba(229,57,53,0); }
+}
+.panel-flash-correct { animation: panel-flash-correct 0.65s ease forwards; }
+.panel-flash-wrong   { animation: panel-flash-wrong   0.65s ease forwards; }
 
 /* =====================================================
    タイムアタック
@@ -1289,6 +1381,41 @@ body.logged-in .login-gate-overlay {
     #next-btn { padding: 6px; font-size: 12px; }
 
     #map { height: 100%; min-height: 0; }
+}
+
+/* ── モバイル横向き：地図を優先してパネルを最小化 ── */
+@media (max-width: 900px) and (orientation: landscape) and (max-height: 500px) {
+    #mobile-nav {
+        height: 40px;
+    }
+    .mob-tab {
+        font-size: 16px;
+        gap: 0;
+        min-height: 40px;
+    }
+    .mob-tab span { display: none; }
+
+    #mobile-question-panel {
+        height: 42% !important;
+    }
+    #mobile-question-panel #q-text {
+        font-size: 14px;
+        margin: 2px 0 4px;
+    }
+    #mobile-question-panel #result {
+        font-size: 13px;
+        min-height: 15px;
+        margin: 2px 0;
+    }
+    #mobile-question-panel #explanation-box {
+        font-size: 10px;
+        padding: 4px 6px;
+    }
+    #mobile-question-panel #next-btn {
+        padding: 7px;
+        font-size: 12px;
+        min-height: 36px;
+    }
 }
 
 /* ── 試験範囲URL モーダル ──────────────────────────── */

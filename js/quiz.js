@@ -8,6 +8,15 @@ import { addPoint }       from './user.js';
 import { clearQuizLayer, getQuizLayer, flyToRegion } from './map.js';
 import { recordAnswer }   from './srs.js';
 
+// ── 正解/不正解フラッシュ ────────────────────────────────────
+function flashPanel(correct) {
+    const panel = document.getElementById('mobile-question-panel') ?? document.getElementById('question-box');
+    if (!panel) return;
+    panel.classList.remove('panel-flash-correct', 'panel-flash-wrong');
+    void panel.offsetWidth; // reflow で再生
+    panel.classList.add(correct ? 'panel-flash-correct' : 'panel-flash-wrong');
+}
+
 // ── 問題表示エントリ ─────────────────────────────────────────
 export function showQuestion() {
     if (!state.questions.length) return;
@@ -83,6 +92,7 @@ function showPointQuestion(q) {
             if (c.correct) {
                 marker.setStyle({ fillColor: '#43a047', color: '#fff' });
                 document.getElementById('result').innerText = '⭕ 正解！';
+                flashPanel(true);
                 addPoint();
                 recordAnswer(q, true);
                 if (state.timeAttack.active) {
@@ -93,6 +103,7 @@ function showPointQuestion(q) {
             } else {
                 marker.setStyle({ fillColor: '#9e9e9e', fillOpacity: 0.4 });
                 document.getElementById('result').innerText = '❌ 不正解';
+                flashPanel(false);
                 recordAnswer(q, false);
                 highlightCorrectMarker(layer, q);
                 // 間違えた問題を記録（重複なし）
@@ -160,6 +171,7 @@ function showAreaQuestion(q) {
             if (area.correct) {
                 polygon.setStyle({ fillColor: area.color, fillOpacity: 0.75, weight: 3 });
                 document.getElementById('result').innerText = '⭕ 正解！';
+                flashPanel(true);
                 addPoint();
                 recordAnswer(q, true);
                 polygon._labelTooltip?.setOpacity(1);
@@ -171,6 +183,7 @@ function showAreaQuestion(q) {
             } else {
                 polygon.setStyle({ fillOpacity: 0.1, weight: 0.5 });
                 document.getElementById('result').innerText = '❌ 不正解';
+                flashPanel(false);
                 recordAnswer(q, false);
                 polygon._labelTooltip?.setOpacity(1);
                 highlightCorrectArea(layer);

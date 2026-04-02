@@ -7,6 +7,46 @@ import { invalidateMapSize } from './map.js';
 const BREAKPOINT = 768;
 let sheetOwner   = null; // 現在シートに移動中の要素キー
 
+// ── 問題パネルのドラッグリサイズ ────────────────────────────
+function setupDragResize() {
+    const panel = document.getElementById('mobile-question-panel');
+    if (!panel) return;
+
+    const handle = document.createElement('div');
+    handle.id = 'panel-drag-handle';
+    handle.innerHTML = '<div class="handle-bar"></div>';
+    panel.prepend(handle);
+
+    let startY      = 0;
+    let startHeight = 0;
+    const MIN_PX = () => window.innerHeight * 0.14;
+    const MAX_PX = () => window.innerHeight * 0.72;
+
+    handle.addEventListener('touchstart', (e) => {
+        startY      = e.touches[0].clientY;
+        startHeight = panel.getBoundingClientRect().height;
+        panel.style.transition = 'none';
+        e.preventDefault();
+    }, { passive: false });
+
+    handle.addEventListener('touchmove', (e) => {
+        const dy     = startY - e.touches[0].clientY; // 上にドラッグ = 正
+        const newH   = Math.min(Math.max(startHeight + dy, MIN_PX()), MAX_PX());
+        panel.style.height = newH + 'px';
+        e.preventDefault();
+    }, { passive: false });
+
+    handle.addEventListener('touchend', () => {
+        panel.style.transition = '';
+        // 近いスナップ位置に吸着
+        const vh = (panel.getBoundingClientRect().height / window.innerHeight) * 100;
+        const snaps = [18, 32, 52];
+        const snap  = snaps.reduce((a, b) => Math.abs(b - vh) < Math.abs(a - vh) ? b : a);
+        panel.style.height = snap + 'vh';
+        setTimeout(() => invalidateMapSize(), 80);
+    });
+}
+
 function isMobile() {
     return window.innerWidth <= BREAKPOINT;
 }
@@ -39,12 +79,15 @@ function returnToSidebar() {
     const content  = document.getElementById('sidebar-content');
 
     if (sheetOwner === 'region' || sheetOwner === 'era') {
-        const modeEl = document.getElementById('mode-selector');
-        const eraEl  = document.getElementById('era-selector');
+        const modeEl      = document.getElementById('mode-selector');
+        const eraEl       = document.getElementById('era-selector');
+        const advancedBar = document.getElementById('advanced-mode-bar');
         if (controls) {
             const labels = controls.querySelectorAll('.section-label');
             if (labels[0]) labels[0].after(modeEl);
             if (labels[1]) labels[1].after(eraEl);
+            // advanced-mode-bar を sidebar-controls の末尾に戻す
+            if (advancedBar) controls.appendChild(advancedBar);
         }
     } else if (sheetOwner === 'rank') {
         const userPanel = document.getElementById('user-panel');
@@ -73,7 +116,12 @@ function openSheet(tabName) {
     if (tabName === 'region') {
         const l1 = makeLabel('🌍 REGION / 地域');
         const l2 = makeLabel('🕐 ERA / 時代', '12px');
+        const advancedBar = document.getElementById('advanced-mode-bar');
         inner.append(l1, document.getElementById('mode-selector'), l2, document.getElementById('era-selector'));
+        if (advancedBar) {
+            const l3 = makeLabel('🎓 LEVEL / 難易度', '14px');
+            inner.append(l3, advancedBar);
+        }
         sheetOwner = 'region';
     } else if (tabName === 'era') {
         const l = makeLabel('🕐 ERA / 時代');
@@ -138,7 +186,10 @@ function blockLeafletTouch() {
 }
 
 export function initMobile() {
-    if (isMobile()) moveQuestionBox();
+    if (isMobile()) {
+        moveQuestionBox();
+        setupDragResize();
+    }
     setupNav();
 
     // Leaflet 初期化後（DOMContentLoaded + initMap が完了している）に実行

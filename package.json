@@ -3,8 +3,5 @@
   "scripts": {
     "validate": "node scripts/validate_data.js",
     "update-sw": "node scripts/update_sw_version.mjs"
-  },
-  "devDependencies": {
-    "sharp": "^0.34.5"
   }
 }

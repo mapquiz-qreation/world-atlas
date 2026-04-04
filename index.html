@@ -243,9 +243,18 @@
     <script type="module" src="js/main.js"></script>
     <script>
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
-                    .catch(() => {});
+            window.addEventListener('load', async () => {
+                const reg = await navigator.serviceWorker.register('./sw.js').catch(() => null);
+                if (!reg) return;
+                // 新SWがインストール待ちなら controllerchange でリロード
+                let refreshing = false;
+                navigator.serviceWorker.addEventListener('controllerchange', () => {
+                    if (refreshing) return;
+                    refreshing = true;
+                    location.reload();
+                });
+                // 定期的に更新チェック（1時間ごと）
+                setInterval(() => reg.update(), 60 * 60 * 1000);
             });
         }
     </script>

@@ -1794,27 +1794,49 @@
     let currentQ    = null;
 
     function generateQuestion() {
-        const valid = timelineData.filter(e => e.events.length >= 2);
+        const valid = timelineData.filter(e => {
+            const regions = new Set(e.events.map(ev => ev.region));
+            return regions.size >= 2;
+        });
         const epoch = valid[Math.floor(Math.random() * valid.length)];
 
-        // 出題イベント（seed）
         const seedIdx   = Math.floor(Math.random() * epoch.events.length);
         const seedEvent = epoch.events[seedIdx];
 
-        // 正解イベント（同エポック・別地域）
-        const correctCandidates = epoch.events.filter((_, i) => i !== seedIdx);
+        // 正解：同エポック・別地域（必須）
+        const correctCandidates = epoch.events.filter(
+            (ev, i) => i !== seedIdx && ev.region !== seedEvent.region
+        );
         const correctEvent = correctCandidates[Math.floor(Math.random() * correctCandidates.length)];
+        const targetRegion = correctEvent.region;
 
-        // 不正解3つ（他エポックからランダム）
-        const otherEvents = timelineData
+        // 不正解：同じ地域 + 別エポックから選び、時代の近さで優先
+        const distractorPool = timelineData
             .filter(e => e.year !== epoch.year)
-            .flatMap(e => e.events)
-            .sort(() => Math.random() - 0.5)
-            .slice(0, 3);
+            .flatMap(e => e.events.map(ev => ({ event: ev, dist: Math.abs(e.year - epoch.year) })))
+            .filter(d => d.event.region === targetRegion)
+            .filter(d => d.event.title !== correctEvent.title);
+
+        // 時代が近い方を優先しつつランダム性も維持（近いものを高確率で選ぶ）
+        distractorPool.sort((a, b) => a.dist - b.dist);
+        const nearPool = distractorPool.slice(0, Math.min(10, distractorPool.length));
+        const shuffled = nearPool.sort(() => Math.random() - 0.5);
+        let wrongEvents = shuffled.slice(0, 3).map(d => d.event);
+
+        // 同地域が3つ揃わない場合は他地域からも補充（seedの地域は除外）
+        if (wrongEvents.length < 3) {
+            const fallback = timelineData
+                .filter(e => e.year !== epoch.year)
+                .flatMap(e => e.events)
+                .filter(ev => ev.region !== seedEvent.region && ev.title !== correctEvent.title
+                    && !wrongEvents.some(w => w.title === ev.title))
+                .sort(() => Math.random() - 0.5);
+            wrongEvents = wrongEvents.concat(fallback.slice(0, 3 - wrongEvents.length));
+        }
 
         const choices = [
             { event: correctEvent, isCorrect: true },
-            ...otherEvents.map(e => ({ event: e, isCorrect: false })),
+            ...wrongEvents.map(e => ({ event: e, isCorrect: false })),
         ].sort(() => Math.random() - 0.5);
 
         return { epoch, seedEvent, correctEvent, choices };
